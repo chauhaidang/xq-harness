@@ -1,0 +1,34 @@
+{
+  "name": "@chauhaidang/xq-test-harness-e2e-consumer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Exercises @chauhaidang/xq-test-harness like an external consumer (single published dependency)",
+  "scripts": {
+    "build": "true",
+    "test": "yarn test:bdd",
+    "test:bdd": "yarn exec bddgen -c playwright.config.ts && yarn exec playwright test -c playwright.config.ts",
+    "report:show": "yarn exec playwright show-report playwright-report",
+    "lint": "eslint . --ext .ts",
+    "clean": "rm -rf .features-gen test-results playwright-report"
+  },
+  "dependencies": {
+    "@chauhaidang/xq-test-harness": "^0.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^8.50.0",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "yarn@4.13.0",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chauhaidang/xq-harness.git",
+    "directory": "modules/xq-test-harness-e2e-consumer"
+  },
+  "license": "Apache-2.0"
+}

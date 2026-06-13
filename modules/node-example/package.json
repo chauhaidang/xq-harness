@@ -1,0 +1,9 @@
+{
+  "name": "node-example",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node --check src/index.js",
+    "test": "node --test test/**/*.test.js"
+  }
+}

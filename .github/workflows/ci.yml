@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      xq-common-kit: ${{ steps.filter.outputs.xq-common-kit }}
+      xq-test-utils: ${{ steps.filter.outputs.xq-test-utils }}
+      xq-test-infra: ${{ steps.filter.outputs.xq-test-infra }}
+      xq-test-harness: ${{ steps.filter.outputs.xq-test-harness }}
+      xq-test-harness-e2e-consumer: ${{ steps.filter.outputs.xq-test-harness-e2e-consumer }}
+      shared: ${{ steps.filter.outputs.shared }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            shared:
+              - 'modules.yaml'
+              - 'scripts/module'
+              - 'scripts/check-xq-version-changes.js'
+              - '.github/workflows/ci.yml'
+              - 'modules/tsconfig.base.json'
+              - 'modules/yarnrc.github-packages.yml'
+            xq-common-kit:
+              - 'modules/xq-common-kit/**'
+            xq-test-utils:
+              - 'modules/xq-test-utils/**'
+            xq-test-infra:
+              - 'modules/xq-test-infra/**'
+            xq-test-harness:
+              - 'modules/xq-test-harness/**'
+            xq-test-harness-e2e-consumer:
+              - 'modules/xq-test-harness-e2e-consumer/**'
+
+  xq-module:
+    needs: changes
+    if: |
+      needs.changes.outputs.shared == 'true' ||
+      needs.changes.outputs.xq-common-kit == 'true' ||
+      needs.changes.outputs.xq-test-utils == 'true' ||
+      needs.changes.outputs.xq-test-infra == 'true' ||
+      needs.changes.outputs.xq-test-harness == 'true' ||
+      needs.changes.outputs.xq-test-harness-e2e-consumer == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - xq-common-kit
+          - xq-test-utils
+          - xq-test-infra
+          - xq-test-harness
+          - xq-test-harness-e2e-consumer
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://npm.pkg.github.com
+          scope: "@chauhaidang"
+      - run: corepack enable
+      - run: sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.45.1/yq_linux_amd64 && sudo chmod +x /usr/local/bin/yq
+      - name: CI module
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+        run: ./scripts/module ci ${{ matrix.module }}

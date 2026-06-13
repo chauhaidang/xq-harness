@@ -1,0 +1,266 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REGISTRY="${ROOT}/modules.yaml"
+
+require_yq() {
+  if ! command -v yq >/dev/null 2>&1; then
+    echo "error: yq is required (https://github.com/mikefarah/yq)" >&2
+    exit 1
+  fi
+}
+
+require_registry() {
+  if [[ ! -f "${REGISTRY}" ]]; then
+    echo "error: registry not found at ${REGISTRY}" >&2
+    exit 1
+  fi
+}
+
+list_modules() {
+  yq -r '.modules | keys | .[]' "${REGISTRY}"
+}
+
+module_test_all() {
+  local module="$1"
+  if [[ "$(yq -r ".modules[\"${module}\"] | has(\"test_all\")" "${REGISTRY}")" == "true" ]]; then
+    yq -r ".modules[\"${module}\"].test_all" "${REGISTRY}"
+  else
+    echo "true"
+  fi
+}
+
+list_test_all_modules() {
+  local module
+  for module in $(list_modules); do
+    if [[ "$(module_test_all "${module}")" == "true" ]]; then
+      echo "${module}"
+    fi
+  done
+}
+
+module_exists() {
+  local module="$1"
+  yq -e ".modules[\"${module}\"]" "${REGISTRY}" >/dev/null 2>&1
+}
+
+module_path() {
+  local module="$1"
+  yq -r ".modules[\"${module}\"].path" "${REGISTRY}"
+}
+
+module_command() {
+  local module="$1"
+  local action="$2"
+  yq -r ".modules[\"${module}\"].commands.${action}" "${REGISTRY}"
+}
+
+module_version() {
+  local module="$1"
+  yq -r ".modules[\"${module}\"].version" "${REGISTRY}"
+}
+
+module_depends_on() {
+  local module="$1"
+  yq -r ".modules[\"${module}\"].depends_on // [] | .[]" "${REGISTRY}" 2>/dev/null \
+    | sed '/^$/d'
+}
+
+module_workspace() {
+  local module="$1"
+  yq -r ".modules[\"${module}\"].workspace // \"\"" "${REGISTRY}"
+}
+
+validate_depends_on() {
+  local module="$1"
+  local dep
+  while IFS= read -r dep; do
+    [[ -z "${dep}" ]] && continue
+    if ! module_exists "${dep}"; then
+      echo "error: module '${module}' depends on unknown module '${dep}'" >&2
+      exit 1
+    fi
+  done < <(module_depends_on "${module}")
+}
+
+run_action() {
+  local module="$1"
+  local action="$2"
+
+  if ! module_exists "${module}"; then
+    echo "error: unknown module '${module}'" >&2
+    echo "available modules:" >&2
+    list_modules >&2
+    exit 1
+  fi
+
+  validate_depends_on "${module}"
+
+  local rel_path cmd
+  rel_path="$(module_path "${module}")"
+  cmd="$(module_command "${module}" "${action}")"
+
+  if [[ -z "${cmd}" || "${cmd}" == "null" ]]; then
+    echo "error: no '${action}' command for module '${module}'" >&2
+    exit 1
+  fi
+
+  local dir="${ROOT}/${rel_path}"
+  if [[ ! -d "${dir}" ]]; then
+    echo "error: module directory not found: ${dir}" >&2
+    exit 1
+  fi
+
+  echo "==> ${module}: ${action}"
+  (
+    cd "${dir}"
+    bash -lc "${cmd}"
+  )
+}
+
+run_action_with_deps() {
+  local module="$1"
+  local action="$2"
+  local visited="${3:-}"
+
+  if [[ " ${visited} " == *" ${module} "* ]]; then
+    echo "error: circular depends_on involving '${module}'" >&2
+    exit 1
+  fi
+  visited="${visited} ${module}"
+
+  local dep
+  while IFS= read -r dep; do
+    [[ -z "${dep}" ]] && continue
+    run_action_with_deps "${dep}" "${action}" "${visited}"
+  done < <(module_depends_on "${module}")
+
+  run_action "${module}" "${action}"
+}
+
+run_ci() {
+  local module="$1"
+  run_action_with_deps "${module}" install
+  run_action_with_deps "${module}" build
+  run_action_with_deps "${module}" test
+}
+
+show_module_info() {
+  local module="$1"
+  if ! module_exists "${module}"; then
+    echo "error: unknown module '${module}'" >&2
+    exit 1
+  fi
+
+  local workspace deps test_all
+  workspace="$(module_workspace "${module}")"
+  test_all="$(module_test_all "${module}")"
+  deps="$(module_depends_on "${module}" | tr '\n' ',' | sed 's/,$//')"
+
+  echo "module: ${module}"
+  echo "path: $(module_path "${module}")"
+  echo "version: $(module_version "${module}")"
+  echo "workspace: ${workspace:-none}"
+  echo "depends_on: ${deps:-none}"
+  echo "test_all: ${test_all}"
+}
+
+usage() {
+  cat <<'EOF'
+Usage:
+  ./scripts/module list
+  ./scripts/module list-test-all
+  ./scripts/module info <module>
+  ./scripts/module version [module]
+  ./scripts/module install <module>
+  ./scripts/module build <module>
+  ./scripts/module test <module>
+  ./scripts/module ci <module>
+  ./scripts/module test-all
+
+Modules with depends_on run dependency modules first (build/test/ci).
+Workspace members (e.g. xq-toolbox packages) share a Yarn root install and
+are not independent; use ./scripts/module ci xq-toolbox for the full graph.
+EOF
+}
+
+main() {
+  require_yq
+  require_registry
+
+  local action="${1:-}"
+  case "${action}" in
+    list)
+      list_modules
+      ;;
+    list-test-all)
+      list_test_all_modules
+      ;;
+    info)
+      if [[ $# -ne 2 ]]; then
+        usage
+        exit 1
+      fi
+      show_module_info "$2"
+      ;;
+    version)
+      if [[ $# -eq 1 ]]; then
+        local module
+        for module in $(list_modules); do
+          printf '%s %s\n' "${module}" "$(module_version "${module}")"
+        done
+      elif [[ $# -eq 2 ]]; then
+        if ! module_exists "$2"; then
+          echo "error: unknown module '$2'" >&2
+          exit 1
+        fi
+        module_version "$2"
+      else
+        usage
+        exit 1
+      fi
+      ;;
+    install)
+      if [[ $# -ne 2 ]]; then
+        usage
+        exit 1
+      fi
+      run_action "$2" install
+      ;;
+    build|test)
+      if [[ $# -ne 2 ]]; then
+        usage
+        exit 1
+      fi
+      run_action_with_deps "$2" "${action}"
+      ;;
+    ci)
+      if [[ $# -ne 2 ]]; then
+        usage
+        exit 1
+      fi
+      run_ci "$2"
+      ;;
+    test-all)
+      local module failed=0
+      for module in $(list_test_all_modules); do
+        if ! run_ci "${module}"; then
+          failed=1
+          break
+        fi
+      done
+      exit "${failed}"
+      ;;
+    ""|-h|--help|help)
+      usage
+      ;;
+    *)
+      echo "error: unknown action '${action}'" >&2
+      usage
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

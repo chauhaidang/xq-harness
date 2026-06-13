@@ -1,0 +1,141 @@
+version: 1
+
+modules:
+  node-example:
+    path: modules/node-example
+    language: node
+    version: 0.1.0
+    test_all: false
+    toolchain:
+      node: "22"
+      yarn: "4"
+    commands:
+      install: yarn install --immutable
+      build: yarn build
+      test: yarn test
+
+  python-example:
+    path: modules/python-example
+    language: python
+    version: 0.1.0
+    test_all: false
+    toolchain:
+      python: "3.12"
+    commands:
+      install: uv sync --dev
+      build: uv sync
+      test: uv run pytest
+
+  java-example:
+    path: modules/java-example
+    language: java
+    version: 0.1.0
+    test_all: false
+    toolchain:
+      java: "21"
+    commands:
+      install: ./gradlew --version
+      build: ./gradlew assemble
+      test: ./gradlew test
+
+  ios-example:
+    path: modules/ios-example
+    language: ios
+    version: 0.1.0
+    test_all: false
+    toolchain:
+      xcode: "16"
+    commands:
+      install: "true"
+      build: >
+        xcodebuild -project ios-example.xcodeproj
+        -scheme ios-example
+        -destination 'platform=iOS Simulator,name=iPhone 16'
+        build
+      test: >
+        xcodebuild -project ios-example.xcodeproj
+        -scheme ios-example
+        -destination 'platform=iOS Simulator,name=iPhone 16'
+        test
+
+  # ── XQ packages (Level C: published semver, independent modules) ──────────────
+  # Internal deps use @chauhaidang/* from GitHub Packages (^semver).
+  # Requires NODE_AUTH_TOKEN for install when a module depends on another package.
+
+  xq-common-kit:
+    path: modules/xq-common-kit
+    language: node
+    version: 1.0.12
+    test_all: true
+    toolchain:
+      node: ">=18"
+      yarn: "4.13"
+    commands:
+      install: yarn install --immutable
+      build: yarn build
+      test: yarn test
+
+  xq-test-utils:
+    path: modules/xq-test-utils
+    language: node
+    version: 2.0.1
+    test_all: true
+    toolchain:
+      node: ">=18"
+      yarn: "4.13"
+    commands:
+      install: yarn install --immutable
+      build: yarn build
+      test: yarn test
+
+  xq-test-infra:
+    path: modules/xq-test-infra
+    language: node
+    version: 1.0.3
+    test_all: true
+    toolchain:
+      node: ">=18"
+      yarn: "4.13"
+      docker: optional
+    commands:
+      install: yarn install --immutable
+      build: yarn build
+      test: yarn test
+
+  xq-test-harness:
+    path: modules/xq-test-harness
+    language: node
+    version: 0.2.0
+    test_all: true
+    toolchain:
+      node: ">=18"
+      yarn: "4.13"
+      playwright: required
+    commands:
+      install: yarn install --immutable
+      build: yarn build
+      test: yarn test
+
+  xq-test-harness-e2e-consumer:
+    path: modules/xq-test-harness-e2e-consumer
+    language: node
+    version: 0.0.0
+    test_all: true
+    toolchain:
+      node: ">=18"
+      yarn: "4.13"
+      playwright: required
+    commands:
+      install: yarn install --immutable
+      build: yarn build
+      test: yarn test
+
+  xq-scripts:
+    path: modules/xq-scripts
+    language: shell
+    version: 0.0.0
+    test_all: false
+    commands:
+      install: "true"
+      build: "true"
+      test: "true"

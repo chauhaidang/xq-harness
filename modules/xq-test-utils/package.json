@@ -1,0 +1,81 @@
+{
+  "name": "@chauhaidang/xq-test-utils",
+  "version": "2.0.1",
+  "description": "Test utilities for XQ applications: component/integration helpers and Detox E2E abstractions",
+  "main": "dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "jest.component.config.js",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "clean": "rm -rf dist"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chauhaidang/xq-harness.git",
+    "directory": "modules/xq-test-utils"
+  },
+  "packageManager": "yarn@4.13.0",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "xq",
+    "typescript",
+    "testing",
+    "database",
+    "postgres",
+    "wait-on",
+    "detox",
+    "e2e",
+    "mobile"
+  ],
+  "author": "chauhaidang",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/chauhaidang/xq-harness/issues"
+  },
+  "homepage": "https://github.com/chauhaidang/xq-harness#readme",
+  "dependencies": {
+    "@chauhaidang/xq-common-kit": "^1.0.12",
+    "pg": "^8.16.3",
+    "wait-on": "^8.0.1"
+  },
+  "peerDependencies": {
+    "detox": ">=20.0.0"
+  },
+  "peerDependenciesMeta": {
+    "detox": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.10.1",
+    "@types/pg": "^8.16.0",
+    "@types/wait-on": "^5.3.4",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^8.50.0",
+    "jest": "^30.1.1",
+    "ts-jest": "^29.2.0",
+    "typescript": "^5.9.3"
+  }
+}

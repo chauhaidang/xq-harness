@@ -1,0 +1,57 @@
+# Harness durable layer — each project instance generates its own data.
+harness.db
+harness.db-wal
+harness.db-shm
+
+# Rust build output for harness tooling.
+target/
+dist/
+
+# Downloaded Harness CLI binary for installed project instances.
+scripts/bin/harness-cli
+scripts/bin/harness-cli.exe
+
+# Node / Yarn (all modules, any depth)
+node_modules/
+**/.yarn/*
+!**/.yarn/patches
+!**/.yarn/plugins
+!**/.yarn/releases
+!**/.yarn/sdks
+!**/.yarn/versions
+.pnp.*
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Java / iOS examples
+modules/java-example/.gradle/
+modules/java-example/build/
+modules/ios-example/DerivedData/
+*.xcuserstate
+*.xcuserdata/
+**/ios-**/build
+
+# xq-toolbox workspace artifacts
+modules/xq-*/.task/
+modules/xq-*/reports/
+modules/xq-**/coverage/
+modules/xq-**/test-results/
+modules/xq-**/playwright-report/
+modules/xq-**/.features-gen/
+
+# Local / secrets / IDE
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea
+
+# Local-only archive
+archive/
+archive/xq-toolbox-workspace/node_modules/

@@ -1,0 +1,73 @@
+name: Publish XQ Packages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'modules/xq-*/**'
+      - 'scripts/check-xq-version-changes.js'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ steps.version_check.outputs.version_changed }}
+      changed_packages: ${{ steps.version_check.outputs.changed_packages }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://npm.pkg.github.com
+          scope: "@chauhaidang"
+      - run: corepack enable
+      - run: sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.45.1/yq_linux_amd64 && sudo chmod +x /usr/local/bin/yq
+      - name: Check version changes
+        id: version_check
+        run: node scripts/check-xq-version-changes.js
+      - name: CI publishable modules
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+        run: |
+          for module in xq-common-kit xq-test-utils xq-test-infra xq-test-harness xq-test-harness-e2e-consumer; do
+            ./scripts/module ci "$module"
+          done
+
+  publish:
+    needs: build
+    if: needs.build.outputs.version_changed == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://npm.pkg.github.com
+          scope: "@chauhaidang"
+      - run: corepack enable
+      - name: Publish changed packages
+        if: needs.build.outputs.version_changed == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CHANGED='${{ needs.build.outputs.changed_packages }}'
+          for PKG in $(echo "$CHANGED" | node -e "let s='';process.stdin.on('data',c=>s+=c);process.stdin.on('end',()=>{try{JSON.parse(s).forEach(p=>console.log(p))}catch{}})"); do
+            echo "Publishing $PKG"
+            (cd "modules/$PKG" && yarn npm publish) || exit 1
+          done
+      - name: Publish all packages (manual)
+        if: github.event_name == 'workflow_dispatch' && needs.build.outputs.version_changed != 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for PKG in xq-common-kit xq-test-utils xq-test-infra xq-test-harness; do
+            echo "Publishing $PKG"
+            (cd "modules/$PKG" && yarn npm publish) || exit 1
+          done
