@@ -1,0 +1,22 @@
+# Reusable workflow templates — platform maintainers
+/.github/workflows/reusable/                    @chauhaidang/xq-harness-maintainers
+
+# Per-module CI/CD — module owners customize their caller workflows
+/.github/workflows/ci-xq-common-kit.yml       @chauhaidang/xq-harness-maintainers
+/.github/workflows/cd-xq-common-kit.yml       @chauhaidang/xq-harness-maintainers
+/.github/workflows/ci-xq-test-utils.yml       @chauhaidang/xq-harness-maintainers
+/.github/workflows/cd-xq-test-utils.yml       @chauhaidang/xq-harness-maintainers
+/.github/workflows/ci-xq-test-infra.yml       @chauhaidang/xq-harness-maintainers
+/.github/workflows/cd-xq-test-infra.yml       @chauhaidang/xq-harness-maintainers
+/.github/workflows/ci-xq-test-harness.yml     @chauhaidang/xq-harness-maintainers
+/.github/workflows/cd-xq-test-harness.yml     @chauhaidang/xq-harness-maintainers
+/.github/workflows/ci-xq-test-harness-e2e-consumer.yml @chauhaidang/xq-harness-maintainers
+/.github/workflows/cd-xq-scripts.yml          @chauhaidang/xq-harness-maintainers
+
+# Module source ownership (optional — replace with real teams)
+/modules/xq-common-kit/                       @chauhaidang/xq-harness-maintainers
+/modules/xq-test-utils/                       @chauhaidang/xq-harness-maintainers
+/modules/xq-test-infra/                       @chauhaidang/xq-harness-maintainers
+/modules/xq-test-harness/                     @chauhaidang/xq-harness-maintainers
+/modules/xq-test-harness-e2e-consumer/         @chauhaidang/xq-harness-maintainers
+/modules/xq-scripts/                            @chauhaidang/xq-harness-maintainers

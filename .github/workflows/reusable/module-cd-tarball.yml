@@ -1,0 +1,62 @@
+name: Module CD (Tarball release)
+
+on:
+  workflow_call:
+    inputs:
+      module:
+        description: Module registry key (e.g. xq-scripts)
+        required: true
+        type: string
+      version_file:
+        description: Path to VERSION file relative to module directory
+        required: false
+        type: string
+        default: VERSION
+      tag_prefix:
+        description: Git tag prefix (e.g. xq-scripts/v)
+        required: false
+        type: string
+        default: xq-scripts/v
+      archive_prefix:
+        description: Archive filename prefix
+        required: false
+        type: string
+        default: xq-scripts-v
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create release tarball
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          MODULE="${{ inputs.module }}"
+          VERSION_FILE="${{ inputs.version_file }}"
+          TAG_PREFIX="${{ inputs.tag_prefix }}"
+          ARCHIVE_PREFIX="${{ inputs.archive_prefix }}"
+          VERSION="$(tr -d '[:space:]' < "modules/${MODULE}/${VERSION_FILE}")"
+          TAG="${TAG_PREFIX}${VERSION}"
+          ARCHIVE="${ARCHIVE_PREFIX}${VERSION}.tar.gz"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists" >&2
+            exit 1
+          fi
+          tar -czf "$ARCHIVE" \
+            --transform "s|^modules/${MODULE}|${ARCHIVE_PREFIX}${VERSION}|" \
+            "modules/${MODULE}"
+          PREV_TAG=$(git tag --list "${TAG_PREFIX}*" --sort=-version:refname | head -n 1)
+          if [ -n "$PREV_TAG" ]; then
+            NOTES=$(git log "${PREV_TAG}..HEAD" --oneline -- "modules/${MODULE}/" | sed 's/^/- /')
+          else
+            NOTES=$(git log --oneline -- "modules/${MODULE}/" | sed 's/^/- /')
+          fi
+          [ -z "$NOTES" ] && NOTES="- Initial release"
+          gh release create "$TAG" --title "${MODULE} v${VERSION}" --notes "$NOTES" "$ARCHIVE"

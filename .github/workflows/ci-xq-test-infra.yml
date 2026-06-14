@@ -1,0 +1,26 @@
+name: CI xq-test-infra
+
+on:
+  pull_request:
+    paths: &paths
+      - modules/xq-test-infra/**
+      - modules/xq-common-kit/**
+      - modules.yaml
+      - scripts/module
+      - scripts/check-xq-version-changes.js
+      - modules/yarnrc.github-packages.yml
+      - .github/workflows/ci-xq-test-infra.yml
+      - .github/workflows/reusable/**
+  push:
+    branches: [main]
+    paths: *paths
+
+concurrency:
+  group: ci-xq-test-infra-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: ./.github/workflows/reusable/module-ci-node.yml
+    with:
+      module: xq-test-infra

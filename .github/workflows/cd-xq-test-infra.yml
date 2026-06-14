@@ -1,0 +1,29 @@
+name: CD xq-test-infra
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - modules/xq-test-infra/package.json
+  workflow_dispatch:
+
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ steps.v.outputs.version_changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check version bump
+        id: v
+        run: node scripts/check-xq-version-changes.js --module xq-test-infra
+
+  publish:
+    needs: version-check
+    if: needs.version-check.outputs.version_changed == 'true' || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/reusable/module-cd-github-packages.yml
+    secrets: inherit
+    with:
+      module: xq-test-infra

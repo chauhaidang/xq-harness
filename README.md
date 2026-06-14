@@ -40,6 +40,8 @@ make test-all          # all xq modules with test_all: true
 Requires [yq](https://github.com/mikefarah/yq) and the toolchain for the module
 you touch (Node 18+, etc.). See [docs/modules/README.md](docs/modules/README.md).
 
+CI/CD is per-module: [docs/github-actions.md](docs/github-actions.md).
+
 ## Repository layout
 
 ```text
@@ -66,5 +68,6 @@ See [docs/HARNESS.md](docs/HARNESS.md).
 | Topic | Doc |
 | --- | --- |
 | Module registry | [docs/modules/README.md](docs/modules/README.md) |
+| CI/CD (per module) | [docs/github-actions.md](docs/github-actions.md) |
 | Package rename (legacy vs harness) | [docs/decisions/0010-xq-harness-package-rename.md](docs/decisions/0010-xq-harness-package-rename.md) |
 | Migration history | [docs/MIGRATION_XQ_TOOLBOX.md](docs/MIGRATION_XQ_TOOLBOX.md) |

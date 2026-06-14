@@ -210,7 +210,7 @@ tarball to copy skills into your project's `.agents/skills/`.
 
 - **Registry:** `https://npm.pkg.github.com` (scope `@chauhaidang`)
 - **Harness lineage:** `xq-harness-*` @ **0.1.0** (fresh line; see ADR 0010)
-- **Publish workflow:** `.github/workflows/publish-xq-packages.yml` on version bumps
+- **Publish:** per-module `cd-<module>.yml` workflows on version bump to `main` (see [docs/github-actions.md](docs/github-actions.md))
 
 ---
 

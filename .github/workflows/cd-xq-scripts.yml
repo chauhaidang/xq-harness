@@ -1,0 +1,16 @@
+name: CD xq-scripts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - modules/xq-scripts/VERSION
+      - modules/xq-scripts/**
+  workflow_dispatch:
+
+jobs:
+  release:
+    uses: ./.github/workflows/reusable/module-cd-tarball.yml
+    secrets: inherit
+    with:
+      module: xq-scripts

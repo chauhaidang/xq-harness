@@ -42,7 +42,7 @@ make test-all
 
 ## Publishing
 
-Workflow: `.github/workflows/publish-xq-packages.yml`
+Workflows: per-module `cd-*.yml` (see [docs/github-actions.md](../github-actions.md))
 
 Version detection: `scripts/check-xq-version-changes.js`
 
