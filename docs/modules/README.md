@@ -92,8 +92,8 @@ Commit the updated `ios-example.xcodeproj`.
 ## GitHub Actions
 
 Each publishable module has its own **CI** (`ci-<module>.yml`) and **CD**
-(`cd-<module>.yml`) workflow. Shared bootstrap lives in reusable templates under
-`.github/workflows/reusable/`.
+(`cd-<module>.yml`) workflow. Shared bootstrap lives in reusable `module-*.yml`
+templates at the top level of `.github/workflows/`.
 
 See [docs/github-actions.md](../github-actions.md) for template inputs, path
 filters, and how module owners add pipelines.

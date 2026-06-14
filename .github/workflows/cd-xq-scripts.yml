@@ -10,7 +10,7 @@ on:
 
 jobs:
   release:
-    uses: ./.github/workflows/reusable/module-cd-tarball.yml
+    uses: ./.github/workflows/module-cd-tarball.yml
     secrets: inherit
     with:
       module: xq-scripts

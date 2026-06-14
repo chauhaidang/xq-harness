@@ -1,5 +1,7 @@
 # Reusable workflow templates — platform maintainers
-/.github/workflows/reusable/                    @chauhaidang/xq-harness-maintainers
+/.github/workflows/module-ci-node.yml              @chauhaidang/xq-harness-maintainers
+/.github/workflows/module-cd-github-packages.yml   @chauhaidang/xq-harness-maintainers
+/.github/workflows/module-cd-tarball.yml           @chauhaidang/xq-harness-maintainers
 
 # Per-module CI/CD — module owners customize their caller workflows
 /.github/workflows/ci-xq-common-kit.yml       @chauhaidang/xq-harness-maintainers

@@ -10,7 +10,7 @@ on:
       - scripts/check-xq-version-changes.js
       - modules/yarnrc.github-packages.yml
       - .github/workflows/ci-xq-test-infra.yml
-      - .github/workflows/reusable/**
+      - .github/workflows/module-*.yml
   push:
     branches: [main]
     paths: *paths
@@ -21,6 +21,6 @@ concurrency:
 
 jobs:
   ci:
-    uses: ./.github/workflows/reusable/module-ci-node.yml
+    uses: ./.github/workflows/module-ci-node.yml
     with:
       module: xq-test-infra
