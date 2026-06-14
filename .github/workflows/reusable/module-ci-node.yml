@@ -1,0 +1,44 @@
+name: Module CI (Node)
+
+on:
+  workflow_call:
+    inputs:
+      module:
+        description: Module registry key (e.g. xq-common-kit)
+        required: true
+        type: string
+      node_version:
+        description: Node.js version
+        required: false
+        type: string
+        default: "22"
+      playwright_skip_browser:
+        description: Set PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node_version }}
+          registry-url: https://npm.pkg.github.com
+          scope: "@chauhaidang"
+
+      - run: corepack enable
+
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.45.1/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: CI module
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: ${{ inputs.playwright_skip_browser && '1' || '' }}
+        run: ./scripts/module ci ${{ inputs.module }}

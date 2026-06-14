@@ -1,0 +1,27 @@
+name: CI xq-test-utils
+
+on:
+  pull_request:
+    paths: &paths
+      - modules/xq-test-utils/**
+      - modules/xq-common-kit/**
+      - modules.yaml
+      - scripts/module
+      - scripts/check-xq-version-changes.js
+      - modules/tsconfig.base.json
+      - modules/yarnrc.github-packages.yml
+      - .github/workflows/ci-xq-test-utils.yml
+      - .github/workflows/reusable/**
+  push:
+    branches: [main]
+    paths: *paths
+
+concurrency:
+  group: ci-xq-test-utils-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: ./.github/workflows/reusable/module-ci-node.yml
+    with:
+      module: xq-test-utils

@@ -1,0 +1,27 @@
+name: CI xq-test-harness
+
+on:
+  pull_request:
+    paths: &paths
+      - modules/xq-test-harness/**
+      - modules.yaml
+      - scripts/module
+      - scripts/check-xq-version-changes.js
+      - modules/tsconfig.base.json
+      - modules/yarnrc.github-packages.yml
+      - .github/workflows/ci-xq-test-harness.yml
+      - .github/workflows/reusable/**
+  push:
+    branches: [main]
+    paths: *paths
+
+concurrency:
+  group: ci-xq-test-harness-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: ./.github/workflows/reusable/module-ci-node.yml
+    with:
+      module: xq-test-harness
+      playwright_skip_browser: true

@@ -89,9 +89,18 @@ xcodegen generate
 
 Commit the updated `ios-example.xcodeproj`.
 
+## GitHub Actions
+
+Each publishable module has its own **CI** (`ci-<module>.yml`) and **CD**
+(`cd-<module>.yml`) workflow. Shared bootstrap lives in reusable templates under
+`.github/workflows/reusable/`.
+
+See [docs/github-actions.md](../github-actions.md) for template inputs, path
+filters, and how module owners add pipelines.
+
 ## Versioning
 
 Each module version is declared in `modules.yaml` and mirrored in the native
 project file (`package.json`, `pyproject.toml`, Gradle `version`, Xcode
-marketing version). Publishable XQ packages use `yarn npm publish` from their
-module directory when CI detects a version bump.
+marketing version). Publishable XQ packages use per-module `cd-<module>.yml`
+workflows; CD runs on `package.json` version bump to `main` or manual dispatch.

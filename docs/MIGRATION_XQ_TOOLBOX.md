@@ -104,7 +104,7 @@ Port or replace legacy workflows:
 | Legacy | Harness action |
 | --- | --- |
 | `.github/workflows/publish.yml` | Move to xq-harness root or call `./scripts/module ci xq-toolbox` |
-| `release-xq-scripts.yml` | Keep tarball release path; needs `GH_TOKEN` |
+| `release-xq-scripts.yml` | Replaced by `cd-xq-scripts.yml` tarball workflow; needs `GH_TOKEN` |
 | Missing `e2e-tests.yml` | Add when todo-app demo is complete |
 
 **Secrets required:**
