@@ -36,20 +36,22 @@ Scaffold modules for polyglot layout reference. Not included in CI or
 ## XQ packages (Level C — independent)
 
 Each `modules/xq-*` package has its own `yarn.lock` and `.yarnrc.yml` for
-GitHub Packages. Internal dependencies use **published semver**, not workspace
-links.
+GitHub Packages. **Harness-lineage** npm names use the `xq-harness-*` prefix
+(ADR 0010). Monorepo sibling deps use Yarn `portal:`; external consumers use
+semver after publish.
 
-| Module | Version | Registry dep |
+| Module | Version | npm package / dep |
 | --- | --- | --- |
-| `xq-common-kit` | 1.0.12 | — |
-| `xq-test-utils` | 2.0.1 | `@chauhaidang/xq-common-kit` ^1.0.12 |
-| `xq-test-infra` | 1.0.3 | `@chauhaidang/xq-common-kit` ^1.0.12 |
-| `xq-test-harness` | 0.2.0 | — |
-| `xq-test-harness-e2e-consumer` | 0.0.0 | `@chauhaidang/xq-test-harness` ^0.2.0 |
+| `xq-common-kit` | 0.1.0 | `@chauhaidang/xq-harness-common-kit` |
+| `xq-test-utils` | 0.1.0 | `portal:../xq-common-kit` |
+| `xq-test-infra` | 0.1.0 | `portal:../xq-common-kit` |
+| `xq-test-harness` | 0.1.0 | `@chauhaidang/xq-harness-test-harness` |
+| `xq-test-harness-e2e-consumer` | 0.0.0 | `file:../xq-test-harness` |
 | `xq-scripts` | VERSION file | tarball release only |
 
-**Prerequisites:** Node ≥ 18, Corepack, `NODE_AUTH_TOKEN` with `read:packages`
-when installing modules that depend on other `@chauhaidang/*` packages.
+**Prerequisites:** Node ≥ 18, Corepack. `NODE_AUTH_TOKEN` only needed when
+installing published `@chauhaidang/xq-harness-*` from GitHub Packages (not for
+`portal:` monorepo CI).
 
 Shared TS config: `modules/tsconfig.base.json`. Shared registry template:
 `modules/yarnrc.github-packages.yml`.
@@ -66,7 +68,7 @@ Packages, then bump semver in downstream `package.json` files.
 ## Working on one module
 
 ```bash
-cd modules/xq-common-kit
+cd modules/xq-harness-common-kit
 yarn install --immutable && yarn test
 ```
 

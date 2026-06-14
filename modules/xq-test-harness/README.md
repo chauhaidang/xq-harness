@@ -1,8 +1,8 @@
-# `@chauhaidang/xq-test-harness`
+# `@chauhaidang/xq-harness-test-harness`
 
 Project overview and architecture for the XQ **Playwright API + Gherkin BDD** harness. The package wraps [`playwright-bdd`](https://github.com/vitalets/playwright-bdd) and [`@playwright/test`](https://playwright.dev) so backend black-box tests can use a single Yarn dependency, pre-bound step keywords, and a shared Playwright config helper.
 
-**Using the harness in another repo?** See [docs/CONSUMER-GUIDE.md](docs/CONSUMER-GUIDE.md) and the agent skill [skills/xq-test-harness-bdd/SKILL.md](skills/xq-test-harness-bdd/SKILL.md) (install, VS Code, CI, scripts).
+**Using the harness in another repo?** See [docs/CONSUMER-GUIDE.md](docs/CONSUMER-GUIDE.md) and the agent skill [skills/xq-harness-test-harness-bdd/SKILL.md](skills/xq-harness-test-harness-bdd/SKILL.md) (install, VS Code, CI, scripts).
 
 ---
 
@@ -32,7 +32,7 @@ flowchart TB
     pwcfg[playwright.config.ts]
   end
   subgraph harness [Published harness]
-    main["@chauhaidang/xq-test-harness"]
+    main["@chauhaidang/xq-harness-test-harness"]
     cfg["/config"]
     adv["/advanced"]
     base[fixtures/base.ts]
@@ -75,7 +75,7 @@ flowchart TB
 ## Package layout
 
 ```text
-packages/xq-test-harness/
+packages/xq-harness-test-harness/
 ├── src/                          # Published library (tsc → dist/)
 │   ├── fixtures/base.ts          # Canonical test + xq fixture
 │   ├── bdd-bound.ts              # createBdd(test) once → Tier A keywords
@@ -88,12 +88,12 @@ packages/xq-test-harness/
 ├── tests/                        # Contract tests (config merge)
 ├── scripts/mock-http-server.mjs  # Dogfood webServer target
 ├── docs/CONSUMER-GUIDE.md        # External consumer setup
-├── skills/xq-test-harness-bdd/   # Agent-oriented setup checklist
+├── skills/xq-harness-test-harness-bdd/   # Agent-oriented setup checklist
 ├── TEST-PLAN.md                  # Manual / regression tiers
 └── CHANGELOG.md
 ```
 
-Monorepo sibling: **`packages/xq-test-harness-e2e-consumer/`** (private) depends only on `workspace:*` harness and proves the single-dependency consumer story (mock on a different port than dogfood).
+Monorepo sibling: **`packages/xq-harness-test-harness-e2e-consumer/`** (private) depends only on `workspace:*` harness and proves the single-dependency consumer story (mock on a different port than dogfood).
 
 ---
 
@@ -147,9 +147,9 @@ Monorepo sibling: **`packages/xq-test-harness-e2e-consumer/`** (private) depends
 
 | Subpath | Role |
 |---------|------|
-| `@chauhaidang/xq-test-harness` | `test`, `expect`, `Given`, `When`, `Then`, `Step`, `XQFixture`, `XQApiClients` |
-| `@chauhaidang/xq-test-harness/config` | `defineApiHarnessConfig`, `mergeApiHarnessPlaywrightConfig`, `defineBddProject` |
-| `@chauhaidang/xq-test-harness/advanced` | `mergeTests`, `createHarnessBdd` |
+| `@chauhaidang/xq-harness-test-harness` | `test`, `expect`, `Given`, `When`, `Then`, `Step`, `XQFixture`, `XQApiClients` |
+| `@chauhaidang/xq-harness-test-harness/config` | `defineApiHarnessConfig`, `mergeApiHarnessPlaywrightConfig`, `defineBddProject` |
+| `@chauhaidang/xq-harness-test-harness/advanced` | `mergeTests`, `createHarnessBdd` |
 
 Build: **`yarn build`** (`tsc` → `dist/`). Published **`files`**: `dist`, `README.md`, `CHANGELOG.md`, `LICENSE`, `docs`, `skills`.
 
@@ -161,7 +161,7 @@ Build: **`yarn build`** (`tsc` → `dist/`). Published **`files`**: `dist`, `REA
 |-------|----------|---------|
 | **Contract** | `tests/*.contract.spec.ts` | Config merge behavior without full BDD run |
 | **Dogfood** | `bdd-dogfood/` + `playwright.config.ts` | Tier A steps against mock HTTP (port **19999**) |
-| **E2E consumer** | `packages/xq-test-harness-e2e-consumer/` | External-style layout; only `workspace:*` harness dep (port **19998**) |
+| **E2E consumer** | `packages/xq-harness-test-harness-e2e-consumer/` | External-style layout; only `workspace:*` harness dep (port **19998**) |
 
 From repo root: `task build:xq-test-harness`, `task test:xq-test-harness`, `task test:xq-test-harness-e2e-consumer`, `task lint:xq-test-harness`.
 
@@ -178,6 +178,6 @@ Bump **`version`** in `package.json` on `main`; CI [`scripts/check-version-chang
 | Document | Audience |
 |----------|----------|
 | [docs/CONSUMER-GUIDE.md](docs/CONSUMER-GUIDE.md) | Teams adopting the harness (`bdd-world.ts`, `XQApiClients`, `xq.apis`) |
-| [skills/xq-test-harness-bdd/SKILL.md](skills/xq-test-harness-bdd/SKILL.md) | Agents (full setup: registry → VS Code → CI) |
+| [skills/xq-harness-test-harness-bdd/SKILL.md](skills/xq-harness-test-harness-bdd/SKILL.md) | Agents (full setup: registry → VS Code → CI) |
 | [TEST-PLAN.md](TEST-PLAN.md) | QA / regression tiers |
 | [CHANGELOG.md](CHANGELOG.md) | Release notes |

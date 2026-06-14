@@ -35,7 +35,7 @@ export type {
  * internally — consumers never import or reference Detox directly.
  *
  * @example
- * import { screen } from '@chauhaidang/xq-test-utils';
+ * import { screen } from '@chauhaidang/xq-harness-test-utils';
  *
  * // Native: fill in a form and submit
  * await screen.element(screen.by.id('email-input')).typeText('user@example.com');

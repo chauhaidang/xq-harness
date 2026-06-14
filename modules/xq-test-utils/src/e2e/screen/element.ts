@@ -1,4 +1,4 @@
-import { logger } from '@chauhaidang/xq-common-kit';
+import { logger } from '@chauhaidang/xq-harness-common-kit';
 import type { Matcher, ElementActions, ScrollDirection, ScrollEdge, SwipeSpeed } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -9,7 +9,7 @@ const _el = (matcher: Matcher): any => (globalThis as any).element(matcher);
  * All actions are logged via xq-common-kit logger for debugging.
  *
  * @example
- * import { screen } from '@chauhaidang/xq-test-utils';
+ * import { screen } from '@chauhaidang/xq-harness-test-utils';
  *
  * await screen.element(screen.by.id('submit-btn')).tap();
  * await screen.element(screen.by.id('email-input')).typeText('user@example.com');

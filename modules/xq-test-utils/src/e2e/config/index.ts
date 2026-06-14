@@ -1,5 +1,5 @@
 import type { Config } from 'jest';
-import { logger } from '@chauhaidang/xq-common-kit';
+import { logger } from '@chauhaidang/xq-harness-common-kit';
 
 const DEFAULT_SIMULATOR = 'iPhone 15';
 const DEFAULT_JEST_CONFIG = 'e2e/jest.config.js';
@@ -28,7 +28,7 @@ export interface DetoxConfigOptions {
  *
  * @example
  * // .detoxrc.js
- * const { createDetoxConfig } = require('@chauhaidang/xq-test-utils');
+ * const { createDetoxConfig } = require('@chauhaidang/xq-harness-test-utils');
  * module.exports = createDetoxConfig('ios/build/Release-iphonesimulator/MyApp.app', {
  *   simulator: 'iPhone 16 Pro',
  * });
@@ -92,7 +92,7 @@ export interface E2eJestConfigOptions {
  *
  * @example
  * // e2e/jest.config.js
- * const { createE2eJestConfig } = require('@chauhaidang/xq-test-utils');
+ * const { createE2eJestConfig } = require('@chauhaidang/xq-harness-test-utils');
  * module.exports = createE2eJestConfig();
  */
 export function createE2eJestConfig(options: E2eJestConfigOptions = {}): Config {

@@ -1,14 +1,14 @@
 ---
 name: xq-test-harness-bdd
 description: >-
-  End-to-end setup for @chauhaidang/xq-test-harness: GitHub Packages auth, Yarn deps,
+  End-to-end setup for @chauhaidang/xq-harness-test-harness: GitHub Packages auth, Yarn deps,
   VS Code/Cucumber step globs, bdd-world, defineApiHarnessConfig, bddgen/playwright scripts,
   gitignore, CI env, and advanced fixture patterns.
 ---
 
 # Skill: xq-test-harness BDD (consumer setup)
 
-Use this skill when you are **greenfielding or migrating** a repo to **Playwright API + Gherkin** using **`@chauhaidang/xq-test-harness`** with **one** primary harness dependency (Playwright and playwright-bdd ship transitively inside the harness).
+Use this skill when you are **greenfielding or migrating** a repo to **Playwright API + Gherkin** using **`@chauhaidang/xq-harness-test-harness`** with **one** primary harness dependency (Playwright and playwright-bdd ship transitively inside the harness).
 
 ## When to use
 
@@ -38,7 +38,7 @@ Use this skill when you are **greenfielding or migrating** a repo to **Playwrigh
 **Install** (harness only for the stack; keep authoring tools explicit):
 
 ```bash
-yarn add -D @chauhaidang/xq-test-harness typescript @types/node
+yarn add -D @chauhaidang/xq-harness-test-harness typescript @types/node
 ```
 
 Do **not** add `@playwright/test` or `playwright-bdd` as direct dependencies unless you accept duplicate installs and version skew.
@@ -90,8 +90,8 @@ Install an extension that supports **Cucumber autocomplete** using workspace set
     "features/**/*.js",
     "steps/**/*.ts",
     "steps/**/*.js",
-    "node_modules/@chauhaidang/xq-test-harness/dist/**/*.js",
-    "node_modules/@chauhaidang/xq-test-harness/dist/**/*.ts"
+    "node_modules/@chauhaidang/xq-harness-test-harness/dist/**/*.js",
+    "node_modules/@chauhaidang/xq-harness-test-harness/dist/**/*.ts"
   ],
   "cucumberautocomplete.strictGherkinCompletion": true
 }
@@ -127,13 +127,13 @@ Adjust the Cucumber extension id if your team standardizes on a different market
 **`bdd-world.ts`** (repo root next to config):
 
 ```typescript
-export { test, expect } from "@chauhaidang/xq-test-harness";
+export { test, expect } from "@chauhaidang/xq-harness-test-harness";
 ```
 
 **`playwright.config.ts`:**
 
 ```typescript
-import { defineApiHarnessConfig } from "@chauhaidang/xq-test-harness/config";
+import { defineApiHarnessConfig } from "@chauhaidang/xq-harness-test-harness/config";
 
 export default defineApiHarnessConfig({
   bdd: {
@@ -163,10 +163,10 @@ export default defineApiHarnessConfig({
 The harness does **not** provide SDK instances. Put **`declare module`** augmentation and **`test.extend`** runtime wiring in one **`bdd-world.ts`**. Set **`bdd.importTestFrom: './bdd-world.ts'`**.
 
 ```typescript
-import { test as base, expect } from "@chauhaidang/xq-test-harness";
+import { test as base, expect } from "@chauhaidang/xq-harness-test-harness";
 import { ReadServiceApi } from "@chauhaidang/read-service-api";
 
-declare module "@chauhaidang/xq-test-harness" {
+declare module "@chauhaidang/xq-harness-test-harness" {
   interface XQApiClients {
     read: ReadServiceApi;
   }
@@ -192,7 +192,7 @@ Full copy-paste blocks: **`docs/CONSUMER-GUIDE.md`** section 2.
 ## 7. Step definitions (Tier A)
 
 ```typescript
-import { When, Then, expect } from "@chauhaidang/xq-test-harness";
+import { When, Then, expect } from "@chauhaidang/xq-harness-test-harness";
 
 When("I call ping", async ({ request }) => {
   const res = await request.get("/ping");
@@ -200,7 +200,7 @@ When("I call ping", async ({ request }) => {
 });
 ```
 
-Imports must come from **`@chauhaidang/xq-test-harness`** for normal flows (see **`docs/CONSUMER-GUIDE.md`**).
+Imports must come from **`@chauhaidang/xq-harness-test-harness`** for normal flows (see **`docs/CONSUMER-GUIDE.md`**).
 
 ---
 
@@ -248,6 +248,6 @@ Expect **`bddgen`** to create **`.features-gen/`** and Playwright to run the **b
 
 ## Rules (agent)
 
-- Prefer **Tier A** imports from `@chauhaidang/xq-test-harness`; follow **`docs/CONSUMER-GUIDE.md`** for **`bdd-world.ts`**, **`XQApiClients`**, and **`xq.apis`**.
+- Prefer **Tier A** imports from `@chauhaidang/xq-harness-test-harness`; follow **`docs/CONSUMER-GUIDE.md`** for **`bdd-world.ts`**, **`XQApiClients`**, and **`xq.apis`**.
 - Add **`bdd-world.ts`** (types + client instances) and **`bdd.importTestFrom: './bdd-world.ts'`** for every consumer.
 - Add **VS Code** step globs (section 4) whenever the user uses Cucumber autocomplete; without **`node_modules/.../dist/`** globs, cross-package navigation may be incomplete for the installed harness.

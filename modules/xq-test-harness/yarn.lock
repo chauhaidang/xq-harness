@@ -5,9 +5,9 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@chauhaidang/xq-test-harness@workspace:.":
+"@chauhaidang/xq-harness-test-harness@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@chauhaidang/xq-test-harness@workspace:."
+  resolution: "@chauhaidang/xq-harness-test-harness@workspace:."
   dependencies:
     "@playwright/test": "npm:^1.60.0"
     "@types/node": "npm:^24.10.1"

@@ -1,18 +1,18 @@
 {
-  "name": "@chauhaidang/xq-test-harness-e2e-consumer",
+  "name": "@chauhaidang/xq-harness-test-harness-e2e-consumer",
   "version": "0.0.0",
   "private": true,
-  "description": "Exercises @chauhaidang/xq-test-harness like an external consumer (single published dependency)",
+  "description": "Exercises @chauhaidang/xq-harness-test-harness like an external consumer (single harness dependency)",
   "scripts": {
     "build": "true",
     "test": "yarn test:bdd",
-    "test:bdd": "yarn exec bddgen -c playwright.config.ts && yarn exec playwright test -c playwright.config.ts",
-    "report:show": "yarn exec playwright show-report playwright-report",
+    "test:bdd": "./node_modules/.bin/bddgen -c playwright.config.ts && ./node_modules/.bin/playwright test -c playwright.config.ts",
+    "report:show": "./node_modules/.bin/playwright show-report playwright-report",
     "lint": "eslint . --ext .ts",
     "clean": "rm -rf .features-gen test-results playwright-report"
   },
   "dependencies": {
-    "@chauhaidang/xq-test-harness": "^0.2.0"
+    "@chauhaidang/xq-harness-test-harness": "file:../xq-test-harness"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
@@ -28,7 +28,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chauhaidang/xq-harness.git",
-    "directory": "modules/xq-test-harness-e2e-consumer"
+    "directory": "modules/xq-harness-test-harness-e2e-consumer"
   },
   "license": "Apache-2.0"
 }

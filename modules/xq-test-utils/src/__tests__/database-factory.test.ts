@@ -14,7 +14,7 @@ jest.mock('pg', () => ({
     })),
 }));
 
-jest.mock('@chauhaidang/xq-common-kit', () => ({
+jest.mock('@chauhaidang/xq-harness-common-kit', () => ({
     logger: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
 }));
 

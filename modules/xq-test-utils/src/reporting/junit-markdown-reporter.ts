@@ -6,7 +6,7 @@
  */
 
 import { readFileSync, writeFileSync } from 'node:fs';
-import { generateMarkdownFromJunit } from '@chauhaidang/xq-common-kit';
+import { generateMarkdownFromJunit } from '@chauhaidang/xq-harness-common-kit';
 import { GenerateTestReportOptions, ITestReporter } from './types';
 
 /**

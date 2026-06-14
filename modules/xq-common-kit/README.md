@@ -1,8 +1,8 @@
-# @chauhaidang/xq-common-kit
+# @chauhaidang/xq-harness-common-kit
 
 Lightweight TypeScript utility library for XQ projects. Part of the `xq-toolbox` monorepo.
 
-**Package**: `@chauhaidang/xq-common-kit` (v1.0.12)  
+**Package**: `@chauhaidang/xq-harness-common-kit` (v1.0.12)  
 **Entry point**: `dist/index.js` (types: `dist/index.d.ts`)  
 **License**: Apache-2.0  
 **Registry**: GitHub Packages (`https://npm.pkg.github.com`)
@@ -12,7 +12,7 @@ Lightweight TypeScript utility library for XQ projects. Part of the `xq-toolbox`
 ## Directory Structure
 
 ```
-packages/xq-common-kit/
+packages/xq-harness-common-kit/
 ├── src/
 │   ├── index.ts            # Barrel export — re-exports all public API
 │   ├── config.ts            # getConfig()
@@ -60,7 +60,7 @@ import {
   LOG_LEVELS,
   type Logger,
   generateMarkdownFromJunit
-} from '@chauhaidang/xq-common-kit';
+} from '@chauhaidang/xq-harness-common-kit';
 ```
 
 ### `getConfig()`
@@ -193,7 +193,7 @@ async function generateMarkdownFromJunit(xmlContent: string): Promise<string>
 
 ## Development Commands
 
-All commands should be run from **this package directory** (`packages/xq-common-kit/`):
+All commands should be run from **this package directory** (`packages/xq-harness-common-kit/`):
 
 | Command | Description |
 |---|---|
@@ -222,7 +222,7 @@ Requires `.npmrc` configuration for GitHub Packages:
 Then install:
 
 ```sh
-npm install @chauhaidang/xq-common-kit
+npm install @chauhaidang/xq-harness-common-kit
 ```
 
 ---

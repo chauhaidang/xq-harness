@@ -16,7 +16,7 @@ jest.mock('node:fs', () => ({
 // ---------- mock xq-common-kit ----------
 const mockGenerateMarkdownFromJunit = jest.fn();
 
-jest.mock('@chauhaidang/xq-common-kit', () => ({
+jest.mock('@chauhaidang/xq-harness-common-kit', () => ({
     generateMarkdownFromJunit: (...args: any[]) => mockGenerateMarkdownFromJunit(...args),
 }));
 

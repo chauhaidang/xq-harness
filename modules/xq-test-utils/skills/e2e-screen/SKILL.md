@@ -2,7 +2,7 @@
 name: e2e-screen
 description: >
   Interact with UI elements in Detox E2E tests using the screen object from
-  @chauhaidang/xq-test-utils. Use when you need to select elements, perform
+  @chauhaidang/xq-harness-test-utils. Use when you need to select elements, perform
   actions (tap, type, scroll), assert state, or wait for conditions — for both
   native elements and web-view (WebView) elements.
 ---
@@ -21,7 +21,7 @@ internally — consumers never import or reference Detox directly.
 ## Import
 
 ```ts
-import { screen } from '@chauhaidang/xq-test-utils';
+import { screen } from '@chauhaidang/xq-harness-test-utils';
 const { by, webBy } = screen;
 ```
 
@@ -206,7 +206,7 @@ await screen.webExpect(webBy.cssSelector('.spinner')).not.toExist();
 ## Complete test example
 
 ```ts
-import { App, screen } from '@chauhaidang/xq-test-utils';
+import { App, screen } from '@chauhaidang/xq-harness-test-utils';
 const { by, webBy } = screen;
 
 describe('Login flow', () => {

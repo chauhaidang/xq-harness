@@ -1,6 +1,6 @@
 {
-  "name": "@chauhaidang/xq-common-kit",
-  "version": "1.0.12",
+  "name": "@chauhaidang/xq-harness-common-kit",
+  "version": "0.1.0",
   "description": "TypeScript common kit for XQ applications",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
@@ -28,7 +28,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chauhaidang/xq-harness.git",
-    "directory": "modules/xq-common-kit"
+    "directory": "modules/xq-harness-common-kit"
   },
   "packageManager": "yarn@4.13.0",
   "engines": {

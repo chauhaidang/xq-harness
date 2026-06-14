@@ -381,21 +381,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chauhaidang/xq-common-kit@npm:^1.0.12":
-  version: 1.0.12
-  resolution: "@chauhaidang/xq-common-kit@npm:1.0.12::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40chauhaidang%2Fxq-common-kit%2F1.0.12%2F10adc5d3042d1b1a32e0dbc21e6b13aa9c6ee886"
+"@chauhaidang/xq-harness-common-kit@portal:../xq-common-kit::locator=%40chauhaidang%2Fxq-harness-test-utils%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@chauhaidang/xq-harness-common-kit@portal:../xq-common-kit::locator=%40chauhaidang%2Fxq-harness-test-utils%40workspace%3A."
   dependencies:
     js-yaml: "npm:^4.1.0"
     xml2js: "npm:^0.6.2"
-  checksum: 10c0/93518466f294c75df55b496bee53a2a3a184dd73bcaad11a25b8771adab3ffa0723ac6425e4fd760ee90d5b20a913a1330a22e909c68765e2905d5b06d370ca8
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@chauhaidang/xq-test-utils@workspace:.":
+"@chauhaidang/xq-harness-test-utils@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@chauhaidang/xq-test-utils@workspace:."
+  resolution: "@chauhaidang/xq-harness-test-utils@workspace:."
   dependencies:
-    "@chauhaidang/xq-common-kit": "npm:^1.0.12"
+    "@chauhaidang/xq-harness-common-kit": "portal:../xq-common-kit"
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^24.10.1"
     "@types/pg": "npm:^8.16.0"

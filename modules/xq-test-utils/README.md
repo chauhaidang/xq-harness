@@ -1,4 +1,4 @@
-# @chauhaidang/xq-test-utils
+# @chauhaidang/xq-harness-test-utils
 
 Test utilities for XQ component and integration tests: PostgreSQL database helper and wait-for-service.
 
@@ -18,14 +18,14 @@ This package is structured into several core modules to provide organized test u
 ## Installation
 
 ```sh
-npm install @chauhaidang/xq-test-utils
+npm install @chauhaidang/xq-harness-test-utils
 ```
 
 For use from the xq-toolbox monorepo, link the workspace package:
 
 ```json
 "devDependencies": {
-  "@chauhaidang/xq-test-utils": "file:../xq-toolbox/packages/xq-test-utils"
+  "@chauhaidang/xq-harness-test-utils": "file:../xq-toolbox/packages/xq-harness-test-utils"
 }
 ```
 
@@ -36,7 +36,7 @@ For use from the xq-toolbox monorepo, link the workspace package:
 ### Database (PostgreSQL)
 
 ```typescript
-import { createDatabaseHelper } from '@chauhaidang/xq-test-utils';
+import { createDatabaseHelper } from '@chauhaidang/xq-harness-test-utils';
 
 const db = createDatabaseHelper();
 await db.connect();
@@ -53,7 +53,7 @@ Configuration is read from the environment (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB
 ### Service Readiness
 
 ```typescript
-import { waitForService } from '@chauhaidang/xq-test-utils';
+import { waitForService } from '@chauhaidang/xq-harness-test-utils';
 
 // In Jest beforeAll or similar
 await waitForService('http://localhost:8080/health', {
@@ -65,7 +65,7 @@ await waitForService('http://localhost:8080/health', {
 ### Reporting
 
 ```typescript
-import { generateTestReport } from '@chauhaidang/xq-test-utils';
+import { generateTestReport } from '@chauhaidang/xq-harness-test-utils';
 
 // In Jest globalTeardown or after all tests
 await generateTestReport({
@@ -101,7 +101,7 @@ await generateTestReport({
 
 ```javascript
 // jest.config.component.js (in your service)
-const { getComponentTestConfig } = require('@chauhaidang/xq-test-utils');
+const { getComponentTestConfig } = require('@chauhaidang/xq-harness-test-utils');
 
 module.exports = getComponentTestConfig({
   rootDir: './',

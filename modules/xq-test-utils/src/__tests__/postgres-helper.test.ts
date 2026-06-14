@@ -22,7 +22,7 @@ jest.mock('pg', () => ({
 }));
 
 // ---------- mock logger ----------
-jest.mock('@chauhaidang/xq-common-kit', () => ({
+jest.mock('@chauhaidang/xq-harness-common-kit', () => ({
     logger: {
         info: jest.fn(),
         warn: jest.fn(),
@@ -64,7 +64,7 @@ describe('PostgresDatabaseHelper', () => {
             await db.connect();
 
             // eslint-disable-next-line @typescript-eslint/no-require-imports
-            const { logger } = require('@chauhaidang/xq-common-kit');
+            const { logger } = require('@chauhaidang/xq-harness-common-kit');
             await db.connect();
 
             expect(logger.warn).toHaveBeenCalledWith('Database pool already initialized');

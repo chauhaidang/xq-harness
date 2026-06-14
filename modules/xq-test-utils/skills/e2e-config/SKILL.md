@@ -2,7 +2,7 @@
 name: e2e-config
 description: >
   Generate Detox and Jest configuration for iOS E2E tests using
-  createDetoxConfig and createE2eJestConfig from @chauhaidang/xq-test-utils.
+  createDetoxConfig and createE2eJestConfig from @chauhaidang/xq-harness-test-utils.
   Use when setting up .detoxrc.js or e2e/jest.config.js in a React Native project.
 ---
 
@@ -41,7 +41,7 @@ Generates a complete Detox configuration object for iOS simulator.
 
 ```js
 // .detoxrc.js
-const { createDetoxConfig } = require('@chauhaidang/xq-test-utils');
+const { createDetoxConfig } = require('@chauhaidang/xq-harness-test-utils');
 
 module.exports = createDetoxConfig(
   'ios/build/Build/Products/Release-iphonesimulator/MyApp.app',
@@ -75,7 +75,7 @@ Generates a Jest configuration tuned for Detox E2E tests.
 
 ```js
 // e2e/jest.config.js
-const { createE2eJestConfig } = require('@chauhaidang/xq-test-utils');
+const { createE2eJestConfig } = require('@chauhaidang/xq-harness-test-utils');
 
 module.exports = createE2eJestConfig({
   testMatch: ['<rootDir>/e2e/**/*.e2e.ts'],
@@ -101,7 +101,7 @@ my-rn-app/
 **Install**
 
 ```bash
-yarn add --dev @chauhaidang/xq-test-utils detox jest-circus ts-jest
+yarn add --dev @chauhaidang/xq-harness-test-utils detox jest-circus ts-jest
 ```
 
 **Run**
@@ -120,6 +120,6 @@ detox test --configuration ios.sim.release
 - Do not add `apps`, `devices`, or `configurations` manually — that is handled
   internally.
 - Use `createE2eJestConfig` for `e2e/jest.config.js` only; use
-  `getComponentTestConfig` (also from `@chauhaidang/xq-test-utils`) for
+  `getComponentTestConfig` (also from `@chauhaidang/xq-harness-test-utils`) for
   component/integration test configs.
 - Do not import from `detox` directly — all configuration is through this API.

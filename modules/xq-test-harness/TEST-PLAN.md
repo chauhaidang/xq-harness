@@ -1,4 +1,4 @@
-# Test plan: `@chauhaidang/xq-test-harness`
+# Test plan: `@chauhaidang/xq-harness-test-harness`
 
 ## Tier A — smoke
 
@@ -20,4 +20,4 @@
 | ID | Case | Expect |
 |----|------|--------|
 | C1 | Version bump on `main` | `check-version-changes` lists `xq-test-harness`; publish job can `yarn npm publish` |
-| C2 | Consumer install doc | Single `@chauhaidang/xq-test-harness` devDependency documented |
+| C2 | Consumer install doc | Single `@chauhaidang/xq-harness-test-harness` devDependency documented |

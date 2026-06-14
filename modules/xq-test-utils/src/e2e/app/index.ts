@@ -1,4 +1,4 @@
-import { logger } from '@chauhaidang/xq-common-kit';
+import { logger } from '@chauhaidang/xq-harness-common-kit';
 
 export interface LaunchOptions {
   /**
@@ -33,7 +33,7 @@ const _device = (): any => (globalThis as any).device;
  * All methods are async and log their actions via xq-common-kit logger.
  *
  * @example
- * import { App } from '@chauhaidang/xq-test-utils';
+ * import { App } from '@chauhaidang/xq-harness-test-utils';
  *
  * beforeAll(async () => {
  *   await App.launch({ newInstance: true });

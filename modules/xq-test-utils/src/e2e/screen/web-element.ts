@@ -1,4 +1,4 @@
-import { logger } from '@chauhaidang/xq-common-kit';
+import { logger } from '@chauhaidang/xq-harness-common-kit';
 import type { WebMatcher, WebElementActions, WebElementExpectations } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,7 +11,7 @@ const _webEl = (matcher: WebMatcher): any => (globalThis as any).web.element(mat
  * Use `screen.webBy.*` to build the matcher, then pass it here.
  *
  * @example
- * import { screen } from '@chauhaidang/xq-test-utils';
+ * import { screen } from '@chauhaidang/xq-harness-test-utils';
  *
  * await screen.webElement(screen.webBy.id('username')).typeText('alice');
  * await screen.webElement(screen.webBy.cssSelector('button.submit')).tap();
@@ -80,7 +80,7 @@ export function getWebElement(matcher: WebMatcher): WebElementActions {
  * Wraps Detox's `web.element().expect()` — consumers never call Detox APIs directly.
  *
  * @example
- * import { screen } from '@chauhaidang/xq-test-utils';
+ * import { screen } from '@chauhaidang/xq-harness-test-utils';
  *
  * await screen.webExpect(screen.webBy.id('error-msg')).toHaveText('Invalid email');
  * await screen.webExpect(screen.webBy.cssSelector('.spinner')).not.toExist();

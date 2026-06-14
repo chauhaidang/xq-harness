@@ -5,11 +5,11 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@chauhaidang/xq-test-harness-e2e-consumer@workspace:.":
+"@chauhaidang/xq-harness-test-harness-e2e-consumer@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@chauhaidang/xq-test-harness-e2e-consumer@workspace:."
+  resolution: "@chauhaidang/xq-harness-test-harness-e2e-consumer@workspace:."
   dependencies:
-    "@chauhaidang/xq-test-harness": "npm:^0.2.0"
+    "@chauhaidang/xq-harness-test-harness": "file:../xq-test-harness"
     "@types/node": "npm:^24.10.1"
     "@typescript-eslint/eslint-plugin": "npm:^8.0.0"
     "@typescript-eslint/parser": "npm:^8.0.0"
@@ -18,13 +18,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@chauhaidang/xq-test-harness@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "@chauhaidang/xq-test-harness@npm:0.2.0::__archiveUrl=https%3A%2F%2Fnpm.pkg.github.com%2Fdownload%2F%40chauhaidang%2Fxq-test-harness%2F0.2.0%2Ffc0f81887a261732cf28a3effe45331601a30fe9"
+"@chauhaidang/xq-harness-test-harness@file:../xq-test-harness::locator=%40chauhaidang%2Fxq-harness-test-harness-e2e-consumer%40workspace%3A.":
+  version: 0.1.0
+  resolution: "@chauhaidang/xq-harness-test-harness@file:../xq-test-harness#../xq-test-harness::hash=ed0ecd&locator=%40chauhaidang%2Fxq-harness-test-harness-e2e-consumer%40workspace%3A."
   dependencies:
     "@playwright/test": "npm:^1.60.0"
     playwright-bdd: "npm:^8.5.1"
-  checksum: 10c0/11b261b46fbe6f491a33351c3a15e124c07ac037f2e0f114c8fea89071b3aadc1fb157fef3bed0fb5c229479662d1f07810b20fec0b30fab55a6f5a9df9a5744
+  checksum: 10c0/4cdc21c78a79498642b10df6e449e22da0c2b245e3db7285dad7a1d0518c059b17fe6bf0b915fe0274427f92146cfaf640257056ad4eac12b9828ade839b45f2
   languageName: node
   linkType: hard
 

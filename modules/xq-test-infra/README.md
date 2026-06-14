@@ -86,10 +86,10 @@ Replace `YOUR_GITHUB_TOKEN` with a GitHub Personal Access Token that has `read:p
 #### 2. Install the CLI
 ```bash
 # Install globally
-npm install -g @chauhaidang/xq-test-infra
+npm install -g @chauhaidang/xq-harness-test-infra
 
 # Or install in your project
-npm install --save-dev @chauhaidang/xq-test-infra
+npm install --save-dev @chauhaidang/xq-harness-test-infra
 ```
 
 #### 3. Verify Installation
@@ -101,7 +101,7 @@ xq-infra --help
 ### Install from Source
 ```bash
 git clone https://github.com/chauhaidang/xq-toolbox.git
-cd xq-toolbox/packages/xq-test-infra
+cd xq-toolbox/packages/xq-harness-test-infra
 npm install
 npm link  # Optional: make xq-infra available globally
 ```
@@ -1124,7 +1124,7 @@ Current version: **0.1.0** - Key improvements:
 
 ## 🔗 Links
 
-- **Repository**: https://github.com/chauhaidang/xq-toolbox (package: `packages/xq-test-infra`)
+- **Repository**: https://github.com/chauhaidang/xq-toolbox (package: `packages/xq-harness-test-infra`)
 - **Issues**: https://github.com/chauhaidang/xq-toolbox/issues
 - **Examples**: [./examples/](./examples/)
 

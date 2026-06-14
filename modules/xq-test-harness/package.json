@@ -1,6 +1,6 @@
 {
-  "name": "@chauhaidang/xq-test-harness",
-  "version": "0.2.0",
+  "name": "@chauhaidang/xq-harness-test-harness",
+  "version": "0.1.0",
   "description": "Playwright API + Gherkin (playwright-bdd) harness for backend black-box tests",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
@@ -40,7 +40,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chauhaidang/xq-harness.git",
-    "directory": "modules/xq-test-harness"
+    "directory": "modules/xq-harness-test-harness"
   },
   "packageManager": "yarn@4.13.0",
   "engines": {

@@ -1,4 +1,4 @@
-import { When, Then, expect, type XQFixture } from '@chauhaidang/xq-test-harness';
+import { When, Then, expect, type XQFixture } from '@chauhaidang/xq-harness-test-harness';
 import type { APIResponse } from '@playwright/test';
 
 let lastResponse: APIResponse | undefined;

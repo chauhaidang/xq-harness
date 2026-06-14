@@ -2,7 +2,7 @@
 name: e2e-app
 description: >
   Control the React Native app lifecycle in Detox E2E tests using the App
-  controller from @chauhaidang/xq-test-utils. Use when you need to launch,
+  controller from @chauhaidang/xq-harness-test-utils. Use when you need to launch,
   reset, terminate, relaunch, or background the app.
 ---
 
@@ -18,7 +18,7 @@ All methods are async and emit debug logs via xq-common-kit.
 ## Import
 
 ```ts
-import { App } from '@chauhaidang/xq-test-utils';
+import { App } from '@chauhaidang/xq-harness-test-utils';
 ```
 
 ---

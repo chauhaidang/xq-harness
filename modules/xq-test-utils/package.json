@@ -1,6 +1,6 @@
 {
-  "name": "@chauhaidang/xq-test-utils",
-  "version": "2.0.1",
+  "name": "@chauhaidang/xq-harness-test-utils",
+  "version": "0.1.0",
   "description": "Test utilities for XQ applications: component/integration helpers and Detox E2E abstractions",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
@@ -30,7 +30,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chauhaidang/xq-harness.git",
-    "directory": "modules/xq-test-utils"
+    "directory": "modules/xq-harness-test-utils"
   },
   "packageManager": "yarn@4.13.0",
   "engines": {
@@ -54,7 +54,7 @@
   },
   "homepage": "https://github.com/chauhaidang/xq-harness#readme",
   "dependencies": {
-    "@chauhaidang/xq-common-kit": "^1.0.12",
+    "@chauhaidang/xq-harness-common-kit": "portal:../xq-common-kit",
     "pg": "^8.16.3",
     "wait-on": "^8.0.1"
   },

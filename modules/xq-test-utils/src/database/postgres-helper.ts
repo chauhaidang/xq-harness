@@ -6,7 +6,7 @@
  */
 
 import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg';
-import { logger } from '@chauhaidang/xq-common-kit';
+import { logger } from '@chauhaidang/xq-harness-common-kit';
 import { DatabaseConfig, HealthCheckResult, IDatabaseHelper } from './types';
 
 export class PostgresDatabaseHelper implements IDatabaseHelper {

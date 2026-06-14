@@ -59,13 +59,13 @@ modules:
         test
 
   # ── XQ packages (Level C: published semver, independent modules) ──────────────
-  # Internal deps use @chauhaidang/* from GitHub Packages (^semver).
-  # Requires NODE_AUTH_TOKEN for install when a module depends on another package.
+  # Harness-lineage packages: @chauhaidang/xq-harness-* (see ADR 0010).
+  # Monorepo uses Yarn portal: for sibling deps; external consumers use semver.
 
   xq-common-kit:
     path: modules/xq-common-kit
     language: node
-    version: 1.0.12
+    version: 0.1.0
     test_all: true
     toolchain:
       node: ">=18"
@@ -78,7 +78,7 @@ modules:
   xq-test-utils:
     path: modules/xq-test-utils
     language: node
-    version: 2.0.1
+    version: 0.1.0
     test_all: true
     toolchain:
       node: ">=18"
@@ -91,7 +91,7 @@ modules:
   xq-test-infra:
     path: modules/xq-test-infra
     language: node
-    version: 1.0.3
+    version: 0.1.0
     test_all: true
     toolchain:
       node: ">=18"
@@ -105,7 +105,7 @@ modules:
   xq-test-harness:
     path: modules/xq-test-harness
     language: node
-    version: 0.2.0
+    version: 0.1.0
     test_all: true
     toolchain:
       node: ">=18"

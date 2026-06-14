@@ -1,8 +1,8 @@
-# Consumer guide: `@chauhaidang/xq-test-harness`
+# Consumer guide: `@chauhaidang/xq-harness-test-harness`
 
 **Four things to remember:** one Yarn package; **`bdd-world.ts`** (types + client instances); config with **`importTestFrom`**; step files import keywords from the harness.
 
-Full agent checklist (VS Code, CI): [skills/xq-test-harness-bdd/SKILL.md](../skills/xq-test-harness-bdd/SKILL.md).  
+Full agent checklist (VS Code, CI): [skills/xq-harness-test-harness-bdd/SKILL.md](../skills/xq-harness-test-harness-bdd/SKILL.md).  
 Package architecture: [README.md](../README.md).
 
 ---
@@ -17,7 +17,7 @@ Package architecture: [README.md](../README.md).
 ```
 
 ```bash
-yarn add -D @chauhaidang/xq-test-harness typescript @types/node
+yarn add -D @chauhaidang/xq-harness-test-harness typescript @types/node
 ```
 
 Do not add `@playwright/test` or `playwright-bdd` separately. Add your generated or hand-rolled API client packages as needed (for example `@chauhaidang/read-service-api`).
@@ -31,10 +31,10 @@ The harness does **not** ship SDK instances. It provides runtime **`xq.apis`** a
 Put **declaration merging** and **runtime clients** in one file. **`bddgen`** and your steps use the **`test`** you export here; set **`bdd.importTestFrom: './bdd-world.ts'`** in config (section 3).
 
 ```typescript
-import { test as base, expect } from '@chauhaidang/xq-test-harness';
+import { test as base, expect } from '@chauhaidang/xq-harness-test-harness';
 import { ReadServiceApi } from '@chauhaidang/read-service-api';
 
-declare module '@chauhaidang/xq-test-harness' {
+declare module '@chauhaidang/xq-harness-test-harness' {
   interface XQApiClients {
     read: ReadServiceApi;
   }
@@ -67,7 +67,7 @@ A shared **`@org/test-clients`** package can export the same **`bdd-world.ts`** 
 `playwright.config.ts`:
 
 ```typescript
-import { defineApiHarnessConfig } from '@chauhaidang/xq-test-harness/config';
+import { defineApiHarnessConfig } from '@chauhaidang/xq-harness-test-harness/config';
 
 export default defineApiHarnessConfig({
   bdd: {
@@ -89,7 +89,7 @@ export default defineApiHarnessConfig({
 `steps/example.steps.ts`:
 
 ```typescript
-import { When, Then, expect } from '@chauhaidang/xq-test-harness';
+import { When, Then, expect } from '@chauhaidang/xq-harness-test-harness';
 
 When('I call ping via the read API client', async ({ xq }) => {
   const res = await xq.apis.read.ping(); // example; method name depends on your SDK

@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { defineApiHarnessConfig } from '@chauhaidang/xq-test-harness/config';
+import { defineApiHarnessConfig } from '@chauhaidang/xq-harness-test-harness/config';
 
 const mockPort = 19998;
 const mockScript = path.join(__dirname, 'scripts', 'mock-http-server.mjs');

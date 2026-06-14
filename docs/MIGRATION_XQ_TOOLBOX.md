@@ -22,52 +22,47 @@ product truth.
 
 **Publish target:** GitHub Packages (`@chauhaidang/*`).
 
-## Integration Shape: Wrap In Place (Option A)
+## Integration Shape: Level C (done)
 
-Packages stay under `xq-toolbox/` with their Yarn workspace layout unchanged.
-Harness registers them in root `modules.yaml` and adds policy docs at the
-xq-harness root.
-
-Do **not** move packages into `modules/` yet. That would break workspace paths,
-Task sources, and publish `repository.directory` metadata.
+Packages live under `modules/xq-*` as independent harness modules with published
+semver dependencies from GitHub Packages. Legacy workspace archived at
+`archive/xq-toolbox-workspace/`. See
+`docs/decisions/0009-xq-toolbox-level-c-decoupling.md`.
 
 ```text
 xq-harness/
-  modules.yaml              ← canonical module registry (includes xq-toolbox)
+  modules.yaml              ← canonical module registry
   scripts/module            ← YAML-driven runner
-  docs/product/             ← living product contract (derived from legacy)
-  xq-toolbox/               ← legacy monorepo (Yarn workspace root)
-    packages/
-    Taskfile.yml
+  docs/product/             ← living product contract
+  modules/xq-*/             ← independent packages (own yarn.lock each)
+  archive/xq-toolbox-workspace/  ← legacy reference
 ```
 
-## Phase 0 — Repository Hygiene (done / required)
+## Phase 0 — Repository Hygiene (done)
 
 | Step | Status | Action |
 | --- | --- | --- |
-| Copy legacy tree | Done | `xq-toolbox/` present |
-| Remove nested `.git` | **Required** | `rm -rf xq-toolbox/.git` so parent repo tracks files |
+| Copy legacy tree | Done | Archived at `archive/xq-toolbox-workspace/` |
+| Remove nested `.git` | Done | Single git repo at xq-harness root |
 | Register modules | Done | See `modules.yaml` |
-| Prereqs | Manual | Node ≥ 18, Corepack, [Task](https://taskfile.dev/), [yq](https://github.com/mikefarah/yq) |
+| Prereqs | Manual | Node ≥ 18, Corepack, [yq](https://github.com/mikefarah/yq), `NODE_AUTH_TOKEN` |
 
 ## Phase 1 — Mechanical Module Wiring (done)
 
-Six harness modules registered:
+Six harness modules registered under `modules/`:
 
 ```bash
 ./scripts/module list | rg '^xq'
 ./scripts/module ci xq-common-kit
-make test MODULE=xq-toolbox    # full workspace via Task
+make test-all   # runs all modules with test_all: true
 ```
 
-Per-package modules delegate to Task at the workspace root because Yarn
-workspace dependencies require a root `yarn install` and ordered builds
-(`xq-common-kit` before `xq-test-utils` / `xq-test-infra`).
+Each module installs and builds independently via semver from GitHub Packages.
 
 **Not registered as modules:**
 
-- `xq-scripts` — tarball-only release via `task release:xq-scripts` + GH workflow
-- `todo-app` demo — incomplete (`write-service` source missing); defer until fixed
+- `xq-scripts` — tarball-only release via GH workflow
+- `todo-app` demo — incomplete in legacy archive; defer until fixed
 - `archive/poc/xq-coconut` — dist-only archive
 
 ## Phase 2 — Product Archaeology (in progress)
@@ -84,27 +79,15 @@ Reverse-engineer product truth from code and package READMEs into
 Mark confidence: **observed** (tests prove it), **documented** (README only),
 **unknown** (gap).
 
-## Phase 3 — Baseline Stories + Proof
+## Phase 3 — Baseline Stories + Proof (done)
 
-Create story packets for existing behavior and attach verify commands:
+Durable stories US-TB-001 … US-TB-005 registered with verify commands. See
+`docs/stories/US-TB-baseline-proof.md`.
 
 ```bash
-scripts/bin/harness-cli init
-scripts/bin/harness-cli intake \
-  --type "maintenance request" \
-  --summary "Baseline proof for xq-common-kit" \
-  --lane normal
-
-scripts/bin/harness-cli story add \
-  --id US-TB-001 \
-  --title "xq-common-kit unit tests pass" \
-  --lane normal \
-  --verify "./scripts/module test xq-common-kit"
-
-scripts/bin/harness-cli story verify US-TB-001
+scripts/bin/harness-cli query matrix
+scripts/bin/harness-cli story verify-all
 ```
-
-Suggested baseline stories:
 
 | ID | Module | Verify command |
 | --- | --- | --- |
@@ -114,7 +97,7 @@ Suggested baseline stories:
 | US-TB-004 | xq-test-harness | `./scripts/module test xq-test-harness` |
 | US-TB-005 | e2e consumer | `./scripts/module test xq-test-harness-e2e-consumer` |
 
-## Phase 4 — CI and Secrets
+## Phase 4 — CI and Secrets (done)
 
 Port or replace legacy workflows:
 
@@ -215,12 +198,12 @@ Do not duplicate commands in Makefile or CI — `modules.yaml` is canonical per
 
 ## Open Items
 
-1. Remove `xq-toolbox/.git` before first commit to xq-harness
-2. Fix or drop incomplete `todo-app` demo (`write-service` missing)
-3. Port publish workflow to xq-harness root
-4. Split package READMEs into `docs/product/*` incrementally
-5. Reconcile `.agents/skills/` with xq-harness agent skills
-6. Decide fate of example modules (`node-example`, etc.) vs production modules
+1. Split package READMEs into `docs/product/*` incrementally (`test-harness.md`, `test-infra.md`, …)
+2. Fix or drop incomplete `todo-app` demo in legacy archive (`write-service` missing)
+3. Reconcile agent skills from legacy archive with xq-harness skills
+4. Decide fate of example modules (`node-example`, etc.) vs production modules
+5. Remove `archive/xq-toolbox-workspace/` once workflows are stable (per ADR 0009)
+6. Publish bumped package versions after structural migration if registry drift appears
 
 ## Quick Verification
 

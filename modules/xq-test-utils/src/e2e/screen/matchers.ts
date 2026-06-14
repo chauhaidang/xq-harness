@@ -13,7 +13,7 @@ const _byWeb = (): any => (globalThis as any).by.web;
  * `screen.element()`, `screen.expect()`, or `screen.waitFor()`.
  *
  * @example
- * import { screen } from '@chauhaidang/xq-test-utils';
+ * import { screen } from '@chauhaidang/xq-harness-test-utils';
  * const { by } = screen;
  *
  * // Find by testID (most reliable — prefer this)
@@ -109,7 +109,7 @@ export const by = {
  * the app — they do not apply to native elements.
  *
  * @example
- * import { screen } from '@chauhaidang/xq-test-utils';
+ * import { screen } from '@chauhaidang/xq-harness-test-utils';
  * const { webBy } = screen;
  *
  * await screen.webElement(webBy.id('username')).typeText('alice');

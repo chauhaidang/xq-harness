@@ -1,58 +1,70 @@
 # xq-harness
 
-Polyglot monorepo with independent build/test modules. Example modules live under
-`modules/`; XQ testing packages are decoupled Level C modules with semver deps
-from GitHub Packages.
+Monorepo for **XQ testing libraries** and a polyglot module runner. Publishable
+packages ship to GitHub Packages as `@chauhaidang/xq-harness-*`.
 
-## Quick start
+## For consumers
+
+Install published packages in your own repo. Start here:
+
+- **[exposure/catalogue.md](exposure/catalogue.md)** — package index, APIs, CLIs, and install notes
+- [modules/xq-test-harness/docs/CONSUMER-GUIDE.md](modules/xq-test-harness/docs/CONSUMER-GUIDE.md) — Playwright BDD harness setup
+
+Registry scope: `@chauhaidang`. Requires a GitHub token with `read:packages`
+(`NODE_AUTH_TOKEN` in CI).
+
+```ini
+# .npmrc
+@chauhaidang:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+```
+
+```bash
+yarn add @chauhaidang/xq-harness-test-harness
+```
+
+Legacy xq-toolbox packages (`@chauhaidang/xq-common-kit`, `@chauhaidang/xq-test-*`
+without the `harness-` prefix) are a separate line — do not confuse them with
+the harness packages listed in the catalogue.
+
+## For contributors
+
+Run one module:
 
 ```bash
 ./scripts/module list
-./scripts/module ci node-example
-make test MODULE=xq-common-kit
+make ci MODULE=xq-common-kit
+make test-all          # all xq modules with test_all: true
 ```
 
-Requires [yq](https://github.com/mikefarah/yq). Install only the toolchain for
-the module you work on — see [docs/modules/README.md](docs/modules/README.md).
+Requires [yq](https://github.com/mikefarah/yq) and the toolchain for the module
+you touch (Node 18+, etc.). See [docs/modules/README.md](docs/modules/README.md).
 
-**XQ packages** that depend on `@chauhaidang/*` need `NODE_AUTH_TOKEN` (GitHub
-Packages) for `yarn install`.
-
-## Layout
+## Repository layout
 
 ```text
-modules.yaml          # canonical module registry and commands
-scripts/module        # YAML-driven runner
+modules.yaml              # module registry (paths, versions, commands)
+scripts/module            # install / build / test / ci runner
+exposure/catalogue.md     # consumer-facing package index
 modules/
-  node-example/       # Yarn 4 (example)
-  python-example/     # uv + pytest (example)
-  java-example/       # Gradle + JUnit (example)
-  ios-example/        # Xcode + XCTest (example)
-  xq-common-kit/      # @chauhaidang/xq-common-kit (independent)
-  xq-test-utils/      # depends on published xq-common-kit ^1.0.12
-  xq-test-infra/      # depends on published xq-common-kit ^1.0.12
-  xq-test-harness/    # Playwright BDD harness
-  xq-test-harness-e2e-consumer/  # single dep on published harness
-  xq-scripts/         # tarball release only
-archive/
-  xq-toolbox-workspace/  # legacy Yarn workspace (reference)
+  xq-common-kit/          # shared TS utilities
+  xq-test-utils/          # Jest / DB / Detox helpers
+  xq-test-infra/          # xq-infra CLI (Docker test environments)
+  xq-test-harness/        # Playwright + Gherkin API harness
+  xq-scripts/             # release tarball scripts (not npm)
+  *-example/              # polyglot layout examples (not published)
+docs/                     # harness operating model + decisions
 ```
 
-## XQ packages (Level C)
+## Harness (agent workflow)
 
-Each package has its own `yarn.lock`. Internal links use semver from GitHub
-Packages, not `workspace:*`.
-
-```bash
-export NODE_AUTH_TOKEN=ghp_...   # read:packages
-./scripts/module ci xq-common-kit
-./scripts/module ci xq-test-utils
-```
-
-See [docs/MIGRATION_XQ_TOOLBOX.md](docs/MIGRATION_XQ_TOOLBOX.md) and
-[docs/decisions/0009-xq-toolbox-level-c-decoupling.md](docs/decisions/0009-xq-toolbox-level-c-decoupling.md).
-
-## Harness
-
-This repo also uses the Harness operating model for agent-assisted development.
+This repo uses the Harness model for agent-assisted development.
 See [docs/HARNESS.md](docs/HARNESS.md).
+
+## Further reading
+
+| Topic | Doc |
+| --- | --- |
+| Module registry | [docs/modules/README.md](docs/modules/README.md) |
+| Package rename (legacy vs harness) | [docs/decisions/0010-xq-harness-package-rename.md](docs/decisions/0010-xq-harness-package-rename.md) |
+| Migration history | [docs/MIGRATION_XQ_TOOLBOX.md](docs/MIGRATION_XQ_TOOLBOX.md) |
