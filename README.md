@@ -7,7 +7,7 @@ packages ship to GitHub Packages as `@chauhaidang/xq-harness-*`.
 
 Install published packages in your own repo. Start here:
 
-- **[exposure/catalogue.md](exposure/catalogue.md)** — package index, APIs, CLIs, and install notes
+- **[exposure/catalogue.md](CATALOGUE.md)** — package index, APIs, CLIs, and install notes
 - [modules/xq-test-harness/docs/CONSUMER-GUIDE.md](modules/xq-test-harness/docs/CONSUMER-GUIDE.md) — Playwright BDD harness setup
 
 Registry scope: `@chauhaidang`. Requires a GitHub token with `read:packages`
