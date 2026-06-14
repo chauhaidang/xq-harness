@@ -27,7 +27,7 @@ xq-common-kit                    @chauhaidang/xq-harness-common-kit
   └── xq-test-infra              portal:../xq-common-kit (monorepo)
 
 xq-test-harness                  @chauhaidang/xq-harness-test-harness
-  └── xq-test-harness-e2e-consumer   file:../xq-test-harness (monorepo)
+  └── xq-test-harness-e2e-consumer   portal:../xq-test-harness (monorepo)
 ```
 
 External consumers install semver from GitHub Packages after publish, e.g.
