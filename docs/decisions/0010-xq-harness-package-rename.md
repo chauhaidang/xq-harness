@@ -32,11 +32,14 @@ Reset publishable package versions to **0.1.0** for a clean registry lineage.
 
 ```json
 "@chauhaidang/xq-harness-common-kit": "portal:../xq-common-kit"
-"@chauhaidang/xq-harness-test-harness": "file:../xq-test-harness"
+"@chauhaidang/xq-harness-test-harness": "portal:../xq-test-harness"
 ```
 
-`file:` for e2e-consumer avoids duplicate `@playwright/test` loads that occur
-with `portal:` on the harness package.
+E2e-consumer uses `portal:` while harness is unpublished; switch to semver from
+GitHub Packages once `@chauhaidang/xq-harness-test-harness` is on the registry.
+`portal:` avoids `file:` lockfile hash drift when the harness module is built
+before install. The e2e-consumer test script sets `NODE_PATH` and clears duplicate
+Playwright installs under the harness package so `@playwright/test` loads once.
 
 **External consumers** install semver from GitHub Packages after publish, e.g.
 `yarn add @chauhaidang/xq-harness-test-harness`.

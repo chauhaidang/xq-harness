@@ -23,7 +23,7 @@ jobs:
   publish:
     needs: version-check
     if: needs.version-check.outputs.version_changed == 'true' || github.event_name == 'workflow_dispatch'
-    uses: ./.github/workflows/reusable/module-cd-github-packages.yml
+    uses: ./.github/workflows/module-cd-github-packages.yml
     secrets: inherit
     with:
       module: xq-test-infra

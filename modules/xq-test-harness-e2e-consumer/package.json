@@ -6,13 +6,15 @@
   "scripts": {
     "build": "true",
     "test": "yarn test:bdd",
-    "test:bdd": "./node_modules/.bin/bddgen -c playwright.config.ts && ./node_modules/.bin/playwright test -c playwright.config.ts",
+    "test:bdd": "rm -rf ../xq-test-harness/node_modules/@playwright ../xq-test-harness/node_modules/playwright ../xq-test-harness/node_modules/playwright-bdd ../xq-test-harness/node_modules/playwright-core 2>/dev/null; NODE_PATH=\"${PWD}/node_modules\" ./node_modules/.bin/bddgen -c playwright.config.ts && NODE_PATH=\"${PWD}/node_modules\" ./node_modules/.bin/playwright test -c playwright.config.ts",
     "report:show": "./node_modules/.bin/playwright show-report playwright-report",
     "lint": "eslint . --ext .ts",
     "clean": "rm -rf .features-gen test-results playwright-report"
   },
   "dependencies": {
-    "@chauhaidang/xq-harness-test-harness": "file:../xq-test-harness"
+    "@chauhaidang/xq-harness-test-harness": "portal:../xq-test-harness",
+    "@playwright/test": "^1.60.0",
+    "playwright-bdd": "^8.5.1"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

@@ -10,7 +10,7 @@ on:
       - modules/tsconfig.base.json
       - modules/yarnrc.github-packages.yml
       - .github/workflows/ci-xq-test-harness-e2e-consumer.yml
-      - .github/workflows/reusable/**
+      - .github/workflows/module-*.yml
   push:
     branches: [main]
     paths: *paths
@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   ci:
-    uses: ./.github/workflows/reusable/module-ci-node.yml
+    uses: ./.github/workflows/module-ci-node.yml
     with:
       module: xq-test-harness-e2e-consumer
       playwright_skip_browser: true

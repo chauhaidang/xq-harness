@@ -46,7 +46,7 @@ semver after publish.
 | `xq-test-utils` | 0.1.0 | `portal:../xq-common-kit` |
 | `xq-test-infra` | 0.1.0 | `portal:../xq-common-kit` |
 | `xq-test-harness` | 0.1.0 | `@chauhaidang/xq-harness-test-harness` |
-| `xq-test-harness-e2e-consumer` | 0.0.0 | `file:../xq-test-harness` |
+| `xq-test-harness-e2e-consumer` | 0.0.0 | `portal:../xq-test-harness` |
 | `xq-scripts` | VERSION file | tarball release only |
 
 **Prerequisites:** Node ≥ 18, Corepack. `NODE_AUTH_TOKEN` only needed when
@@ -92,8 +92,8 @@ Commit the updated `ios-example.xcodeproj`.
 ## GitHub Actions
 
 Each publishable module has its own **CI** (`ci-<module>.yml`) and **CD**
-(`cd-<module>.yml`) workflow. Shared bootstrap lives in reusable templates under
-`.github/workflows/reusable/`.
+(`cd-<module>.yml`) workflow. Shared bootstrap lives in reusable `module-*.yml`
+templates at the top level of `.github/workflows/`.
 
 See [docs/github-actions.md](../github-actions.md) for template inputs, path
 filters, and how module owners add pipelines.

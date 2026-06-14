@@ -1,10 +1,10 @@
-name: Module CD (GitHub Packages)
+name: Module CI (Node)
 
 on:
   workflow_call:
     inputs:
       module:
-        description: Module registry key to publish (e.g. xq-common-kit)
+        description: Module registry key (e.g. xq-common-kit)
         required: true
         type: string
       node_version:
@@ -13,17 +13,13 @@ on:
         type: string
         default: "22"
       playwright_skip_browser:
-        description: Set PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 during CI gate
+        description: Set PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
         required: false
         type: boolean
         default: false
 
-permissions:
-  contents: read
-  packages: write
-
 jobs:
-  publish:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,15 +37,9 @@ jobs:
           sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.45.1/yq_linux_amd64
           sudo chmod +x /usr/local/bin/yq
 
-      - name: CI gate before publish
+      - name: CI module
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: ${{ inputs.playwright_skip_browser && '1' || '' }}
         run: ./scripts/module ci ${{ inputs.module }}
-
-      - name: Publish to GitHub Packages
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cd "modules/${{ inputs.module }}"
-          yarn npm publish

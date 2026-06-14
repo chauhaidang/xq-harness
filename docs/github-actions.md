@@ -8,12 +8,11 @@ reusable templates.
 
 ```text
 .github/workflows/
-  reusable/
-    module-ci-node.yml              # CI template (Node / yarn modules)
-    module-cd-github-packages.yml   # CD template (npm publish)
-    module-cd-tarball.yml           # CD template (GitHub Release tarball)
-  ci-<module>.yml                   # Per-module CI (owners edit)
-  cd-<module>.yml                   # Per-module CD (owners edit)
+  module-ci-node.yml              # CI template (Node / yarn modules)
+  module-cd-github-packages.yml   # CD template (npm publish)
+  module-cd-tarball.yml           # CD template (GitHub Release tarball)
+  ci-<module>.yml                 # Per-module CI (owners edit)
+  cd-<module>.yml                 # Per-module CD (owners edit)
 ```
 
 Commands always run through [`scripts/module`](../scripts/module) and
@@ -93,7 +92,7 @@ Publish runs only when the version changed or the workflow was dispatched manual
 ## Ownership
 
 Per-module caller workflows are listed in [`.github/CODEOWNERS`](../.github/CODEOWNERS).
-Reusable templates under `reusable/` should be changed only when the shared
+Reusable templates (`module-*.yml`) should be changed only when the shared
 bootstrap (Node, yq, `scripts/module`) changes.
 
 ## Local parity
