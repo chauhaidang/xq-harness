@@ -80,6 +80,8 @@ modules:
     language: node
     version: 0.1.0
     test_all: true
+    depends_on:
+      - xq-common-kit
     toolchain:
       node: ">=18"
       yarn: "4.13"
@@ -93,6 +95,8 @@ modules:
     language: node
     version: 0.1.0
     test_all: true
+    depends_on:
+      - xq-common-kit
     toolchain:
       node: ">=18"
       yarn: "4.13"
@@ -121,6 +125,8 @@ modules:
     language: node
     version: 0.0.0
     test_all: true
+    depends_on:
+      - xq-test-harness
     toolchain:
       node: ">=18"
       yarn: "4.13"
