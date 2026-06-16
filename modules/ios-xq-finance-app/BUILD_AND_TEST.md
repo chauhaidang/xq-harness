@@ -74,7 +74,38 @@ Last verified physical device:
 
 - Name: `iPhone`
 - ID: `00008101-000E548E34F0001E`
-- Result: 5 XCTest cases, 0 failures
+- Result: 7 XCTest cases, 0 failures
+
+## Physical Device Reinstall Persistence
+
+Run the reinstall persistence smoke test on the verified physical iPhone:
+
+```bash
+modules/ios-xq-finance-app/scripts/verify-device-reinstall-persistence.sh
+```
+
+To target a different plugged-in device:
+
+```bash
+IOS_DEVICE_ID=<device-id> \
+  modules/ios-xq-finance-app/scripts/verify-device-reinstall-persistence.sh
+```
+
+The script builds the Debug app, installs it on the device, launches it with a
+debug-only smoke command that backs up the current portfolio and seeds a
+temporary marker, installs the same app again without uninstalling, then
+launches a verify command that asserts the marker survived and restores the
+original portfolio.
+
+This proves update-style reinstalls with the same bundle ID and signing identity
+do not wipe the app's local persisted portfolio. It intentionally does not
+uninstall the app; uninstalling removes the app container, and recovery then
+depends on the Keychain fallback path.
+
+Last verified result:
+
+- Device ID: `00008101-000E548E34F0001E`
+- Result: reinstall persistence verification passed
 
 ## Signing Requirements
 

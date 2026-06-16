@@ -19,19 +19,26 @@
   action.
 - Users can add a buy lot for the active asset by entering units and price per
   unit in USD. Adding a buy lot inserts it at the top of the local buy-lot list
-  and updates units owned, asset current value, and portfolio total.
+  and updates units owned, the asset's latest price, asset current value, and
+  portfolio total.
 - Users move between asset cards by swiping horizontally on the card stack.
 - Users can manually update the current price for each asset. Manual price
   updates are entered in USD and change current total value only; they do not
   change units owned or buy transaction history.
+- Asset current total value is always calculated as total units owned multiplied
+  by the asset's latest current price.
 - Users can deduct a buy transaction from an asset through a destructive
   confirmation action. Deduction removes that buy lot from local portfolio
   calculations.
+- Local portfolio data is persisted on device as a JSON snapshot in Application
+  Support and mirrored to Keychain as the latest recovery snapshot.
+- On launch, the app loads the Application Support snapshot first, restores
+  from the Keychain snapshot if the file is missing, and falls back to fixtures
+  only when neither local snapshot exists.
 - The current slice does not expose a menu, filters, bottom arrow controls,
   average cost, realized gain, invested value, or gain/loss summaries.
-- Current asset and transaction data is local fixture data for the UI slice.
-- Financial account data, authentication, provider integrations, persistence,
-  and analytics are not part of the current contract.
+- Financial account data, authentication, provider integrations, cloud backup,
+  export/import, and analytics are not part of the current contract.
 
 ## Validation
 
@@ -39,3 +46,7 @@
 - App build and unit tests are run through `./scripts/module build ios-xq-finance-app`
   and `./scripts/module test ios-xq-finance-app` on machines with Xcode and an
   iOS simulator matching `modules.yaml`.
+- Physical-device validation can run the same XCTest suite with `xcodebuild`
+  targeting a plugged-in iPhone destination.
+- Update-style reinstall persistence is validated on a physical device by
+  `modules/ios-xq-finance-app/scripts/verify-device-reinstall-persistence.sh`.

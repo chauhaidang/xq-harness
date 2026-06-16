@@ -1,7 +1,17 @@
+#if DEBUG
+import Darwin
+#endif
+import Security
 import SwiftUI
 
 @main
 struct XQFinanceApp: App {
+    init() {
+        #if DEBUG
+        PersistenceSmokeTestRunner.runIfRequested()
+        #endif
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView(summary: FinanceAppSummary.default)
@@ -40,13 +50,15 @@ struct FinanceAsset: Identifiable {
     }
 
     mutating func addBuyLot(units: Double, unitPrice: Double, date: String) {
+        let normalizedUnitPrice = max(0, unitPrice)
         let transaction = BuyTransaction(
             id: UUID(),
             date: date,
             units: max(0, units),
-            unitPrice: max(0, unitPrice)
+            unitPrice: normalizedUnitPrice
         )
         transactions.insert(transaction, at: 0)
+        currentPrice = normalizedUnitPrice
     }
 
     mutating func updateCurrentPrice(_ price: Double) {
@@ -58,7 +70,7 @@ struct FinanceAsset: Identifiable {
     }
 }
 
-struct BuyTransaction: Identifiable, Equatable {
+struct BuyTransaction: Identifiable, Codable, Equatable {
     let id: UUID
     let date: String
     let units: Double
@@ -75,10 +87,267 @@ struct BuyTransaction: Identifiable, Equatable {
     }
 }
 
+enum PortfolioStore {
+    private static let encoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        return encoder
+    }()
+
+    private static let decoder = JSONDecoder()
+
+    private static var portfolioURL: URL? {
+        guard let baseURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        return baseURL
+            .appendingPathComponent("XQFinance", isDirectory: true)
+            .appendingPathComponent("portfolio.json")
+    }
+
+    static func loadAssets() -> [FinanceAsset] {
+        if let data = loadPrimarySnapshotData(), let snapshot = decode(data) {
+            return snapshot.financeAssets
+        }
+
+        if let data = KeychainPortfolioSnapshot.load(), let snapshot = decode(data) {
+            writePrimarySnapshotData(data)
+            return snapshot.financeAssets
+        }
+
+        return FinanceAsset.fixtures
+    }
+
+    static func save(_ assets: [FinanceAsset]) {
+        guard let data = encode(PortfolioSnapshot(assets: assets)) else { return }
+        writePrimarySnapshotData(data)
+        KeychainPortfolioSnapshot.save(data)
+    }
+
+    static func signature(for assets: [FinanceAsset]) -> String {
+        guard let data = encode(PortfolioSnapshot(assets: assets)) else { return "" }
+        return String(decoding: data, as: UTF8.self)
+    }
+
+    static func encode(_ snapshot: PortfolioSnapshot) -> Data? {
+        try? encoder.encode(snapshot)
+    }
+
+    static func decode(_ data: Data) -> PortfolioSnapshot? {
+        try? decoder.decode(PortfolioSnapshot.self, from: data)
+    }
+
+    private static func loadPrimarySnapshotData() -> Data? {
+        guard let portfolioURL else { return nil }
+        return try? Data(contentsOf: portfolioURL)
+    }
+
+    private static func writePrimarySnapshotData(_ data: Data) {
+        guard let portfolioURL else { return }
+        do {
+            try FileManager.default.createDirectory(
+                at: portfolioURL.deletingLastPathComponent(),
+                withIntermediateDirectories: true
+            )
+            try data.write(to: portfolioURL, options: [.atomic])
+        } catch {
+            // Keychain fallback still gives the app a recovery path if file write fails.
+        }
+    }
+}
+
+struct PortfolioSnapshot: Codable, Equatable {
+    let version: Int
+    let assets: [PortfolioAssetSnapshot]
+
+    init(version: Int = 1, assets: [PortfolioAssetSnapshot]) {
+        self.version = version
+        self.assets = assets
+    }
+
+    init(assets: [FinanceAsset]) {
+        self.version = 1
+        self.assets = assets.map(PortfolioAssetSnapshot.init(asset:))
+    }
+
+    var financeAssets: [FinanceAsset] {
+        assets.map(\.financeAsset)
+    }
+}
+
+struct PortfolioAssetSnapshot: Codable, Equatable {
+    let id: UUID
+    let symbol: String
+    let name: String
+    let currentPrice: Double
+    let transactions: [BuyTransaction]
+
+    init(asset: FinanceAsset) {
+        id = asset.id
+        symbol = asset.symbol
+        name = asset.name
+        currentPrice = asset.currentPrice
+        transactions = asset.transactions
+    }
+
+    var financeAsset: FinanceAsset {
+        FinanceAsset(
+            id: id,
+            symbol: symbol,
+            name: name,
+            accent: FinanceAsset.accent(for: symbol),
+            currentPrice: currentPrice,
+            transactions: transactions
+        )
+    }
+}
+
+private enum KeychainPortfolioSnapshot {
+    private static let service = "com.xq.finance.ios-xq-finance-app.portfolio"
+    private static let defaultAccount = "latestPortfolioSnapshot"
+
+    static func load(account: String = defaultAccount) -> Data? {
+        var query = baseQuery(account: account)
+        query[kSecReturnData as String] = true
+        query[kSecMatchLimit as String] = kSecMatchLimitOne
+
+        var result: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        guard status == errSecSuccess else { return nil }
+        return result as? Data
+    }
+
+    static func save(_ data: Data, account: String = defaultAccount) {
+        let attributes: [String: Any] = [
+            kSecValueData as String: data,
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock
+        ]
+
+        let updateStatus = SecItemUpdate(baseQuery(account: account) as CFDictionary, attributes as CFDictionary)
+        if updateStatus == errSecSuccess {
+            return
+        }
+
+        var addQuery = baseQuery(account: account)
+        addQuery[kSecValueData as String] = data
+        addQuery[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
+        SecItemAdd(addQuery as CFDictionary, nil)
+    }
+
+    static func delete(account: String = defaultAccount) {
+        SecItemDelete(baseQuery(account: account) as CFDictionary)
+    }
+
+    private static func baseQuery(account: String) -> [String: Any] {
+        [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: account
+        ]
+    }
+}
+
+#if DEBUG
+enum PersistenceSmokeTestRunner {
+    private static let flag = "--xq-persistence-smoke"
+    private static let seedCommand = "seed"
+    private static let verifyCommand = "verify"
+    private static let restoreCommand = "restore"
+    private static let backupAccount = "reinstallPersistenceSmokeBackup"
+    private static let smokeAssetID = UUID(uuidString: "5AE61D43-67EE-4C1F-8ED4-B5D5A3799825")!
+    private static let smokeTransactionID = UUID(uuidString: "F3117862-9382-44A2-8407-1EAD34F70A5D")!
+    private static let smokeSymbol = "XQSMOKE"
+    private static let smokePrice = 1234.56
+    private static let smokeUnits = 7.5
+    private static let smokeUnitPrice = 11.22
+
+    static func runIfRequested(arguments: [String] = CommandLine.arguments) {
+        guard
+            let flagIndex = arguments.firstIndex(of: flag),
+            arguments.indices.contains(flagIndex + 1)
+        else {
+            return
+        }
+
+        let status: Int32
+        switch arguments[flagIndex + 1] {
+        case seedCommand:
+            status = seed()
+        case verifyCommand:
+            status = verifyAndRestore()
+        case restoreCommand:
+            status = restoreOriginalPortfolio()
+        default:
+            status = 64
+        }
+
+        exit(status)
+    }
+
+    private static func seed() -> Int32 {
+        let originalSnapshot = PortfolioSnapshot(assets: PortfolioStore.loadAssets())
+        guard let backupData = PortfolioStore.encode(originalSnapshot) else { return 65 }
+        KeychainPortfolioSnapshot.save(backupData, account: backupAccount)
+
+        var assets = originalSnapshot.financeAssets.filter { $0.symbol != smokeSymbol }
+        assets.insert(smokeAsset, at: 0)
+        PortfolioStore.save(assets)
+        return 0
+    }
+
+    private static func verifyAndRestore() -> Int32 {
+        let assets = PortfolioStore.loadAssets()
+        guard let asset = assets.first(where: { $0.id == smokeAssetID && $0.symbol == smokeSymbol }) else {
+            return 66
+        }
+        guard asset.currentPrice == smokePrice else { return 67 }
+        guard let transaction = asset.transactions.first(where: { $0.id == smokeTransactionID }) else {
+            return 68
+        }
+        guard transaction.units == smokeUnits && transaction.unitPrice == smokeUnitPrice else {
+            return 69
+        }
+
+        return restoreOriginalPortfolio()
+    }
+
+    private static func restoreOriginalPortfolio() -> Int32 {
+        guard let backupData = KeychainPortfolioSnapshot.load(account: backupAccount) else {
+            return 70
+        }
+        guard let snapshot = PortfolioStore.decode(backupData) else {
+            return 71
+        }
+
+        PortfolioStore.save(snapshot.financeAssets)
+        KeychainPortfolioSnapshot.delete(account: backupAccount)
+        return 0
+    }
+
+    private static var smokeAsset: FinanceAsset {
+        FinanceAsset(
+            id: smokeAssetID,
+            symbol: smokeSymbol,
+            name: "XQ Persistence Smoke",
+            accent: FinanceAsset.accent(for: smokeSymbol),
+            currentPrice: smokePrice,
+            transactions: [
+                BuyTransaction(
+                    id: smokeTransactionID,
+                    date: "Jun 16, 2026",
+                    units: smokeUnits,
+                    unitPrice: smokeUnitPrice
+                )
+            ]
+        )
+    }
+}
+#endif
+
 struct ContentView: View {
     let summary: FinanceAppSummary
 
-    @State private var assets = FinanceAsset.fixtures
+    @State private var assets: [FinanceAsset]
     @State private var activeIndex = 0
     @State private var dragOffset: CGSize = .zero
     @State private var selectedTransaction: TransactionSelection?
@@ -86,8 +355,17 @@ struct ContentView: View {
     @State private var activeSheet: AssetSheet?
     @State private var displayCurrency = DisplayCurrency.usd
 
+    init(summary: FinanceAppSummary, assets: [FinanceAsset]? = nil) {
+        self.summary = summary
+        _assets = State(initialValue: assets ?? PortfolioStore.loadAssets())
+    }
+
     private var portfolioTotalValue: Double {
         assets.reduce(0) { $0 + $1.currentValue }
+    }
+
+    private var persistenceSignature: String {
+        PortfolioStore.signature(for: assets)
     }
 
     var body: some View {
@@ -142,6 +420,9 @@ struct ContentView: View {
                 .padding(.bottom, 10)
             }
             .navigationBarTitleDisplayMode(.inline)
+        }
+        .onChange(of: persistenceSignature) { _, _ in
+            PortfolioStore.save(assets)
         }
         .sheet(item: $activeSheet) { sheet in
             if let index = assets.firstIndex(where: { $0.id == sheet.assetID }) {
@@ -823,12 +1104,25 @@ private extension Date {
 }
 
 extension FinanceAsset {
+    static func accent(for symbol: String) -> Color {
+        switch symbol {
+        case "AAPL":
+            return Color(red: 0.06, green: 0.11, blue: 0.2)
+        case "BTC":
+            return Color(red: 0.98, green: 0.58, blue: 0.04)
+        case "ETH":
+            return Color(red: 0.29, green: 0.38, blue: 0.83)
+        default:
+            return XQPalette.ink
+        }
+    }
+
     static let fixtures = [
         FinanceAsset(
             id: UUID(uuidString: "46C64E8D-039F-4E41-8E0C-7D6D970E3F91")!,
             symbol: "AAPL",
             name: "Apple Inc.",
-            accent: Color(red: 0.06, green: 0.11, blue: 0.2),
+            accent: Self.accent(for: "AAPL"),
             currentPrice: 174.65,
             transactions: [
                 BuyTransaction(id: UUID(uuidString: "52AD1788-4E1C-4797-9BD9-F5B77C9388E2")!, date: "May 6, 2024", units: 10.000, unitPrice: 169.21),
@@ -842,7 +1136,7 @@ extension FinanceAsset {
             id: UUID(uuidString: "87A05B55-3282-49EA-98E4-3A2C05B34B20")!,
             symbol: "BTC",
             name: "Bitcoin",
-            accent: Color(red: 0.98, green: 0.58, blue: 0.04),
+            accent: Self.accent(for: "BTC"),
             currentPrice: 68420.00,
             transactions: [
                 BuyTransaction(id: UUID(uuidString: "3AE792AC-4B1E-4712-A302-33E6D9F1D1BD")!, date: "May 5, 2024", units: 0.080, unitPrice: 64210.00),
@@ -854,7 +1148,7 @@ extension FinanceAsset {
             id: UUID(uuidString: "2B90ACF5-4B3D-4F57-9E70-A3363A1F515C")!,
             symbol: "ETH",
             name: "Ethereum",
-            accent: Color(red: 0.29, green: 0.38, blue: 0.83),
+            accent: Self.accent(for: "ETH"),
             currentPrice: 3520.25,
             transactions: [
                 BuyTransaction(id: UUID(uuidString: "68BC655E-1F43-4D68-9227-78C4BAA5E7ED")!, date: "May 2, 2024", units: 1.200, unitPrice: 3120.40),
@@ -866,5 +1160,5 @@ extension FinanceAsset {
 }
 
 #Preview {
-    ContentView(summary: .default)
+    ContentView(summary: .default, assets: FinanceAsset.fixtures)
 }
