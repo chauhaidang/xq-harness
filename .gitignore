@@ -55,3 +55,4 @@ modules/xq-**/.features-gen/
 # Local-only archive
 archive/
 archive/xq-toolbox-workspace/node_modules/
+nvim.log
