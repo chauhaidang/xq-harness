@@ -58,6 +58,27 @@ modules:
         -destination 'platform=iOS Simulator,name=iPhone 16'
         test
 
+  ios-xq-finance-app:
+    path: modules/ios-xq-finance-app
+    language: ios
+    version: 0.1.0
+    test_all: false
+    toolchain:
+      xcode: "16"
+      xcodegen: required
+    commands:
+      install: "true"
+      build: >
+        xcodebuild -project ios-xq-finance-app.xcodeproj
+        -scheme ios-xq-finance-app
+        -destination 'platform=iOS Simulator,name=iPhone 16'
+        build
+      test: >
+        xcodebuild -project ios-xq-finance-app.xcodeproj
+        -scheme ios-xq-finance-app
+        -destination 'platform=iOS Simulator,name=iPhone 16'
+        test
+
   # ── XQ packages (Level C: published semver, independent modules) ──────────────
   # Harness-lineage packages: @chauhaidang/xq-harness-* (see ADR 0010).
   # Monorepo uses Yarn portal: for sibling deps; external consumers use semver.
