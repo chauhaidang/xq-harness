@@ -29,10 +29,52 @@ struct FinanceAppSummary {
     )
 }
 
+enum AssetCurrency: String, CaseIterable, Codable, Identifiable {
+    case usd = "USD"
+    case vnd = "VND"
+
+    var id: String {
+        rawValue
+    }
+
+    var label: String {
+        rawValue
+    }
+
+    func formatted(_ amount: Double) -> String {
+        switch self {
+        case .usd:
+            return amount.currency
+        case .vnd:
+            return amount.vndCurrency
+        }
+    }
+
+    func amount(fromUSD amount: Double, exchangeRateUSDToVND: Double) -> Double {
+        switch self {
+        case .usd:
+            return amount
+        case .vnd:
+            return amount * exchangeRateUSDToVND
+        }
+    }
+
+    func usdAmount(from amount: Double, exchangeRateUSDToVND: Double) -> Double {
+        guard exchangeRateUSDToVND > 0 else { return 0 }
+        switch self {
+        case .usd:
+            return amount
+        case .vnd:
+            return amount / exchangeRateUSDToVND
+        }
+    }
+}
+
 struct FinanceAsset: Identifiable {
     let id: UUID
     let symbol: String
     let name: String
+    let nativeCurrency: AssetCurrency
     let accent: Color
     var currentPrice: Double
     var transactions: [BuyTransaction]
@@ -47,6 +89,10 @@ struct FinanceAsset: Identifiable {
 
     var currentValue: Double {
         unitsOwned * currentPrice
+    }
+
+    func currentValueInUSD(exchangeRateUSDToVND: Double) -> Double {
+        nativeCurrency.usdAmount(from: currentValue, exchangeRateUSDToVND: exchangeRateUSDToVND)
     }
 
     mutating func addBuyLot(units: Double, unitPrice: Double, date: String) {
@@ -105,28 +151,46 @@ enum PortfolioStore {
             .appendingPathComponent("portfolio.json")
     }
 
-    static func loadAssets() -> [FinanceAsset] {
+    static func loadPortfolio() -> PortfolioSnapshot {
         if let data = loadPrimarySnapshotData(), let snapshot = decode(data) {
-            return snapshot.financeAssets
+            return migrate(snapshot)
         }
 
         if let data = KeychainPortfolioSnapshot.load(), let snapshot = decode(data) {
-            writePrimarySnapshotData(data)
-            return snapshot.financeAssets
+            let migrated = migrate(snapshot)
+            if let migratedData = encode(migrated) {
+                writePrimarySnapshotData(migratedData)
+                KeychainPortfolioSnapshot.save(migratedData)
+            } else {
+                writePrimarySnapshotData(data)
+            }
+            return migrated
         }
 
-        return FinanceAsset.fixtures
+        return PortfolioSnapshot(assets: [], exchangeRateUSDToVND: PortfolioSnapshot.defaultExchangeRateUSDToVND)
     }
 
-    static func save(_ assets: [FinanceAsset]) {
-        guard let data = encode(PortfolioSnapshot(assets: assets)) else { return }
+    static func loadAssets() -> [FinanceAsset] {
+        loadPortfolio().financeAssets
+    }
+
+    static func save(_ snapshot: PortfolioSnapshot) {
+        guard let data = encode(snapshot) else { return }
         writePrimarySnapshotData(data)
         KeychainPortfolioSnapshot.save(data)
     }
 
-    static func signature(for assets: [FinanceAsset]) -> String {
-        guard let data = encode(PortfolioSnapshot(assets: assets)) else { return "" }
+    static func save(assets: [FinanceAsset], exchangeRateUSDToVND: Double) {
+        save(PortfolioSnapshot(assets: assets, exchangeRateUSDToVND: exchangeRateUSDToVND))
+    }
+
+    static func signature(for snapshot: PortfolioSnapshot) -> String {
+        guard let data = encode(snapshot) else { return "" }
         return String(decoding: data, as: UTF8.self)
+    }
+
+    static func signature(for assets: [FinanceAsset], exchangeRateUSDToVND: Double = PortfolioSnapshot.defaultExchangeRateUSDToVND) -> String {
+        signature(for: PortfolioSnapshot(assets: assets, exchangeRateUSDToVND: exchangeRateUSDToVND))
     }
 
     static func encode(_ snapshot: PortfolioSnapshot) -> Data? {
@@ -137,7 +201,132 @@ enum PortfolioStore {
         try? decoder.decode(PortfolioSnapshot.self, from: data)
     }
 
-    private static func loadPrimarySnapshotData() -> Data? {
+    private static func migrate(_ snapshot: PortfolioSnapshot) -> PortfolioSnapshot {
+        guard snapshot.version < 2, snapshot.looksLikeLegacySeededPortfolio else {
+            return snapshot
+        }
+
+        return PortfolioSnapshot(
+            version: 2,
+            exchangeRateUSDToVND: snapshot.exchangeRateUSDToVND,
+            assets: []
+        )
+    }
+}
+
+struct PortfolioSnapshot: Codable, Equatable {
+    static let defaultExchangeRateUSDToVND = 25_500.0
+
+    var version: Int
+    var exchangeRateUSDToVND: Double
+    var assets: [PortfolioAssetSnapshot]
+
+    init(version: Int = 2, exchangeRateUSDToVND: Double = Self.defaultExchangeRateUSDToVND, assets: [PortfolioAssetSnapshot]) {
+        self.version = version
+        self.exchangeRateUSDToVND = exchangeRateUSDToVND
+        self.assets = assets
+    }
+
+    init(assets: [FinanceAsset], exchangeRateUSDToVND: Double = Self.defaultExchangeRateUSDToVND) {
+        self.init(
+            version: 2,
+            exchangeRateUSDToVND: exchangeRateUSDToVND,
+            assets: assets.map(PortfolioAssetSnapshot.init(asset:))
+        )
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case version
+        case exchangeRateUSDToVND
+        case assets
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        version = try container.decodeIfPresent(Int.self, forKey: .version) ?? 1
+        exchangeRateUSDToVND = try container.decodeIfPresent(Double.self, forKey: .exchangeRateUSDToVND) ?? Self.defaultExchangeRateUSDToVND
+        assets = try container.decode([PortfolioAssetSnapshot].self, forKey: .assets)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(version, forKey: .version)
+        try container.encode(exchangeRateUSDToVND, forKey: .exchangeRateUSDToVND)
+        try container.encode(assets, forKey: .assets)
+    }
+
+    var financeAssets: [FinanceAsset] {
+        assets.map(\.financeAsset)
+    }
+
+    var looksLikeLegacySeededPortfolio: Bool {
+        guard assets.count == 3 else { return false }
+        return Set(assets.map(\.id)) == Self.legacySeededAssetIDs
+            && Set(assets.map(\.symbol)) == Self.legacySeededSymbols
+            && Set(assets.map(\.name)) == Self.legacySeededNames
+    }
+
+    private static let legacySeededAssetIDs: Set<UUID> = [
+        UUID(uuidString: "46C64E8D-039F-4E41-8E0C-7D6D970E3F91")!,
+        UUID(uuidString: "87A05B55-3282-49EA-98E4-3A2C05B34B20")!,
+        UUID(uuidString: "2B90ACF5-4B3D-4F57-9E70-A3363A1F515C")!
+    ]
+
+    private static let legacySeededSymbols: Set<String> = ["AAPL", "BTC", "ETH"]
+    private static let legacySeededNames: Set<String> = ["Apple Inc.", "Bitcoin", "Ethereum"]
+}
+
+struct PortfolioAssetSnapshot: Codable, Equatable {
+    let id: UUID
+    let symbol: String
+    let name: String
+    let nativeCurrency: AssetCurrency
+    let currentPrice: Double
+    let transactions: [BuyTransaction]
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case symbol
+        case name
+        case nativeCurrency
+        case currentPrice
+        case transactions
+    }
+
+    init(asset: FinanceAsset) {
+        id = asset.id
+        symbol = asset.symbol
+        name = asset.name
+        nativeCurrency = asset.nativeCurrency
+        currentPrice = asset.currentPrice
+        transactions = asset.transactions
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        symbol = try container.decode(String.self, forKey: .symbol)
+        name = try container.decode(String.self, forKey: .name)
+        nativeCurrency = try container.decodeIfPresent(AssetCurrency.self, forKey: .nativeCurrency) ?? .usd
+        currentPrice = try container.decode(Double.self, forKey: .currentPrice)
+        transactions = try container.decode([BuyTransaction].self, forKey: .transactions)
+    }
+
+    var financeAsset: FinanceAsset {
+        FinanceAsset(
+            id: id,
+            symbol: symbol,
+            name: name,
+            nativeCurrency: nativeCurrency,
+            accent: FinanceAsset.accent(for: symbol),
+            currentPrice: currentPrice,
+            transactions: transactions
+        )
+    }
+}
+
+private extension PortfolioStore {
+    static func loadPrimarySnapshotData() -> Data? {
         guard let portfolioURL else { return nil }
         return try? Data(contentsOf: portfolioURL)
     }
@@ -153,52 +342,6 @@ enum PortfolioStore {
         } catch {
             // Keychain fallback still gives the app a recovery path if file write fails.
         }
-    }
-}
-
-struct PortfolioSnapshot: Codable, Equatable {
-    let version: Int
-    let assets: [PortfolioAssetSnapshot]
-
-    init(version: Int = 1, assets: [PortfolioAssetSnapshot]) {
-        self.version = version
-        self.assets = assets
-    }
-
-    init(assets: [FinanceAsset]) {
-        self.version = 1
-        self.assets = assets.map(PortfolioAssetSnapshot.init(asset:))
-    }
-
-    var financeAssets: [FinanceAsset] {
-        assets.map(\.financeAsset)
-    }
-}
-
-struct PortfolioAssetSnapshot: Codable, Equatable {
-    let id: UUID
-    let symbol: String
-    let name: String
-    let currentPrice: Double
-    let transactions: [BuyTransaction]
-
-    init(asset: FinanceAsset) {
-        id = asset.id
-        symbol = asset.symbol
-        name = asset.name
-        currentPrice = asset.currentPrice
-        transactions = asset.transactions
-    }
-
-    var financeAsset: FinanceAsset {
-        FinanceAsset(
-            id: id,
-            symbol: symbol,
-            name: name,
-            accent: FinanceAsset.accent(for: symbol),
-            currentPrice: currentPrice,
-            transactions: transactions
-        )
     }
 }
 
@@ -285,19 +428,20 @@ enum PersistenceSmokeTestRunner {
     }
 
     private static func seed() -> Int32 {
-        let originalSnapshot = PortfolioSnapshot(assets: PortfolioStore.loadAssets())
+        let originalSnapshot = PortfolioStore.loadPortfolio()
         guard let backupData = PortfolioStore.encode(originalSnapshot) else { return 65 }
         KeychainPortfolioSnapshot.save(backupData, account: backupAccount)
 
-        var assets = originalSnapshot.financeAssets.filter { $0.symbol != smokeSymbol }
-        assets.insert(smokeAsset, at: 0)
-        PortfolioStore.save(assets)
+        var snapshot = originalSnapshot
+        snapshot.assets.removeAll { $0.symbol == smokeSymbol }
+        snapshot.assets.insert(PortfolioAssetSnapshot(asset: smokeAsset), at: 0)
+        PortfolioStore.save(snapshot)
         return 0
     }
 
     private static func verifyAndRestore() -> Int32 {
-        let assets = PortfolioStore.loadAssets()
-        guard let asset = assets.first(where: { $0.id == smokeAssetID && $0.symbol == smokeSymbol }) else {
+        let snapshot = PortfolioStore.loadPortfolio()
+        guard let asset = snapshot.financeAssets.first(where: { $0.id == smokeAssetID && $0.symbol == smokeSymbol }) else {
             return 66
         }
         guard asset.currentPrice == smokePrice else { return 67 }
@@ -319,7 +463,7 @@ enum PersistenceSmokeTestRunner {
             return 71
         }
 
-        PortfolioStore.save(snapshot.financeAssets)
+        PortfolioStore.save(snapshot)
         KeychainPortfolioSnapshot.delete(account: backupAccount)
         return 0
     }
@@ -329,6 +473,7 @@ enum PersistenceSmokeTestRunner {
             id: smokeAssetID,
             symbol: smokeSymbol,
             name: "XQ Persistence Smoke",
+            nativeCurrency: .usd,
             accent: FinanceAsset.accent(for: smokeSymbol),
             currentPrice: smokePrice,
             transactions: [
@@ -348,6 +493,7 @@ struct ContentView: View {
     let summary: FinanceAppSummary
 
     @State private var assets: [FinanceAsset]
+    @State private var exchangeRateUSDToVND: Double
     @State private var activeIndex = 0
     @State private var dragOffset: CGSize = .zero
     @State private var selectedTransaction: TransactionSelection?
@@ -355,17 +501,19 @@ struct ContentView: View {
     @State private var activeSheet: AssetSheet?
     @State private var displayCurrency = DisplayCurrency.usd
 
-    init(summary: FinanceAppSummary, assets: [FinanceAsset]? = nil) {
+    init(summary: FinanceAppSummary, portfolio: PortfolioSnapshot? = nil) {
         self.summary = summary
-        _assets = State(initialValue: assets ?? PortfolioStore.loadAssets())
+        let snapshot = portfolio ?? PortfolioStore.loadPortfolio()
+        _assets = State(initialValue: snapshot.financeAssets)
+        _exchangeRateUSDToVND = State(initialValue: snapshot.exchangeRateUSDToVND)
     }
 
     private var portfolioTotalValue: Double {
-        assets.reduce(0) { $0 + $1.currentValue }
+        assets.reduce(0) { $0 + $1.currentValueInUSD(exchangeRateUSDToVND: exchangeRateUSDToVND) }
     }
 
     private var persistenceSignature: String {
-        PortfolioStore.signature(for: assets)
+        PortfolioStore.signature(for: PortfolioSnapshot(assets: assets, exchangeRateUSDToVND: exchangeRateUSDToVND))
     }
 
     var body: some View {
@@ -376,15 +524,21 @@ struct ContentView: View {
                 VStack(spacing: 12) {
                     HeaderView(
                         title: summary.title,
-                        position: activeIndex + 1,
-                        count: assets.count
+                        position: assets.isEmpty ? 0 : activeIndex + 1,
+                        count: assets.count,
+                        onAddAsset: { activeSheet = .addAsset }
                     )
 
                     CurrencyToggleView(displayCurrency: $displayCurrency)
 
                     PortfolioSummaryView(
                         totalValue: portfolioTotalValue,
-                        displayCurrency: displayCurrency
+                        displayCurrency: displayCurrency,
+                        exchangeRateUSDToVND: exchangeRateUSDToVND
+                    )
+
+                    ExchangeRateEditorView(
+                        exchangeRateUSDToVND: $exchangeRateUSDToVND
                     )
 
                     AssetDeckView(
@@ -392,6 +546,8 @@ struct ContentView: View {
                         activeIndex: activeIndex,
                         dragOffset: dragOffset,
                         displayCurrency: displayCurrency,
+                        exchangeRateUSDToVND: exchangeRateUSDToVND,
+                        onAddAsset: { activeSheet = .addAsset },
                         onEditPrice: { activeSheet = .editPrice($0.id) },
                         onAddBuyLot: { activeSheet = .addBuyLot($0.id) },
                         onSelectTransaction: { asset, transaction in
@@ -409,11 +565,6 @@ struct ContentView: View {
                                 handleDragEnd(value.translation)
                             }
                     )
-
-                    Text("Swipe card to switch assets")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(XQPalette.muted)
-                        .padding(.bottom, 4)
                 }
                 .padding(.horizontal, 22)
                 .padding(.top, 54)
@@ -422,21 +573,38 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .onChange(of: persistenceSignature) { _, _ in
-            PortfolioStore.save(assets)
+            PortfolioStore.save(PortfolioSnapshot(assets: assets, exchangeRateUSDToVND: exchangeRateUSDToVND))
         }
         .sheet(item: $activeSheet) { sheet in
-            if let index = assets.firstIndex(where: { $0.id == sheet.assetID }) {
-                switch sheet {
-                case .editPrice:
+            switch sheet {
+            case .addAsset:
+                AddAssetSheet { symbol, name, nativeCurrency, startingPrice in
+                    addAsset(
+                        symbol: symbol,
+                        name: name,
+                        nativeCurrency: nativeCurrency,
+                        startingPrice: startingPrice
+                    )
+                }
+                .presentationDetents([.medium])
+
+            case .editPrice(let assetID):
+                if let index = assets.firstIndex(where: { $0.id == assetID }) {
                     PriceEditorSheet(asset: $assets[index])
                         .presentationDetents([.medium])
-                case .addBuyLot:
-                    BuyLotEditorSheet(asset: $assets[index])
+                } else {
+                    Text("Asset unavailable")
                         .presentationDetents([.medium])
                 }
-            } else {
-                Text("Asset unavailable")
-                    .presentationDetents([.medium])
+
+            case .addBuyLot(let assetID):
+                if let index = assets.firstIndex(where: { $0.id == assetID }) {
+                    BuyLotEditorSheet(asset: $assets[index])
+                        .presentationDetents([.medium])
+                } else {
+                    Text("Asset unavailable")
+                        .presentationDetents([.medium])
+                }
             }
         }
         .confirmationDialog(
@@ -455,6 +623,13 @@ struct ContentView: View {
     }
 
     private func handleDragEnd(_ translation: CGSize) {
+        guard assets.count > 1 else {
+            withAnimation(.spring(response: 0.34, dampingFraction: 0.78)) {
+                dragOffset = .zero
+            }
+            return
+        }
+
         if translation.width > 90 {
             moveToNextCard(direction: .right)
         } else if translation.width < -90 {
@@ -472,6 +647,10 @@ struct ContentView: View {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            guard !assets.isEmpty else {
+                dragOffset = .zero
+                return
+            }
             activeIndex = (activeIndex + 1) % assets.count
             dragOffset = .zero
         }
@@ -483,6 +662,27 @@ struct ContentView: View {
             assets[index].deduct(transactionID: selection.transaction.id)
         }
     }
+
+    private func addAsset(symbol: String, name: String, nativeCurrency: AssetCurrency, startingPrice: Double) {
+        let trimmedSymbol = symbol.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let newAsset = FinanceAsset(
+            id: UUID(),
+            symbol: trimmedSymbol,
+            name: trimmedName,
+            nativeCurrency: nativeCurrency,
+            accent: FinanceAsset.accent(for: trimmedSymbol),
+            currentPrice: max(0, startingPrice),
+            transactions: []
+        )
+
+        withAnimation(.spring(response: 0.34, dampingFraction: 0.82)) {
+            assets.insert(newAsset, at: 0)
+            activeIndex = 0
+            dragOffset = .zero
+        }
+    }
 }
 
 private enum SwipeDirection {
@@ -491,22 +691,18 @@ private enum SwipeDirection {
 }
 
 private enum AssetSheet: Identifiable {
+    case addAsset
     case editPrice(UUID)
     case addBuyLot(UUID)
 
     var id: String {
         switch self {
+        case .addAsset:
+            return "add-asset"
         case .editPrice(let assetID):
             return "edit-price-\(assetID.uuidString)"
         case .addBuyLot(let assetID):
             return "add-buy-lot-\(assetID.uuidString)"
-        }
-    }
-
-    var assetID: UUID {
-        switch self {
-        case .editPrice(let assetID), .addBuyLot(let assetID):
-            return assetID
         }
     }
 }
@@ -519,21 +715,21 @@ private enum DisplayCurrency: String, CaseIterable, Identifiable {
         rawValue
     }
 
-    func amount(fromUSD amount: Double) -> Double {
+    func amount(fromUSD amount: Double, exchangeRateUSDToVND: Double) -> Double {
         switch self {
         case .usd:
             return amount
         case .vnd:
-            return amount * 25_500
+            return amount * exchangeRateUSDToVND
         }
     }
 
-    func formatted(fromUSD amount: Double) -> String {
+    func formatted(fromUSD amount: Double, exchangeRateUSDToVND: Double) -> String {
         switch self {
         case .usd:
             return amount.currency
         case .vnd:
-            return self.amount(fromUSD: amount).vndCurrency
+            return self.amount(fromUSD: amount, exchangeRateUSDToVND: exchangeRateUSDToVND).vndCurrency
         }
     }
 }
@@ -542,18 +738,37 @@ private struct HeaderView: View {
     let title: String
     let position: Int
     let count: Int
+    let onAddAsset: () -> Void
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text(title)
-                .font(.system(size: 28, weight: .bold, design: .rounded))
-                .foregroundStyle(XQPalette.ink)
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .foregroundStyle(XQPalette.ink)
+
+                Text(count == 0 ? "No assets yet" : "\(count) assets")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(XQPalette.muted)
+            }
 
             Spacer()
 
-            Text("\(position) / \(count)")
-                .font(.system(size: 14, weight: .bold, design: .rounded))
-                .foregroundStyle(XQPalette.muted)
+            HStack(spacing: 10) {
+                Text(count == 0 ? "0 / 0" : "\(position) / \(count)")
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(XQPalette.muted)
+
+                Button(action: onAddAsset) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 14, weight: .bold))
+                        .frame(width: 34, height: 34)
+                        .background(XQPalette.ink, in: RoundedRectangle(cornerRadius: 12))
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.white)
+                .accessibilityLabel("Add asset")
+            }
         }
     }
 }
@@ -599,6 +814,7 @@ private struct CurrencyToggleView: View {
 private struct PortfolioSummaryView: View {
     let totalValue: Double
     let displayCurrency: DisplayCurrency
+    let exchangeRateUSDToVND: Double
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -606,11 +822,15 @@ private struct PortfolioSummaryView: View {
                 .font(.system(size: 14, weight: .bold))
                 .foregroundStyle(XQPalette.muted)
 
-            Text(displayCurrency.formatted(fromUSD: totalValue))
+            Text(displayCurrency.formatted(fromUSD: totalValue, exchangeRateUSDToVND: exchangeRateUSDToVND))
                 .font(.system(size: displayCurrency == .usd ? 31 : 25, weight: .heavy, design: .rounded))
                 .foregroundStyle(XQPalette.ink)
                 .lineLimit(1)
                 .minimumScaleFactor(0.58)
+
+            Text("1 USD = \(String(format: "%.0f", exchangeRateUSDToVND)) VND")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(XQPalette.muted)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 18)
@@ -623,34 +843,146 @@ private struct PortfolioSummaryView: View {
     }
 }
 
+private struct ExchangeRateEditorView: View {
+    @Binding var exchangeRateUSDToVND: Double
+    @State private var isEditing = false
+    @State private var text = ""
+
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("USD to VND")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(XQPalette.muted)
+
+                Text("1 USD = \(String(format: "%.0f", exchangeRateUSDToVND)) VND")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(XQPalette.ink)
+            }
+
+            Spacer()
+
+            Button {
+                text = String(format: "%.0f", exchangeRateUSDToVND)
+                isEditing = true
+            } label: {
+                HStack(spacing: 8) {
+                    Text(String(format: "%.0f", exchangeRateUSDToVND))
+                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .foregroundStyle(XQPalette.ink)
+
+                    Image(systemName: "pencil")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(XQPalette.muted)
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
+                .background(XQPalette.softFill, in: RoundedRectangle(cornerRadius: 12))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(XQPalette.divider, lineWidth: 1)
+                )
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 13)
+        .background(.white, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(XQPalette.divider, lineWidth: 1)
+        )
+        .onAppear {
+            text = String(format: "%.0f", exchangeRateUSDToVND)
+        }
+        .sheet(isPresented: $isEditing) {
+            ExchangeRateSheet(
+                exchangeRateUSDToVND: $exchangeRateUSDToVND,
+                initialText: text
+            )
+            .presentationDetents([.medium])
+        }
+    }
+}
+
+private struct ExchangeRateSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var exchangeRateUSDToVND: Double
+    @State var initialText: String
+
+    private var parsedValue: Double? {
+        initialText.decimalNumber
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Exchange Rate") {
+                    TextField("USD to VND", text: $initialText)
+                        .keyboardType(.decimalPad)
+                        .font(.system(size: 28, weight: .bold, design: .rounded))
+
+                    Text("Set how many VND equal 1 USD.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .navigationTitle("Update Rate")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        if let parsedValue, parsedValue > 0 {
+                            exchangeRateUSDToVND = parsedValue
+                        }
+                        dismiss()
+                    }
+                    .disabled(parsedValue == nil || parsedValue ?? 0 <= 0)
+                }
+            }
+        }
+    }
+}
+
 private struct AssetDeckView: View {
     let assets: [FinanceAsset]
     let activeIndex: Int
     let dragOffset: CGSize
     let displayCurrency: DisplayCurrency
+    let exchangeRateUSDToVND: Double
+    let onAddAsset: () -> Void
     let onEditPrice: (FinanceAsset) -> Void
     let onAddBuyLot: (FinanceAsset) -> Void
     let onSelectTransaction: (FinanceAsset, BuyTransaction) -> Void
 
     var body: some View {
         ZStack {
-            ForEach(0..<min(3, assets.count), id: \.self) { deckPosition in
-                let assetIndex = (activeIndex + deckPosition) % assets.count
-                let asset = assets[assetIndex]
+            if assets.isEmpty {
+                EmptyPortfolioView(onAddAsset: onAddAsset)
+            } else {
+                ForEach(0..<min(3, assets.count), id: \.self) { deckPosition in
+                    let assetIndex = (activeIndex + deckPosition) % assets.count
+                    let asset = assets[assetIndex]
 
-                AssetCardView(
-                    asset: asset,
-                    isActive: deckPosition == 0,
-                    displayCurrency: displayCurrency,
-                    onEditPrice: { onEditPrice(asset) },
-                    onAddBuyLot: { onAddBuyLot(asset) },
-                    onSelectTransaction: { onSelectTransaction(asset, $0) }
-                )
-                .offset(x: xOffset(for: deckPosition), y: yOffset(for: deckPosition))
-                .rotationEffect(.degrees(rotation(for: deckPosition)))
-                .scaleEffect(scale(for: deckPosition))
-                .zIndex(Double(3 - deckPosition))
-                .allowsHitTesting(deckPosition == 0)
+                    AssetCardView(
+                        asset: asset,
+                        isActive: deckPosition == 0,
+                        displayCurrency: displayCurrency,
+                        exchangeRateUSDToVND: exchangeRateUSDToVND,
+                        onEditPrice: { onEditPrice(asset) },
+                        onAddBuyLot: { onAddBuyLot(asset) },
+                        onSelectTransaction: { onSelectTransaction(asset, $0) }
+                    )
+                    .offset(x: xOffset(for: deckPosition), y: yOffset(for: deckPosition))
+                    .rotationEffect(.degrees(rotation(for: deckPosition)))
+                    .scaleEffect(scale(for: deckPosition))
+                    .zIndex(Double(3 - deckPosition))
+                    .allowsHitTesting(deckPosition == 0)
+                }
             }
         }
         .frame(maxWidth: .infinity)
@@ -677,10 +1009,51 @@ private struct AssetDeckView: View {
     }
 }
 
+private struct EmptyPortfolioView: View {
+    let onAddAsset: () -> Void
+
+    var body: some View {
+        VStack(spacing: 14) {
+            Image(systemName: "chart.line.uptrend.xyaxis")
+                .font(.system(size: 34, weight: .semibold))
+                .foregroundStyle(XQPalette.muted)
+
+            VStack(spacing: 4) {
+                Text("Add your first asset")
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundStyle(XQPalette.ink)
+
+                Text("Start with USD or VND, then add buy lots as you go.")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(XQPalette.muted)
+                    .multilineTextAlignment(.center)
+            }
+
+            Button(action: onAddAsset) {
+                Label("Add Asset", systemImage: "plus")
+                    .font(.system(size: 15, weight: .bold))
+                    .labelStyle(.titleAndIcon)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 11)
+                    .background(XQPalette.ink, in: Capsule())
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(.white)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.white, in: RoundedRectangle(cornerRadius: 26))
+        .overlay(
+            RoundedRectangle(cornerRadius: 28)
+                .stroke(XQPalette.divider, lineWidth: 1)
+        )
+    }
+}
+
 private struct AssetCardView: View {
     let asset: FinanceAsset
     let isActive: Bool
     let displayCurrency: DisplayCurrency
+    let exchangeRateUSDToVND: Double
     let onEditPrice: () -> Void
     let onAddBuyLot: () -> Void
     let onSelectTransaction: (BuyTransaction) -> Void
@@ -721,7 +1094,7 @@ private struct AssetCardView: View {
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                Text(displayCurrency.formatted(fromUSD: asset.currentValue))
+                Text(displayCurrency.formatted(fromUSD: asset.currentValueInUSD(exchangeRateUSDToVND: exchangeRateUSDToVND), exchangeRateUSDToVND: exchangeRateUSDToVND))
                     .font(.system(size: displayCurrency == .usd ? 38 : 30, weight: .heavy, design: .rounded))
                     .minimumScaleFactor(0.62)
                     .lineLimit(1)
@@ -774,6 +1147,8 @@ private struct AssetCardView: View {
                             TransactionRow(
                                 transaction: transaction,
                                 displayCurrency: displayCurrency,
+                                assetCurrency: asset.nativeCurrency,
+                                exchangeRateUSDToVND: exchangeRateUSDToVND,
                                 onDeduct: { onSelectTransaction(transaction) }
                             )
 
@@ -831,9 +1206,14 @@ private struct TransactionHeaderRow: View {
 private struct TransactionRow: View {
     let transaction: BuyTransaction
     let displayCurrency: DisplayCurrency
+    let assetCurrency: AssetCurrency
+    let exchangeRateUSDToVND: Double
     let onDeduct: () -> Void
 
     var body: some View {
+        let unitPriceUSD = assetCurrency.usdAmount(from: transaction.unitPrice, exchangeRateUSDToVND: exchangeRateUSDToVND)
+        let subtotalUSD = assetCurrency.usdAmount(from: transaction.totalCost, exchangeRateUSDToVND: exchangeRateUSDToVND)
+
         HStack(spacing: 10) {
             Text(transaction.units.formattedUnits)
                 .font(.system(size: 15, weight: .bold, design: .rounded))
@@ -842,7 +1222,7 @@ private struct TransactionRow: View {
                 .minimumScaleFactor(0.72)
                 .frame(width: 64, alignment: .leading)
 
-            Text(displayCurrency.formatted(fromUSD: transaction.unitPrice))
+            Text(displayCurrency.formatted(fromUSD: unitPriceUSD, exchangeRateUSDToVND: exchangeRateUSDToVND))
                 .font(.system(size: 14, weight: .semibold, design: .rounded))
                 .foregroundStyle(XQPalette.muted)
                 .lineLimit(1)
@@ -851,7 +1231,7 @@ private struct TransactionRow: View {
 
             Spacer(minLength: 4)
 
-            Text(displayCurrency.formatted(fromUSD: transaction.totalCost))
+            Text(displayCurrency.formatted(fromUSD: subtotalUSD, exchangeRateUSDToVND: exchangeRateUSDToVND))
                 .font(.system(size: 14, weight: .bold, design: .rounded))
                 .foregroundStyle(XQPalette.ink)
                 .frame(width: 86, alignment: .trailing)
@@ -889,7 +1269,7 @@ private struct PriceEditorSheet: View {
                         .keyboardType(.decimalPad)
                         .font(.system(size: 28, weight: .bold, design: .rounded))
 
-                    Text("Current price is entered in USD. Updating price changes total value only; it does not change units owned.")
+                    Text("Current price is entered in \(asset.nativeCurrency.label). Updating price changes total value only; it does not change units owned.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
@@ -949,19 +1329,19 @@ private struct BuyLotEditorSheet: View {
                     TextField("Units", text: $unitsText)
                         .keyboardType(.decimalPad)
 
-                    TextField("Price per unit", text: $unitPriceText)
+                    TextField("Price per unit (\(asset.nativeCurrency.label))", text: $unitPriceText)
                         .keyboardType(.decimalPad)
 
                     HStack {
                         Text("Subtotal")
                         Spacer()
-                        Text(subtotal?.currency ?? "$0.00")
+                        Text(asset.nativeCurrency.formatted(subtotal ?? 0))
                             .font(.system(size: 17, weight: .bold, design: .rounded))
                     }
                 }
 
                 Section {
-                    Text("Buy lots are entered in USD. Adding a lot increases units owned and current total value for this asset.")
+                    Text("Buy lots are entered in \(asset.nativeCurrency.label). Adding a lot increases units owned and current total value for this asset.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
@@ -980,6 +1360,70 @@ private struct BuyLotEditorSheet: View {
                             units: units,
                             unitPrice: unitPrice,
                             date: Date.now.buyLotDate
+                        )
+                        dismiss()
+                    }
+                    .disabled(!canSave)
+                }
+            }
+        }
+    }
+}
+
+private struct AddAssetSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var symbol = ""
+    @State private var name = ""
+    @State private var nativeCurrency = AssetCurrency.usd
+    @State private var startingPriceText = "0"
+
+    let onAdd: (String, String, AssetCurrency, Double) -> Void
+
+    private var canSave: Bool {
+        !symbol.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+        !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Asset") {
+                    TextField("Symbol", text: $symbol)
+                        .textInputAutocapitalization(.characters)
+
+                    TextField("Name", text: $name)
+
+                    Picker("Native currency", selection: $nativeCurrency) {
+                        ForEach(AssetCurrency.allCases) { currency in
+                            Text(currency.label).tag(currency)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+
+                Section("Starting Price") {
+                    TextField("Price", text: $startingPriceText)
+                        .keyboardType(.decimalPad)
+
+                    Text("The price is stored in \(nativeCurrency.label). You can update it later.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .navigationTitle("Add Asset")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Add") {
+                        onAdd(
+                            symbol.trimmingCharacters(in: .whitespacesAndNewlines),
+                            name.trimmingCharacters(in: .whitespacesAndNewlines),
+                            nativeCurrency,
+                            startingPriceText.decimalNumber ?? 0
                         )
                         dismiss()
                     }
@@ -1105,7 +1549,7 @@ private extension Date {
 
 extension FinanceAsset {
     static func accent(for symbol: String) -> Color {
-        switch symbol {
+        switch symbol.uppercased() {
         case "AAPL":
             return Color(red: 0.06, green: 0.11, blue: 0.2)
         case "BTC":
@@ -1116,49 +1560,37 @@ extension FinanceAsset {
             return XQPalette.ink
         }
     }
-
-    static let fixtures = [
-        FinanceAsset(
-            id: UUID(uuidString: "46C64E8D-039F-4E41-8E0C-7D6D970E3F91")!,
-            symbol: "AAPL",
-            name: "Apple Inc.",
-            accent: Self.accent(for: "AAPL"),
-            currentPrice: 174.65,
-            transactions: [
-                BuyTransaction(id: UUID(uuidString: "52AD1788-4E1C-4797-9BD9-F5B77C9388E2")!, date: "May 6, 2024", units: 10.000, unitPrice: 169.21),
-                BuyTransaction(id: UUID(uuidString: "4A8E62BF-6FDE-482A-9F56-768440E28A5D")!, date: "Apr 15, 2024", units: 15.000, unitPrice: 165.32),
-                BuyTransaction(id: UUID(uuidString: "16D2410E-4110-480A-8E83-11DB28DA44E3")!, date: "Mar 1, 2024", units: 20.000, unitPrice: 155.10),
-                BuyTransaction(id: UUID(uuidString: "F9403430-4133-491E-84E9-1172DD6D9C5D")!, date: "Jan 16, 2024", units: 15.000, unitPrice: 145.85),
-                BuyTransaction(id: UUID(uuidString: "52EC4676-C263-4F45-83F5-7E0F355BF2F3")!, date: "Dec 1, 2023", units: 12.342, unitPrice: 124.56)
-            ]
-        ),
-        FinanceAsset(
-            id: UUID(uuidString: "87A05B55-3282-49EA-98E4-3A2C05B34B20")!,
-            symbol: "BTC",
-            name: "Bitcoin",
-            accent: Self.accent(for: "BTC"),
-            currentPrice: 68420.00,
-            transactions: [
-                BuyTransaction(id: UUID(uuidString: "3AE792AC-4B1E-4712-A302-33E6D9F1D1BD")!, date: "May 5, 2024", units: 0.080, unitPrice: 64210.00),
-                BuyTransaction(id: UUID(uuidString: "0FD21708-A91A-4095-86C6-550958F2AD68")!, date: "Apr 20, 2024", units: 0.145, unitPrice: 60280.00),
-                BuyTransaction(id: UUID(uuidString: "0D839E30-F8F8-437E-86C2-7E92EA94372B")!, date: "Mar 11, 2024", units: 0.210, unitPrice: 53640.00)
-            ]
-        ),
-        FinanceAsset(
-            id: UUID(uuidString: "2B90ACF5-4B3D-4F57-9E70-A3363A1F515C")!,
-            symbol: "ETH",
-            name: "Ethereum",
-            accent: Self.accent(for: "ETH"),
-            currentPrice: 3520.25,
-            transactions: [
-                BuyTransaction(id: UUID(uuidString: "68BC655E-1F43-4D68-9227-78C4BAA5E7ED")!, date: "May 2, 2024", units: 1.200, unitPrice: 3120.40),
-                BuyTransaction(id: UUID(uuidString: "8799CF8C-0E5F-4D5B-A706-C4AEB2282A28")!, date: "Feb 19, 2024", units: 2.000, unitPrice: 2860.00),
-                BuyTransaction(id: UUID(uuidString: "A94A411C-1A2F-4F69-9D7A-4229964C5B17")!, date: "Nov 9, 2023", units: 1.500, unitPrice: 1978.22)
-            ]
-        )
-    ]
 }
 
 #Preview {
-    ContentView(summary: .default, assets: FinanceAsset.fixtures)
+    let portfolio = PortfolioSnapshot(
+        assets: [
+            FinanceAsset(
+                id: UUID(uuidString: "46C64E8D-039F-4E41-8E0C-7D6D970E3F91")!,
+                symbol: "AAPL",
+                name: "Apple Inc.",
+                nativeCurrency: .usd,
+                accent: FinanceAsset.accent(for: "AAPL"),
+                currentPrice: 174.65,
+                transactions: [
+                    BuyTransaction(id: UUID(uuidString: "52AD1788-4E1C-4797-9BD9-F5B77C9388E2")!, date: "May 6, 2024", units: 10.000, unitPrice: 169.21),
+                    BuyTransaction(id: UUID(uuidString: "4A8E62BF-6FDE-482A-9F56-768440E28A5D")!, date: "Apr 15, 2024", units: 15.000, unitPrice: 165.32)
+                ]
+            ),
+            FinanceAsset(
+                id: UUID(uuidString: "87A05B55-3282-49EA-98E4-3A2C05B34B20")!,
+                symbol: "VNGOLD",
+                name: "VND Gold",
+                nativeCurrency: .vnd,
+                accent: XQPalette.positive,
+                currentPrice: 7_850_000,
+                transactions: [
+                    BuyTransaction(id: UUID(uuidString: "3AE792AC-4B1E-4712-A302-33E6D9F1D1BD")!, date: "May 5, 2024", units: 0.080, unitPrice: 7_420_000)
+                ]
+            )
+        ],
+        exchangeRateUSDToVND: 25_500
+    )
+
+    ContentView(summary: .default, portfolio: portfolio)
 }

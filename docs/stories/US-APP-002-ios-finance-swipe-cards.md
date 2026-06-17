@@ -12,7 +12,8 @@ normal
 
 Implement the first interactive `XQ Finance` portfolio surface as a native iOS
 swipe-card browser. Each card represents an asset view with current total value,
-manual price editing, and buy lots that can be added or deducted.
+manual price editing, buy lots that can be added or deducted, and asset-native
+currency support.
 
 ## Relevant Product Docs
 
@@ -22,13 +23,17 @@ manual price editing, and buy lots that can be added or deducted.
 
 - The app launches into a card-stack finance UI instead of the minimal overview
   copy screen.
+- The app launches empty on first install and provides an add-asset entry point
+  instead of seeded default holdings.
 - Users can move through asset cards by dragging horizontally on the card stack.
 - Users can switch display currency with a large USD/VND toggle.
 - The screen shows total current portfolio value across all assets below the
   currency toggle and above the card stack.
+- The screen shows an editable USD/VND exchange rate row below the summary.
 - Each asset card shows current total value in USD or VND.
 - Each buy-lot row shows units, price per unit, subtotal, and a delete action.
-- Users can add a buy lot by entering units and price per unit in USD.
+- Users can add a buy lot by entering units and price per unit in the asset's
+  native currency.
 - Adding a buy lot makes the entered price per unit the asset's latest current
   price and recalculates current total value from total units owned.
 - The screen does not show average cost, realized gain, invested value, or
@@ -40,13 +45,15 @@ manual price editing, and buy lots that can be added or deducted.
   action.
 - Price updates, buy-lot additions, and buy-lot deductions are saved to local
   device storage.
+- Users can add a new asset from the add-asset sheet and choose the native
+  currency at creation time.
 - If the app storage snapshot is unavailable after a reinstall/update cycle,
   the app attempts to recover the latest portfolio snapshot from Keychain.
 - A physical-device smoke script proves an update-style reinstall with the same
   bundle ID preserves the local portfolio snapshot.
-- Unit tests prove summary copy, manual price updates, transaction deduction,
-  buy-lot creation behavior, decimal-comma input, and portfolio snapshot
-  encoding behavior.
+- Unit tests prove empty-state startup, exchange-rate persistence, manual price
+  updates, transaction deduction, buy-lot creation behavior, decimal-comma
+  input, native-currency valuation, and portfolio snapshot encoding behavior.
 
 ## Design Notes
 
@@ -83,6 +90,8 @@ No harness changes expected.
 ## Evidence
 
 - `./scripts/module build ios-xq-finance-app` passed with `** BUILD SUCCEEDED **`.
+- `./scripts/module build ios-xq-finance-app` passed after the empty-first,
+  exchange-rate, and add-asset refactor.
 - `./scripts/module test ios-xq-finance-app` passed with 4 XCTest cases and 0 failures.
 - Native simulator screenshot captured at `/private/tmp/xq-finance-add-buy-lot.png`;
   `design-qa.md` records the final visual check as passed.
