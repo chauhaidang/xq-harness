@@ -84,7 +84,7 @@ final class AppTests: XCTestCase {
         XCTAssertEqual(restoredAsset.symbol, "XAU")
         XCTAssertEqual(restoredAsset.name, "VND Gold")
         XCTAssertEqual(restoredAsset.nativeCurrency, .vnd)
-        XCTAssertEqual(restoredAsset.currentPrice, 9_800_000, accuracy: 0.001)
+        XCTAssertEqual(restoredAsset.currentPrice, asset.currentPrice, accuracy: 0.001)
         XCTAssertEqual(restoredAsset.transactions.count, asset.transactions.count)
         XCTAssertEqual(restoredAsset.transactions.first?.units, 0.25)
         XCTAssertEqual(restoredAsset.transactions.first?.unitPrice, 9_500_000)
@@ -153,6 +153,23 @@ final class AppTests: XCTestCase {
         )
 
         XCTAssertFalse(snapshot.looksLikeLegacySeededPortfolio)
+    }
+
+    func testUITestStorageIsIsolatedFromNormalPortfolioStorage() throws {
+        let baseURL = URL(fileURLWithPath: "/tmp/xq-storage-tests", isDirectory: true)
+        let normalURL = try XCTUnwrap(PortfolioStore.portfolioURL(namespace: PortfolioStore.normalNamespace, baseURL: baseURL))
+        let uiTestURL = try XCTUnwrap(PortfolioStore.portfolioURL(namespace: PortfolioStore.uiTestNamespace, baseURL: baseURL))
+
+        XCTAssertNotEqual(normalURL, uiTestURL)
+        XCTAssertNotEqual(PortfolioStore.normalNamespace.keychainService, PortfolioStore.uiTestNamespace.keychainService)
+        XCTAssertEqual(PortfolioStore.namespace(arguments: ["app"]), PortfolioStore.normalNamespace)
+        XCTAssertEqual(PortfolioStore.namespace(arguments: ["app", "--xq-ui-testing"]), PortfolioStore.uiTestNamespace)
+    }
+
+    func testUITestResetRequiresBothIsolationAndResetFlags() {
+        XCTAssertFalse(PortfolioStore.shouldResetUITestData(arguments: ["app", "--xq-ui-testing-reset"]))
+        XCTAssertFalse(PortfolioStore.shouldResetUITestData(arguments: ["app", "--xq-ui-testing"]))
+        XCTAssertTrue(PortfolioStore.shouldResetUITestData(arguments: ["app", "--xq-ui-testing", "--xq-ui-testing-reset"]))
     }
 
     private func makeUSDAsset() -> FinanceAsset {

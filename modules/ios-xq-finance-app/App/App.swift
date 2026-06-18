@@ -7,6 +7,7 @@ import SwiftUI
 @main
 struct XQFinanceApp: App {
     init() {
+        PortfolioStore.resetUITestDataIfRequested()
         #if DEBUG
         PersistenceSmokeTestRunner.runIfRequested()
         #endif
@@ -142,13 +143,47 @@ enum PortfolioStore {
 
     private static let decoder = JSONDecoder()
 
+    static let normalNamespace = PortfolioStorageNamespace(
+        directoryName: "XQFinance",
+        keychainService: "com.xq.finance.ios-xq-finance-app.portfolio"
+    )
+    static let uiTestNamespace = PortfolioStorageNamespace(
+        directoryName: "XQFinanceUITests",
+        keychainService: "com.xq.finance.ios-xq-finance-app.portfolio.uitests"
+    )
+
+    static func namespace(arguments: [String] = CommandLine.arguments) -> PortfolioStorageNamespace {
+        arguments.contains("--xq-ui-testing") ? uiTestNamespace : normalNamespace
+    }
+
     private static var portfolioURL: URL? {
-        guard let baseURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+        portfolioURL(namespace: namespace())
+    }
+
+    static func portfolioURL(namespace: PortfolioStorageNamespace, baseURL: URL? = nil) -> URL? {
+        let resolvedBaseURL: URL
+        if let baseURL {
+            resolvedBaseURL = baseURL
+        } else if let applicationSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+            resolvedBaseURL = applicationSupportURL
+        } else {
             return nil
         }
-        return baseURL
-            .appendingPathComponent("XQFinance", isDirectory: true)
+        return resolvedBaseURL
+            .appendingPathComponent(namespace.directoryName, isDirectory: true)
             .appendingPathComponent("portfolio.json")
+    }
+
+    static func resetUITestDataIfRequested(arguments: [String] = CommandLine.arguments) {
+        guard shouldResetUITestData(arguments: arguments) else { return }
+        if let url = portfolioURL(namespace: uiTestNamespace) {
+            try? FileManager.default.removeItem(at: url)
+        }
+        KeychainPortfolioSnapshot.delete(service: uiTestNamespace.keychainService)
+    }
+
+    static func shouldResetUITestData(arguments: [String]) -> Bool {
+        arguments.contains("--xq-ui-testing") && arguments.contains("--xq-ui-testing-reset")
     }
 
     static func loadPortfolio() -> PortfolioSnapshot {
@@ -156,11 +191,11 @@ enum PortfolioStore {
             return migrate(snapshot)
         }
 
-        if let data = KeychainPortfolioSnapshot.load(), let snapshot = decode(data) {
+        if let data = KeychainPortfolioSnapshot.load(service: namespace().keychainService), let snapshot = decode(data) {
             let migrated = migrate(snapshot)
             if let migratedData = encode(migrated) {
                 writePrimarySnapshotData(migratedData)
-                KeychainPortfolioSnapshot.save(migratedData)
+                KeychainPortfolioSnapshot.save(migratedData, service: namespace().keychainService)
             } else {
                 writePrimarySnapshotData(data)
             }
@@ -177,7 +212,7 @@ enum PortfolioStore {
     static func save(_ snapshot: PortfolioSnapshot) {
         guard let data = encode(snapshot) else { return }
         writePrimarySnapshotData(data)
-        KeychainPortfolioSnapshot.save(data)
+        KeychainPortfolioSnapshot.save(data, service: namespace().keychainService)
     }
 
     static func save(assets: [FinanceAsset], exchangeRateUSDToVND: Double) {
@@ -212,6 +247,11 @@ enum PortfolioStore {
             assets: []
         )
     }
+}
+
+struct PortfolioStorageNamespace: Equatable {
+    let directoryName: String
+    let keychainService: String
 }
 
 struct PortfolioSnapshot: Codable, Equatable {
@@ -346,11 +386,10 @@ private extension PortfolioStore {
 }
 
 private enum KeychainPortfolioSnapshot {
-    private static let service = "com.xq.finance.ios-xq-finance-app.portfolio"
     private static let defaultAccount = "latestPortfolioSnapshot"
 
-    static func load(account: String = defaultAccount) -> Data? {
-        var query = baseQuery(account: account)
+    static func load(account: String = defaultAccount, service: String = PortfolioStore.namespace().keychainService) -> Data? {
+        var query = baseQuery(account: account, service: service)
         query[kSecReturnData as String] = true
         query[kSecMatchLimit as String] = kSecMatchLimitOne
 
@@ -360,28 +399,28 @@ private enum KeychainPortfolioSnapshot {
         return result as? Data
     }
 
-    static func save(_ data: Data, account: String = defaultAccount) {
+    static func save(_ data: Data, account: String = defaultAccount, service: String = PortfolioStore.namespace().keychainService) {
         let attributes: [String: Any] = [
             kSecValueData as String: data,
             kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock
         ]
 
-        let updateStatus = SecItemUpdate(baseQuery(account: account) as CFDictionary, attributes as CFDictionary)
+        let updateStatus = SecItemUpdate(baseQuery(account: account, service: service) as CFDictionary, attributes as CFDictionary)
         if updateStatus == errSecSuccess {
             return
         }
 
-        var addQuery = baseQuery(account: account)
+        var addQuery = baseQuery(account: account, service: service)
         addQuery[kSecValueData as String] = data
         addQuery[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
         SecItemAdd(addQuery as CFDictionary, nil)
     }
 
-    static func delete(account: String = defaultAccount) {
-        SecItemDelete(baseQuery(account: account) as CFDictionary)
+    static func delete(account: String = defaultAccount, service: String = PortfolioStore.namespace().keychainService) {
+        SecItemDelete(baseQuery(account: account, service: service) as CFDictionary)
     }
 
-    private static func baseQuery(account: String) -> [String: Any] {
+    private static func baseQuery(account: String, service: String) -> [String: Any] {
         [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
@@ -613,9 +652,10 @@ struct ContentView: View {
             titleVisibility: .visible,
             presenting: selectedTransaction
         ) { selection in
-            Button("Confirm Deduction", role: .destructive) {
-                deduct(selection)
-            }
+                Button("Confirm Deduction", role: .destructive) {
+                    deduct(selection)
+                }
+                .accessibilityIdentifier(XQAccessibilityIdentifier.confirmDeductionButton.rawValue)
             Button("Cancel", role: .cancel) {}
         } message: { selection in
             Text("This removes \(selection.transaction.units.formattedUnits) units from the asset's buy lots.")
@@ -768,6 +808,7 @@ private struct HeaderView: View {
                 .buttonStyle(.plain)
                 .foregroundStyle(.white)
                 .accessibilityLabel("Add asset")
+                .accessibilityIdentifier(XQAccessibilityIdentifier.addAssetButton.rawValue)
             }
         }
     }
@@ -1039,6 +1080,7 @@ private struct EmptyPortfolioView: View {
             }
             .buttonStyle(.plain)
             .foregroundStyle(.white)
+            .accessibilityIdentifier(XQAccessibilityIdentifier.addAssetButton.rawValue)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.white, in: RoundedRectangle(cornerRadius: 26))
@@ -1046,6 +1088,7 @@ private struct EmptyPortfolioView: View {
             RoundedRectangle(cornerRadius: 28)
                 .stroke(XQPalette.divider, lineWidth: 1)
         )
+        .accessibilityIdentifier(XQAccessibilityIdentifier.emptyPortfolio.rawValue)
     }
 }
 
@@ -1067,6 +1110,7 @@ private struct AssetCardView: View {
                     Text(asset.symbol)
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .foregroundStyle(XQPalette.ink)
+                        .accessibilityIdentifier(XQAccessibilityIdentifier.assetSymbol.rawValue)
 
                     Text(asset.name)
                         .font(.system(size: 15, weight: .medium))
@@ -1091,6 +1135,7 @@ private struct AssetCardView: View {
                 .buttonStyle(.plain)
                 .foregroundStyle(XQPalette.ink)
                 .accessibilityLabel("Update current price for \(asset.symbol)")
+                .accessibilityIdentifier(XQAccessibilityIdentifier.editPriceButton.rawValue)
             }
 
             VStack(alignment: .leading, spacing: 8) {
@@ -1099,6 +1144,7 @@ private struct AssetCardView: View {
                     .minimumScaleFactor(0.62)
                     .lineLimit(1)
                     .foregroundStyle(XQPalette.ink)
+                    .accessibilityIdentifier(XQAccessibilityIdentifier.assetCurrentValue.rawValue)
 
                 Text("Current total value")
                     .font(.system(size: 15, weight: .medium))
@@ -1133,6 +1179,7 @@ private struct AssetCardView: View {
                     .buttonStyle(.plain)
                     .foregroundStyle(.white)
                     .accessibilityLabel("Add buy lot for \(asset.symbol)")
+                    .accessibilityIdentifier(XQAccessibilityIdentifier.addBuyLotButton.rawValue)
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 11)
@@ -1176,6 +1223,8 @@ private struct AssetCardView: View {
                 .stroke(isActive ? XQPalette.divider : XQPalette.divider.opacity(0.5), lineWidth: 1)
         )
         .shadow(color: XQPalette.shadow.opacity(isActive ? 0.18 : 0.08), radius: isActive ? 22 : 12, x: 0, y: isActive ? 16 : 8)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier(XQAccessibilityIdentifier.assetCard.rawValue)
     }
 }
 
@@ -1249,10 +1298,13 @@ private struct TransactionRow: View {
             .buttonStyle(.plain)
             .foregroundStyle(XQPalette.destructive)
             .accessibilityLabel("Deduct transaction from \(transaction.date)")
+            .accessibilityIdentifier(XQAccessibilityIdentifier.deductTransactionButton.rawValue)
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
         .contentShape(Rectangle())
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier(XQAccessibilityIdentifier.transactionRow.rawValue)
     }
 }
 
@@ -1268,6 +1320,7 @@ private struct PriceEditorSheet: View {
                     TextField("Price", text: $priceText)
                         .keyboardType(.decimalPad)
                         .font(.system(size: 28, weight: .bold, design: .rounded))
+                        .accessibilityIdentifier(XQAccessibilityIdentifier.currentPriceField.rawValue)
 
                     Text("Current price is entered in \(asset.nativeCurrency.label). Updating price changes total value only; it does not change units owned.")
                         .font(.footnote)
@@ -1289,6 +1342,7 @@ private struct PriceEditorSheet: View {
                         dismiss()
                     }
                     .disabled(priceText.decimalNumber == nil)
+                    .accessibilityIdentifier(XQAccessibilityIdentifier.priceSaveButton.rawValue)
                 }
             }
             .onAppear {
@@ -1328,9 +1382,11 @@ private struct BuyLotEditorSheet: View {
                 Section("Buy Lot") {
                     TextField("Units", text: $unitsText)
                         .keyboardType(.decimalPad)
+                        .accessibilityIdentifier(XQAccessibilityIdentifier.buyLotUnitsField.rawValue)
 
                     TextField("Price per unit (\(asset.nativeCurrency.label))", text: $unitPriceText)
                         .keyboardType(.decimalPad)
+                        .accessibilityIdentifier(XQAccessibilityIdentifier.buyLotPriceField.rawValue)
 
                     HStack {
                         Text("Subtotal")
@@ -1364,6 +1420,7 @@ private struct BuyLotEditorSheet: View {
                         dismiss()
                     }
                     .disabled(!canSave)
+                    .accessibilityIdentifier(XQAccessibilityIdentifier.buyLotSaveButton.rawValue)
                 }
             }
         }
@@ -1390,8 +1447,10 @@ private struct AddAssetSheet: View {
                 Section("Asset") {
                     TextField("Symbol", text: $symbol)
                         .textInputAutocapitalization(.characters)
+                        .accessibilityIdentifier(XQAccessibilityIdentifier.symbolField.rawValue)
 
                     TextField("Name", text: $name)
+                        .accessibilityIdentifier(XQAccessibilityIdentifier.nameField.rawValue)
 
                     Picker("Native currency", selection: $nativeCurrency) {
                         ForEach(AssetCurrency.allCases) { currency in
@@ -1404,6 +1463,7 @@ private struct AddAssetSheet: View {
                 Section("Starting Price") {
                     TextField("Price", text: $startingPriceText)
                         .keyboardType(.decimalPad)
+                        .accessibilityIdentifier(XQAccessibilityIdentifier.startingPriceField.rawValue)
 
                     Text("The price is stored in \(nativeCurrency.label). You can update it later.")
                         .font(.footnote)
@@ -1428,6 +1488,7 @@ private struct AddAssetSheet: View {
                         dismiss()
                     }
                     .disabled(!canSave)
+                    .accessibilityIdentifier(XQAccessibilityIdentifier.addAssetSaveButton.rawValue)
                 }
             }
         }

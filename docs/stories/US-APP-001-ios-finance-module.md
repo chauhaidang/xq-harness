@@ -33,6 +33,7 @@ finance data behavior, authentication, persistence, or external integrations.
 - Tables: none.
 - Domain rules: only launch summary copy exists in this slice.
 - UI surfaces: SwiftUI iOS application shell.
+- Brand assets: AppIcon asset catalog with a friendly `XQ` pocket-monogram mark.
 
 ## Validation
 
@@ -58,3 +59,5 @@ No harness changes expected.
 - `./scripts/module build ios-xq-finance-app` passed with `** BUILD SUCCEEDED **`.
 - `./scripts/module test ios-xq-finance-app` passed with 1 XCTest and 0 failures.
 - `scripts/bin/harness-cli story verify US-APP-001` passed.
+- `./scripts/module build ios-xq-finance-app` passed after adding the AppIcon
+  asset catalog and compiling it through Xcode's asset tool.

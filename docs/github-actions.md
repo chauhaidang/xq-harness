@@ -76,6 +76,13 @@ Publish runs only when the version changed or the workflow was dispatched manual
 | `xq-test-harness` | `ci-xq-test-harness.yml` | `cd-xq-test-harness.yml` | `playwright_skip_browser: true` |
 | `xq-test-harness-e2e-consumer` | `ci-xq-test-harness-e2e-consumer.yml` | — | Private; CI only |
 | `xq-scripts` | — | `cd-xq-scripts.yml` | Tarball release |
+| `xq-ios-ui-test-framework` | `ci-xq-ios-ui-test-framework.yml` | `cd-xq-ios-ui-test-framework.yml` | Swift package; subtree Git release |
+
+The iOS UI framework uses a dedicated macOS workflow rather than the Node
+templates. CI runs module package validation and an XQ consumer compile check.
+CD is tag-driven (`ios-ui-test-framework-vX.Y.Z`), validates `VERSION` and
+`modules.yaml`, subtree-splits the module, pushes to the private distribution
+repository, creates immutable `X.Y.Z` tags, and publishes release notes.
 
 ## Add CI/CD for a new module
 

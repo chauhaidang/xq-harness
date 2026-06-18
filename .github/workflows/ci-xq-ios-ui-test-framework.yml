@@ -1,0 +1,48 @@
+name: CI xq-ios-ui-test-framework
+
+on:
+  pull_request:
+    paths: &paths
+      - modules/xq-ios-ui-test-framework/**
+      - modules/ios-xq-finance-app/**
+      - modules.yaml
+      - scripts/module
+      - .github/workflows/ci-xq-ios-ui-test-framework.yml
+  push:
+    branches: [main]
+    paths: *paths
+
+concurrency:
+  group: ci-xq-ios-ui-test-framework-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package-and-consumer:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install module tools
+        run: brew install xcodegen yq
+
+      - name: Validate package
+        run: ./scripts/module ci xq-ios-ui-test-framework
+
+      - name: Validate package manifest and public products
+        working-directory: modules/xq-ios-ui-test-framework
+        run: |
+          swift package dump-package > /dev/null
+          swift package describe --type json > /dev/null
+
+      - name: Generate consumer project
+        working-directory: modules/ios-xq-finance-app
+        run: xcodegen generate
+
+      - name: Compile consumer UI-test target
+        run: |
+          xcodebuild \
+            -project modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj \
+            -scheme ios-xq-finance-app-ui-tests \
+            -destination "generic/platform=iOS Simulator" \
+            CODE_SIGNING_ALLOWED=NO \
+            build-for-testing

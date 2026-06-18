@@ -1,0 +1,65 @@
+name: CD xq-ios-ui-test-framework
+
+on:
+  push:
+    tags:
+      - ios-ui-test-framework-v*.*.*
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install module tools
+        run: brew install yq
+
+      - name: Validate release version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#ios-ui-test-framework-v}"
+          declared="$(tr -d '[:space:]' < modules/xq-ios-ui-test-framework/VERSION)"
+          registry="$(yq -r '."xq-ios-ui-test-framework".version' modules.yaml)"
+          test "$version" = "$declared"
+          test "$version" = "$registry"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Validate package
+        run: ./scripts/module ci xq-ios-ui-test-framework
+
+      - name: Validate package manifest and public products
+        working-directory: modules/xq-ios-ui-test-framework
+        run: |
+          swift package dump-package > /dev/null
+          swift package describe --type json > /dev/null
+
+      - name: Publish subtree and immutable tag
+        env:
+          PUBLISH_TOKEN: ${{ secrets.SWIFT_PACKAGE_PUBLISH_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git subtree split --prefix=modules/xq-ios-ui-test-framework -b swift-package-release
+          remote="https://x-access-token:${PUBLISH_TOKEN}@github.com/chauhaidang/xq-ios-ui-test-framework.git"
+          git push "$remote" swift-package-release:main
+          split_commit="$(git rev-parse swift-package-release)"
+          git tag "$VERSION" "$split_commit"
+          git push "$remote" "$VERSION"
+
+      - name: Create distribution release
+        env:
+          GH_TOKEN: ${{ secrets.SWIFT_PACKAGE_PUBLISH_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "$VERSION" \
+            --repo chauhaidang/xq-ios-ui-test-framework \
+            --title "$VERSION" \
+            --notes-file modules/xq-ios-ui-test-framework/CHANGELOG.md

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "project": "ios-xq-finance-app.xcodeproj",
+  "scheme": "ios-xq-finance-app-ui-tests",
+  "bundleIdentifier": "com.xq.finance.ios-xq-finance-app",
+  "ipaEnvironmentVariable": "XQ_FINANCE_IPA",
+  "resultDirectory": "build/ui-test-results",
+  "developmentTeam": "T99X93V7Y2"
+}

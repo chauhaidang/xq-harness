@@ -8,6 +8,7 @@
 
 - The app is a SwiftUI iOS application module under `modules/ios-xq-finance-app`.
 - The launch surface identifies the product as `XQ Finance`.
+- The app icon uses a friendly `XQ` pocket-monogram mark in the app palette.
 - The primary screen is a swipe-card portfolio browser. Each card represents one
   asset and shows current total value in the selected display currency plus a
   buy-lot list.
@@ -42,6 +43,11 @@
 - On launch, the app loads the Application Support snapshot first, restores
   from the Keychain snapshot if the file is missing, and starts empty when
   neither local snapshot exists.
+- The application owns a separate XCUITest target, stable accessibility
+  identifiers, finance screen objects, and the portfolio lifecycle journey.
+- UI-test launches use a dedicated Application Support directory and Keychain
+  service/account. `--xq-ui-testing-reset` is honored only with
+  `--xq-ui-testing` and cannot clear normal portfolio data.
 - The current slice does not expose a menu, filters, bottom arrow controls,
   average cost, realized gain, invested value, or gain/loss summaries.
 - Financial account data, authentication, provider integrations, cloud backup,
@@ -57,3 +63,6 @@
   targeting a plugged-in iPhone destination.
 - Update-style reinstall persistence is validated on a physical device by
   `modules/ios-xq-finance-app/scripts/verify-device-reinstall-persistence.sh`.
+- The isolated lifecycle journey is run through `xq-ui-test` using
+  `modules/ios-xq-finance-app/xq-ui-tests.json`; it emits XCResult, JUnit, logs,
+  metadata, and a retained success screenshot.

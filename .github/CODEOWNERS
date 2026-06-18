@@ -14,6 +14,8 @@
 /.github/workflows/cd-xq-test-harness.yml     @chauhaidang/xq-harness-maintainers
 /.github/workflows/ci-xq-test-harness-e2e-consumer.yml @chauhaidang/xq-harness-maintainers
 /.github/workflows/cd-xq-scripts.yml          @chauhaidang/xq-harness-maintainers
+/.github/workflows/ci-xq-ios-ui-test-framework.yml @chauhaidang/xq-harness-maintainers
+/.github/workflows/cd-xq-ios-ui-test-framework.yml @chauhaidang/xq-harness-maintainers
 
 # Module source ownership (optional — replace with real teams)
 /modules/xq-common-kit/                       @chauhaidang/xq-harness-maintainers
@@ -22,3 +24,4 @@
 /modules/xq-test-harness/                     @chauhaidang/xq-harness-maintainers
 /modules/xq-test-harness-e2e-consumer/         @chauhaidang/xq-harness-maintainers
 /modules/xq-scripts/                            @chauhaidang/xq-harness-maintainers
+/modules/xq-ios-ui-test-framework/              @chauhaidang/xq-harness-maintainers

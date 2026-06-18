@@ -79,6 +79,20 @@ modules:
         -destination 'platform=iOS Simulator,name=iPhone 16'
         test
 
+  xq-ios-ui-test-framework:
+    path: modules/xq-ios-ui-test-framework
+    language: swift
+    version: 0.1.0
+    test_all: false
+    toolchain:
+      swift: "5.10+"
+      xcode: "16"
+      xcbeautify: "3.2.1"
+    commands:
+      install: swift package resolve
+      build: swift build
+      test: swift test
+
   # ── XQ packages (Level C: published semver, independent modules) ──────────────
   # Harness-lineage packages: @chauhaidang/xq-harness-* (see ADR 0010).
   # Monorepo uses Yarn portal: for sibling deps; external consumers use semver.

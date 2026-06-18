@@ -9,6 +9,8 @@ This module is a SwiftUI iOS app with an XCTest bundle.
 - Scheme: `ios-xq-finance-app`
 - App bundle ID: `com.xq.finance.ios-xq-finance-app`
 - Test bundle ID: `com.xq.finance.ios-xq-finance-appTests`
+- UI-test scheme: `ios-xq-finance-app-ui-tests`
+- UI-test configuration: `modules/ios-xq-finance-app/xq-ui-tests.json`
 - Minimum iOS deployment target: `17.0`
 
 ## Preferred Device Workflow
@@ -67,6 +69,26 @@ do not wipe the app's local persisted portfolio. It intentionally does not
 uninstall the app; uninstalling removes the app container, and recovery then
 depends on the Keychain fallback path.
 
+## Isolated UI Journey
+
+Install `xcbeautify 3.2.1`, archive and export the app with the commands at the
+end of this file, then run the consumer-owned lifecycle suite through the local
+framework package:
+
+```bash
+XQ_FINANCE_IPA="$PWD/modules/ios-xq-finance-app/build/ipa/ios-xq-finance-app.ipa" \
+swift run --package-path modules/xq-ios-ui-test-framework xq-ui-test run \
+  --config modules/ios-xq-finance-app/xq-ui-tests.json \
+  --device <device-id> \
+  --suite ios-xq-finance-appUITests/PortfolioLifecycleTests
+```
+
+The suite uses `--xq-ui-testing` and `--xq-ui-testing-reset`. Its Application
+Support directory and Keychain service are distinct from normal app storage,
+and reset removes only that UI-test namespace. Results are written beneath
+`modules/ios-xq-finance-app/build/ui-test-results/` as `result.xcresult`,
+`junit.xml`, raw logs, metadata, and retained screenshots inside XCResult.
+
 ## Signing Requirements
 
 Physical-device builds require both the app and test target to be signed.
@@ -96,7 +118,7 @@ All interface orientations must be supported unless the app requires full screen
 The warning did not block the physical-device XCTest run.
 
 ## Useful commands:
-```
+```bash
 xcodebuild \
   -project modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj \
   -scheme ios-xq-finance-app \
@@ -105,7 +127,8 @@ xcodebuild \
   -archivePath modules/ios-xq-finance-app/build/ios-xq-finance-app.xcarchive \
   archive
 ```
-```
+
+```bash
 xcodebuild \
   -exportArchive \
   -archivePath modules/ios-xq-finance-app/build/ios-xq-finance-app.xcarchive \

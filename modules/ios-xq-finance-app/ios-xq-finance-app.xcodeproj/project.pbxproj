@@ -7,8 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		467ECC4C9A251CAD3B0A651F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE2628BB9C63DAC245D5C6B3 /* Assets.xcassets */; };
+		5BD512AD15C0A6F2820B2C82 /* XQUIHarness in Frameworks */ = {isa = PBXBuildFile; productRef = FC2051F1B5ACA90819A15285 /* XQUIHarness */; };
+		92CDB1D20E6D9F46E18A8B60 /* PortfolioScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8845BB66F8164E1CABD611 /* PortfolioScreen.swift */; };
+		A9A07FC67A3BDA4D0782FF09 /* TestApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D936B784B8958FD1B7B4C3 /* TestApplication.swift */; };
+		B1C8ACBC93FE8AFCFE61CBE0 /* XQAccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55DCABEC2C9E80108AA07E1 /* XQAccessibilityIdentifier.swift */; };
+		B3F0737F2A2FAD6694D087B0 /* AddAssetScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5B1236F5B7A803F196C72E /* AddAssetScreen.swift */; };
 		C060250CED5EE3FB5E9473A1 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD4B6A59787BAB97B7C2FBB1 /* App.swift */; };
+		CC8BA377BBEA0A632EF7F31D /* PortfolioLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 430D79DCFBC6D9079450D72F /* PortfolioLifecycleTests.swift */; };
+		D080E0961EAA7CF743D5C579 /* XQAccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55DCABEC2C9E80108AA07E1 /* XQAccessibilityIdentifier.swift */; };
 		E0A7CB36E87F0D2FA08033CC /* AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FC3EF28A4651572DF5A3739 /* AppTests.swift */; };
+		F233DBAE028FC4E3E87504FF /* PriceEditorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2595EC3CDA86C5571DAF1D21 /* PriceEditorScreen.swift */; };
+		F8A59C2FF0A8F383C60DA2FA /* BuyLotScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1AF249961AC135201FBB88 /* BuyLotScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -19,14 +29,42 @@
 			remoteGlobalIDString = C27FCCEB6FC4AC26D427F0C9;
 			remoteInfo = "ios-xq-finance-app";
 		};
+		E98C6A9AE0C298E33A2379F9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6353B38A5902F3A5D03EC4D3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C27FCCEB6FC4AC26D427F0C9;
+			remoteInfo = "ios-xq-finance-app";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		02AF278EAC6A763ED2B8B48D /* ios-xq-finance-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-xq-finance-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		02AF278EAC6A763ED2B8B48D /* ios-xq-finance-app.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "ios-xq-finance-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0D5B1236F5B7A803F196C72E /* AddAssetScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetScreen.swift; sourceTree = "<group>"; };
+		0D8845BB66F8164E1CABD611 /* PortfolioScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioScreen.swift; sourceTree = "<group>"; };
 		1FC3EF28A4651572DF5A3739 /* AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTests.swift; sourceTree = "<group>"; };
+		2595EC3CDA86C5571DAF1D21 /* PriceEditorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceEditorScreen.swift; sourceTree = "<group>"; };
+		430D79DCFBC6D9079450D72F /* PortfolioLifecycleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioLifecycleTests.swift; sourceTree = "<group>"; };
+		6FE12B90EA65E1C0C91EE9A6 /* xq-ios-ui-test-framework */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "xq-ios-ui-test-framework"; path = "../xq-ios-ui-test-framework"; sourceTree = SOURCE_ROOT; };
+		812300C42A31FA8950FD2845 /* ios-xq-finance-appUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = "ios-xq-finance-appUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD4B6A59787BAB97B7C2FBB1 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
-		DB8E07A435A0CCDD09E9729F /* ios-xq-finance-appTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-xq-finance-appTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C55DCABEC2C9E80108AA07E1 /* XQAccessibilityIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XQAccessibilityIdentifier.swift; sourceTree = "<group>"; };
+		D6D936B784B8958FD1B7B4C3 /* TestApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestApplication.swift; sourceTree = "<group>"; };
+		DB8E07A435A0CCDD09E9729F /* ios-xq-finance-appTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = "ios-xq-finance-appTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE2628BB9C63DAC245D5C6B3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FD1AF249961AC135201FBB88 /* BuyLotScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuyLotScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		347469A2A6CF7A8BDEA36728 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5BD512AD15C0A6F2820B2C82 /* XQUIHarness in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		1157C4DA6D7E9E0B53DD3985 /* AppTests */ = {
@@ -42,8 +80,23 @@
 			children = (
 				AC51796063A86707FBC7D0ED /* App */,
 				1157C4DA6D7E9E0B53DD3985 /* AppTests */,
+				44C858BCE642B75176323C8D /* AppUITests */,
+				6E997DDB70B526E9FDFA4461 /* Packages */,
 				64D6E97C352362C51EE2943B /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		44C858BCE642B75176323C8D /* AppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				0D5B1236F5B7A803F196C72E /* AddAssetScreen.swift */,
+				FD1AF249961AC135201FBB88 /* BuyLotScreen.swift */,
+				430D79DCFBC6D9079450D72F /* PortfolioLifecycleTests.swift */,
+				0D8845BB66F8164E1CABD611 /* PortfolioScreen.swift */,
+				2595EC3CDA86C5571DAF1D21 /* PriceEditorScreen.swift */,
+				D6D936B784B8958FD1B7B4C3 /* TestApplication.swift */,
+			);
+			path = AppUITests;
 			sourceTree = "<group>";
 		};
 		64D6E97C352362C51EE2943B /* Products */ = {
@@ -51,14 +104,25 @@
 			children = (
 				02AF278EAC6A763ED2B8B48D /* ios-xq-finance-app.app */,
 				DB8E07A435A0CCDD09E9729F /* ios-xq-finance-appTests.xctest */,
+				812300C42A31FA8950FD2845 /* ios-xq-finance-appUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		6E997DDB70B526E9FDFA4461 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				6FE12B90EA65E1C0C91EE9A6 /* xq-ios-ui-test-framework */,
+			);
+			name = Packages;
 			sourceTree = "<group>";
 		};
 		AC51796063A86707FBC7D0ED /* App */ = {
 			isa = PBXGroup;
 			children = (
 				AD4B6A59787BAB97B7C2FBB1 /* App.swift */,
+				DE2628BB9C63DAC245D5C6B3 /* Assets.xcassets */,
+				C55DCABEC2C9E80108AA07E1 /* XQAccessibilityIdentifier.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -66,6 +130,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		46C4D7ECF546EEA0070B247C /* ios-xq-finance-appUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E7AFC468F271BBC6B1F827DE /* Build configuration list for PBXNativeTarget "ios-xq-finance-appUITests" */;
+			buildPhases = (
+				9E1887A46D8D42513557C6B9 /* Sources */,
+				347469A2A6CF7A8BDEA36728 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4A2D1D7800B20614D9856270 /* PBXTargetDependency */,
+			);
+			name = "ios-xq-finance-appUITests";
+			packageProductDependencies = (
+				FC2051F1B5ACA90819A15285 /* XQUIHarness */,
+			);
+			productName = "ios-xq-finance-appUITests";
+			productReference = 812300C42A31FA8950FD2845 /* ios-xq-finance-appUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		90D03B2503EFBC94325DFAE4 /* ios-xq-finance-appTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 51893940A5C1BB9297D76983 /* Build configuration list for PBXNativeTarget "ios-xq-finance-appTests" */;
@@ -89,6 +173,7 @@
 			buildConfigurationList = 67A1E73CC1F1429D2634E27A /* Build configuration list for PBXNativeTarget "ios-xq-finance-app" */;
 			buildPhases = (
 				6C84DA973F44B4730A727276 /* Sources */,
+				1AC424388C61E3813A5161B6 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -109,6 +194,18 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					46C4D7ECF546EEA0070B247C = {
+						DevelopmentTeam = T99X93V7Y2;
+						TestTargetID = C27FCCEB6FC4AC26D427F0C9;
+					};
+					90D03B2503EFBC94325DFAE4 = {
+						DevelopmentTeam = T99X93V7Y2;
+					};
+					C27FCCEB6FC4AC26D427F0C9 = {
+						DevelopmentTeam = T99X93V7Y2;
+					};
+				};
 			};
 			buildConfigurationList = F522C3D64C9C16FFB3BCF2C5 /* Build configuration list for PBXProject "ios-xq-finance-app" */;
 			developmentRegion = en;
@@ -119,6 +216,9 @@
 			);
 			mainGroup = 26D805D9656D94B13FB90ACE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AD60DCB1F59CFF05A1FA693F /* XCLocalSwiftPackageReference "../xq-ios-ui-test-framework" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 64D6E97C352362C51EE2943B /* Products */;
 			projectDirPath = "";
@@ -126,9 +226,21 @@
 			targets = (
 				C27FCCEB6FC4AC26D427F0C9 /* ios-xq-finance-app */,
 				90D03B2503EFBC94325DFAE4 /* ios-xq-finance-appTests */,
+				46C4D7ECF546EEA0070B247C /* ios-xq-finance-appUITests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1AC424388C61E3813A5161B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				467ECC4C9A251CAD3B0A651F /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3656AE618CB295F76EF6F117 /* Sources */ = {
@@ -144,6 +256,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				C060250CED5EE3FB5E9473A1 /* App.swift in Sources */,
+				D080E0961EAA7CF743D5C579 /* XQAccessibilityIdentifier.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E1887A46D8D42513557C6B9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B3F0737F2A2FAD6694D087B0 /* AddAssetScreen.swift in Sources */,
+				F8A59C2FF0A8F383C60DA2FA /* BuyLotScreen.swift in Sources */,
+				CC8BA377BBEA0A632EF7F31D /* PortfolioLifecycleTests.swift in Sources */,
+				92CDB1D20E6D9F46E18A8B60 /* PortfolioScreen.swift in Sources */,
+				F233DBAE028FC4E3E87504FF /* PriceEditorScreen.swift in Sources */,
+				A9A07FC67A3BDA4D0782FF09 /* TestApplication.swift in Sources */,
+				B1C8ACBC93FE8AFCFE61CBE0 /* XQAccessibilityIdentifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,6 +281,11 @@
 			isa = PBXTargetDependency;
 			target = C27FCCEB6FC4AC26D427F0C9 /* ios-xq-finance-app */;
 			targetProxy = 413CCD0D9DBCA3F9BEEF371B /* PBXContainerItemProxy */;
+		};
+		4A2D1D7800B20614D9856270 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C27FCCEB6FC4AC26D427F0C9 /* ios-xq-finance-app */;
+			targetProxy = E98C6A9AE0C298E33A2379F9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -299,6 +431,24 @@
 			};
 			name = Release;
 		};
+		70636F14D7CE7B1CF05CCB9E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = T99X93V7Y2;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xq.finance.ios-xq-finance-appUITests";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "ios-xq-finance-app";
+			};
+			name = Debug;
+		};
 		7AE6F66A84FDFD5CCED1DB20 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -355,6 +505,24 @@
 			};
 			name = Release;
 		};
+		E5EFC5A23F228BD30B3EDC83 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = T99X93V7Y2;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xq.finance.ios-xq-finance-appUITests";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "ios-xq-finance-app";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -376,6 +544,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		E7AFC468F271BBC6B1F827DE /* Build configuration list for PBXNativeTarget "ios-xq-finance-appUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70636F14D7CE7B1CF05CCB9E /* Debug */,
+				E5EFC5A23F228BD30B3EDC83 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		F522C3D64C9C16FFB3BCF2C5 /* Build configuration list for PBXProject "ios-xq-finance-app" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -386,6 +563,20 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		AD60DCB1F59CFF05A1FA693F /* XCLocalSwiftPackageReference "../xq-ios-ui-test-framework" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../xq-ios-ui-test-framework";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FC2051F1B5ACA90819A15285 /* XQUIHarness */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = XQUIHarness;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6353B38A5902F3A5D03EC4D3 /* Project object */;
 }
