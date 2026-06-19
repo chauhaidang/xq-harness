@@ -37,9 +37,6 @@ finance data behavior, authentication, persistence, or external integrations.
 
 ## Validation
 
-When updating durable proof status, use numeric booleans:
-`scripts/bin/harness-cli story update --id <id> --unit 1 --integration 0 --e2e 0 --platform 1`.
-
 | Layer | Expected proof |
 | --- | --- |
 | Unit | `./scripts/module test ios-xq-finance-app` |
@@ -48,16 +45,11 @@ When updating durable proof status, use numeric booleans:
 | Platform | `./scripts/module build ios-xq-finance-app` |
 | Release | Not applicable until distribution is defined. |
 
-## Harness Delta
-
-No harness changes expected.
-
 ## Evidence
 
 - `xcodegen generate` created `modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj`.
 - `./scripts/module info ios-xq-finance-app` passed and reported version `0.1.0`, no dependencies, and `test_all: false`.
 - `./scripts/module build ios-xq-finance-app` passed with `** BUILD SUCCEEDED **`.
 - `./scripts/module test ios-xq-finance-app` passed with 1 XCTest and 0 failures.
-- `scripts/bin/harness-cli story verify US-APP-001` passed.
 - `./scripts/module build ios-xq-finance-app` passed after adding the AppIcon
   asset catalog and compiling it through Xcode's asset tool.

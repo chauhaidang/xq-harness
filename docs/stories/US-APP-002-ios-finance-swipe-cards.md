@@ -72,9 +72,6 @@ currency support.
 
 ## Validation
 
-When updating durable proof status, use numeric booleans:
-`scripts/bin/harness-cli story update --id <id> --unit 1 --integration 0 --e2e 0 --platform 1`.
-
 | Layer | Expected proof |
 | --- | --- |
 | Unit | `./scripts/module test ios-xq-finance-app` |
@@ -82,10 +79,6 @@ When updating durable proof status, use numeric booleans:
 | E2E | Not applicable; no UI automation contract exists yet. |
 | Platform | `./scripts/module build ios-xq-finance-app`; `modules/ios-xq-finance-app/scripts/verify-device-reinstall-persistence.sh` for physical-device reinstall persistence |
 | Release | Not applicable until distribution is defined. |
-
-## Harness Delta
-
-No harness changes expected.
 
 ## Evidence
 

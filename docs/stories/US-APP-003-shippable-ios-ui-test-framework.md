@@ -51,7 +51,7 @@ runner, with XQ Finance as the first consumer-owned suite.
 | Platform | Signed IPA archive/export, update install, XCResult/JUnit/log/metadata/screenshot audit |
 | Release | Workflow validates version and subtree split before push/tag/release |
 
-## Harness Delta
+## Repository Delta
 
 Register a non-`test_all` Swift module and add dedicated macOS CI and subtree
 release workflows.

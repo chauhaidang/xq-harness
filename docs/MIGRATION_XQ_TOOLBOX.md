@@ -79,14 +79,13 @@ Reverse-engineer product truth from code and package READMEs into
 Mark confidence: **observed** (tests prove it), **documented** (README only),
 **unknown** (gap).
 
-## Phase 3 — Baseline Stories + Proof (done)
+## Phase 3 — Baseline Proof (done)
 
-Durable stories US-TB-001 … US-TB-005 registered with verify commands. See
+Baseline module verification is documented in
 `docs/stories/US-TB-baseline-proof.md`.
 
 ```bash
-scripts/bin/harness-cli query matrix
-scripts/bin/harness-cli story verify-all
+make test-all
 ```
 
 | ID | Module | Verify command |
@@ -101,7 +100,7 @@ scripts/bin/harness-cli story verify-all
 
 Port or replace legacy workflows:
 
-| Legacy | Harness action |
+| Legacy | Replacement |
 | --- | --- |
 | `.github/workflows/publish.yml` | Move to xq-harness root or call `./scripts/module ci xq-toolbox` |
 | `release-xq-scripts.yml` | Replaced by `cd-xq-scripts.yml` tarball workflow; needs `GH_TOKEN` |
@@ -113,23 +112,11 @@ Port or replace legacy workflows:
 - `GH_TOKEN` — xq-scripts release, OpenAPI sync
 - Docker — integration tests in xq-test-infra, todo-app demo
 
-**Playwright:** harness package tests need browser install locally. CI may set
+**Playwright:** test-harness package tests need browser install locally. CI may set
 `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` only when tests mock HTTP and do not
 launch browsers (verify per package).
 
-## Phase 5 — Agent Operating Loop
-
-After baseline proof exists, all new work follows the standard harness loop
-(`docs/HARNESS.md`):
-
-1. Classify via `docs/FEATURE_INTAKE.md`
-2. `harness-cli intake`
-3. Read `docs/product/*` + story packet
-4. Implement in lane (tiny / normal / high-risk)
-5. `harness-cli story verify` / `./scripts/module ci <module>`
-6. `harness-cli trace`
-
-**High-risk triggers in xq-toolbox:**
+## Risk Areas
 
 - Docker/registry auth (`xq-test-infra`)
 - PostgreSQL helpers (`xq-test-utils`, todo-app)

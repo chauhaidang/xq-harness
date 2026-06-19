@@ -6,7 +6,6 @@ and architecture decisions for the repository.
 ## Main Files
 
 - `ARCHITECTURE.md`: architecture discovery and boundary rules.
-- `GLOSSARY.md`: shared terms.
 
 ## Folders
 

@@ -10,9 +10,9 @@ normal
 
 ## Product Contract
 
-Each decoupled `modules/xq-*` package has a mechanical verify command registered
-in the harness durable layer. `./scripts/module test <module>` (or full `ci`) must
-pass for baseline migration acceptance.
+Each decoupled `modules/xq-*` package has a mechanical verify command.
+`./scripts/module test <module>` or full `ci` must pass for baseline migration
+acceptance.
 
 ## Relevant Product Docs
 
@@ -32,20 +32,14 @@ pass for baseline migration acceptance.
 ## Validation
 
 ```bash
-scripts/bin/harness-cli story verify-all
 make test MODULE=xq-common-kit   # or any module above
 ```
 
-Last verified: all five stories pass via `story verify-all` (2026-06-14).
-
-## Harness Delta
-
-- Registered intake #1 and durable story rows US-TB-001 … US-TB-005.
-- Fixed e2e-consumer test scripts: Yarn 4 `yarn exec bddgen` fails when
-  `playwright-bdd` is only a transitive dependency; use `./node_modules/.bin/*`
-  in package scripts instead.
+Last verified: all five module test commands passed (2026-06-14).
 
 ## Evidence
 
-- `scripts/bin/harness-cli query matrix`
 - CI: per-module `ci-*.yml` workflows (see [docs/github-actions.md](../github-actions.md))
+- Fixed e2e-consumer test scripts: Yarn 4 `yarn exec bddgen` fails when
+  `playwright-bdd` is only a transitive dependency; use `./node_modules/.bin/*`
+  in package scripts instead.

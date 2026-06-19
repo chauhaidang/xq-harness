@@ -1,6 +1,6 @@
 # Product Docs
 
-This directory is intentionally generic and mostly empty in Harness v0.
+This directory contains product notes for the modules in this repository.
 
 When a user provides a project spec, derive smaller product contract files here
 instead of keeping one large spec as the living plan. Name files by the product
@@ -15,8 +15,7 @@ structure is healthier than fake product truth.
 When behavior changes:
 
 1. Update the affected product doc.
-2. Update or create the story packet.
-3. Update durable proof status with `scripts/bin/harness-cli story add` or
-   `scripts/bin/harness-cli story update`.
+2. Update or create the related story note when the change is story-sized.
+3. Run the relevant module verification command.
 4. Record a decision if the change affects architecture, scope, risk, or a
    previously settled product rule.
