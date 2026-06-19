@@ -55,13 +55,8 @@ modules/
   xq-test-harness/        # Playwright + Gherkin API harness
   xq-scripts/             # release tarball scripts (not npm)
   *-example/              # polyglot layout examples (not published)
-docs/                     # harness operating model + decisions
+docs/                     # contributor and package documentation
 ```
-
-## Harness (agent workflow)
-
-This repo uses the Harness model for agent-assisted development.
-See [docs/HARNESS.md](docs/HARNESS.md).
 
 ## Further reading
 

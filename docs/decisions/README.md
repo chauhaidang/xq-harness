@@ -1,22 +1,10 @@
 # Decisions
 
-Decision records explain why important product, architecture, or harness choices
-were made.
+Decision records explain why important product and architecture choices were
+made.
 
-Use `docs/templates/decision.md` when adding a new decision.
-
-After adding or updating a markdown decision file, also add or refresh the
-durable decision row:
-
-```bash
-scripts/bin/harness-cli decision add \
-  --id 0008-auth-boundary \
-  --title "Auth Boundary" \
-  --doc docs/decisions/0008-auth-boundary.md
-```
-
-Trace fields such as `--decisions` summarize task-level choices. They do not
-count as the Harness decision log.
+Keep new records concise and focused on the constraint, the decision, and the
+consequences.
 
 Add a decision when:
 
