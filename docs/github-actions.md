@@ -66,6 +66,20 @@ node scripts/check-xq-version-changes.js --module <module>
 
 Publish runs only when the version changed or the workflow was dispatched manually.
 
+## CD permissions
+
+Reusable workflows cannot elevate the `GITHUB_TOKEN` permissions granted by
+their caller job. Each npm CD caller therefore grants its `publish` job
+`contents: read` and `packages: write`; the tarball caller grants its `release`
+job `contents: write`. Keep these permissions job-scoped so version checks and
+unrelated jobs remain read-only.
+
+Validate caller/callee permission parity locally:
+
+```bash
+./scripts/check-cd-workflow-permissions
+```
+
 ## Current module workflows
 
 | Module | CI | CD | Notes |
@@ -95,6 +109,7 @@ repository, creates immutable `X.Y.Z` tags, and publishes release notes.
 7. If npm-publishable, add the module to `publishPrefixes` in
    `scripts/check-xq-version-changes.js`.
 8. Bump `package.json` version when ready to trigger CD on merge to `main`.
+9. Run `./scripts/check-cd-workflow-permissions` when adding or changing a CD caller.
 
 ## Ownership
 
