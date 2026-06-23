@@ -1,0 +1,117 @@
+name: Harness State Release
+
+on:
+  push:
+    tags:
+      - "harness-state-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      SOURCE_DATE_EPOCH: "0"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Validate tag version
+        id: version
+        working-directory: modules/harness-state
+        run: |
+          python scripts/validate_release_tag.py \
+            --tag "${GITHUB_REF_NAME}" \
+            --github-output "${GITHUB_OUTPUT}"
+
+      - name: Test and build Python package
+        working-directory: modules/harness-state
+        run: |
+          uv sync --locked
+          uv run pytest
+          uv run harness-state --help
+          uv run harness-state --version
+          uv build
+
+      - name: Build skill bundle and checksums
+        working-directory: modules/harness-state
+        run: |
+          uv run python scripts/build_release_artifacts.py --expected-version "${{ steps.version.outputs.version }}"
+          tar -tzf "dist/harness-state-skills-${{ steps.version.outputs.version }}.tar.gz"
+          cat dist/SHA256SUMS
+
+      - name: Verify wheel installation
+        working-directory: modules/harness-state
+        shell: bash
+        run: |
+          set -euo pipefail
+          BIN_DIR="$(uv tool dir --bin)"
+          uv tool install --force "dist/xq_harness_state-${{ steps.version.outputs.version }}-py3-none-any.whl"
+          "${BIN_DIR}/harness-state" --help
+          "${BIN_DIR}/harness-state" --version
+
+      - name: Smoke test installed CLI
+        working-directory: modules/harness-state
+        shell: bash
+        run: |
+          set -euo pipefail
+          BIN_DIR="$(uv tool dir --bin)"
+          uv run python scripts/smoke_test_installed_cli.py \
+            --executable "${BIN_DIR}/harness-state"
+
+      - name: Smoke test skill bundle
+        working-directory: modules/harness-state
+        shell: bash
+        run: |
+          set -euo pipefail
+          WORKDIR="$(mktemp -d)"
+          mkdir -p "${WORKDIR}/.agents/skills"
+          tar -xzf "dist/harness-state-skills-${{ steps.version.outputs.version }}.tar.gz" -C "${WORKDIR}/.agents/skills"
+          test -n "$(find "${WORKDIR}/.agents/skills" -mindepth 2 -maxdepth 2 -name SKILL.md -print -quit)"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            echo "Release ${TAG} already exists" >&2
+            exit 1
+          fi
+          cat > release-notes.md <<EOF
+          # xq-harness-state ${VERSION}
+
+          ## Added
+
+          - Installable \`harness-state\` executable.
+          - Python wheel and sdist release artifacts.
+          - Agent skill bundle from \`modules/harness-state/skills\`.
+          - SHA256 checksums for release artifacts.
+
+          ## Validation
+
+          - \`uv run pytest\`
+          - \`uv build\`
+          - installed wheel and verified \`harness-state --help\`
+          - smoke-tested \`init\`, \`requirement add\`, \`decision record\`, \`timeline\`, \`export\`, and \`rebuild\`
+          - extracted and validated \`harness-state-skills-${VERSION}.tar.gz\`
+          EOF
+          gh release create "${TAG}" \
+            --title "harness-state ${VERSION}" \
+            --notes-file release-notes.md \
+            modules/harness-state/dist/xq_harness_state-${VERSION}-py3-none-any.whl \
+            modules/harness-state/dist/xq_harness_state-${VERSION}.tar.gz \
+            modules/harness-state/dist/harness-state-skills-${VERSION}.tar.gz \
+            modules/harness-state/dist/SHA256SUMS

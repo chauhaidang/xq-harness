@@ -76,3 +76,50 @@ uv sync
 uv run pytest
 uv build
 ```
+
+## Release artifacts
+
+The Level 3 GitHub Release includes:
+
+```txt
+xq_harness_state-<version>-py3-none-any.whl
+xq_harness_state-<version>.tar.gz
+harness-state-skills-<version>.tar.gz
+SHA256SUMS
+```
+
+Build and validate local release artifacts:
+
+```bash
+cd modules/harness-state
+uv sync --locked
+uv run pytest
+SOURCE_DATE_EPOCH=0 uv build
+uv run python scripts/build_release_artifacts.py
+```
+
+Run those commands before creating `harness-state-v<version>`. The GitHub
+release workflow validates the tag after it is pushed and will refuse to create
+an invalid GitHub Release, but it cannot prevent the git tag itself from
+existing.
+
+The skill bundle is built from `modules/harness-state/skills/`. Each skill must
+live in its own directory and include a `SKILL.md` with `name` and `description`
+frontmatter.
+
+Install the CLI from a GitHub Release wheel:
+
+```bash
+uv tool install https://github.com/<OWNER>/<REPO>/releases/download/harness-state-v0.1.0/xq_harness_state-0.1.0-py3-none-any.whl
+harness-state --help
+```
+
+Install the released agent skills:
+
+```bash
+curl -L \
+  https://github.com/<OWNER>/<REPO>/releases/download/harness-state-v0.1.0/harness-state-skills-0.1.0.tar.gz \
+  -o /tmp/harness-state-skills-0.1.0.tar.gz
+mkdir -p .agents/skills
+tar -xzf /tmp/harness-state-skills-0.1.0.tar.gz -C .agents/skills
+```
