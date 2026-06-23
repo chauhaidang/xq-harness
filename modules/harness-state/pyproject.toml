@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "xq-harness-state"
+version = "0.1.0"
+description = "Project context timeline and state management CLI"
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
+harness-state = "harness_state.cli:main"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.0",
+]
+
+[tool.uv]
+package = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/harness_state"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
