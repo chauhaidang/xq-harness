@@ -15,6 +15,8 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+dist/
+*.egg-info/
 
 # Java / iOS examples
 modules/java-example/.gradle/
@@ -39,7 +41,14 @@ modules/xq-**/.features-gen/
 .DS_Store
 .idea
 
+# harness-state: local SQLite projection (rebuildable from JSONL events)
+.harness/state.db
+.harness/state.db-*
+.harness/artifacts/
+
 # Local-only archive
 archive/
 archive/xq-toolbox-workspace/node_modules/
 nvim.log
+skills-lock.json
+.agents

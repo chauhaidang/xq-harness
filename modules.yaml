@@ -26,6 +26,19 @@ modules:
       build: uv sync
       test: uv run pytest
 
+  harness-state:
+    path: modules/harness-state
+    language: python
+    version: 0.1.0
+    test_all: false
+    toolchain:
+      python: "3.12"
+      uv: required
+    commands:
+      install: uv sync --locked
+      build: SOURCE_DATE_EPOCH=0 uv build && uv run python scripts/build_release_artifacts.py
+      test: uv run pytest
+
   java-example:
     path: modules/java-example
     language: java

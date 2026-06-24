@@ -107,6 +107,10 @@ If physical-device testing fails before launching tests, check:
 - The test target is also signed.
 - The selected destination ID matches the connected device.
 
+Use `-allowProvisioningUpdates` on archive and export commands. This lets
+`xcodebuild` refresh automatic signing assets from the CLI instead of relying on
+Xcode.app to reopen and repair stale local provisioning profile state.
+
 ## Known Non-Blocking Warning
 
 Physical-device validation currently emits this warning:
@@ -125,6 +129,7 @@ xcodebuild \
   -destination "generic/platform=iOS" \
   -configuration Release \
   -archivePath modules/ios-xq-finance-app/build/ios-xq-finance-app.xcarchive \
+  -allowProvisioningUpdates \
   archive
 ```
 
@@ -133,5 +138,6 @@ xcodebuild \
   -exportArchive \
   -archivePath modules/ios-xq-finance-app/build/ios-xq-finance-app.xcarchive \
   -exportPath modules/ios-xq-finance-app/build/ipa \
-  -exportOptionsPlist modules/ios-xq-finance-app/exportOptions.plist
+  -exportOptionsPlist modules/ios-xq-finance-app/exportOptions.plist \
+  -allowProvisioningUpdates
 ```
