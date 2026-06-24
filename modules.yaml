@@ -32,7 +32,7 @@ modules:
     version: 0.1.0
     test_all: false
     toolchain:
-      python: "3.14"
+      python: "3.12"
       uv: required
     commands:
       install: uv sync --locked

@@ -39,7 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		02AF278EAC6A763ED2B8B48D /* ios-xq-finance-app.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "ios-xq-finance-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		02AF278EAC6A763ED2B8B48D /* ios-xq-finance-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-xq-finance-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0D5B1236F5B7A803F196C72E /* AddAssetScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAssetScreen.swift; sourceTree = "<group>"; };
 		0D8845BB66F8164E1CABD611 /* PortfolioScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioScreen.swift; sourceTree = "<group>"; };
 		1FC3EF28A4651572DF5A3739 /* AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTests.swift; sourceTree = "<group>"; };
@@ -200,9 +200,6 @@
 						TestTargetID = C27FCCEB6FC4AC26D427F0C9;
 					};
 					90D03B2503EFBC94325DFAE4 = {
-						DevelopmentTeam = T99X93V7Y2;
-					};
-					C27FCCEB6FC4AC26D427F0C9 = {
 						DevelopmentTeam = T99X93V7Y2;
 					};
 				};

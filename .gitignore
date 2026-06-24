@@ -51,3 +51,4 @@ archive/
 archive/xq-toolbox-workspace/node_modules/
 nvim.log
 skills-lock.json
+.agents
