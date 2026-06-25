@@ -18,10 +18,7 @@ __pycache__/
 dist/
 *.egg-info/
 
-# Java / iOS examples
-modules/java-example/.gradle/
-modules/java-example/build/
-modules/ios-example/DerivedData/
+# iOS / Xcode
 *.xcuserstate
 *.xcuserdata/
 **/ios-**/build
@@ -52,3 +49,4 @@ archive/xq-toolbox-workspace/node_modules/
 nvim.log
 skills-lock.json
 .agents
+xq-ios-shell-app/

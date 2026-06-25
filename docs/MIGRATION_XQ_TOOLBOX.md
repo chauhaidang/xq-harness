@@ -125,7 +125,7 @@ launch browsers (verify per package).
 
 ## Dependency Graph
 
-Packages are **not independent** like `modules/node-example`. They share
+Packages are **not independent** standalone modules. They share
 `xq-toolbox/yarn.lock`, hoisted `node_modules`, and `workspace:*` links.
 
 ```text
@@ -157,7 +157,7 @@ Verify a module's graph:
 | --- | --- |
 | `yarn install` | Always runs at `xq-toolbox/` root for any package module |
 | Isolated node_modules per package | No — Yarn workspace hoisting |
-| `make test-all` | Runs **example** modules + **`xq-toolbox` once**; skips per-package `xq-*` entries (`test_all: false`) |
+| `make test-all` | Runs modules with `test_all: true` only |
 | Publishing | Still per-package `@chauhaidang/*` on GitHub Packages |
 
 To CI one package with dependencies satisfied:
@@ -188,9 +188,8 @@ Do not duplicate commands in Makefile or CI — `modules.yaml` is canonical per
 1. Split package READMEs into `docs/product/*` incrementally (`test-harness.md`, `test-infra.md`, …)
 2. Fix or drop incomplete `todo-app` demo in legacy archive (`write-service` missing)
 3. Reconcile agent skills from legacy archive with xq-harness skills
-4. Decide fate of example modules (`node-example`, etc.) vs production modules
-5. Remove `archive/xq-toolbox-workspace/` once workflows are stable (per ADR 0009)
-6. Publish bumped package versions after structural migration if registry drift appears
+4. Remove `archive/xq-toolbox-workspace/` once workflows are stable (per ADR 0009)
+5. Publish bumped package versions after structural migration if registry drift appears
 
 ## Quick Verification
 
@@ -203,5 +202,5 @@ cd xq-toolbox && yarn install --immutable
 
 # Full workspace
 ./scripts/module ci xq-toolbox
-make test-all   # runs ALL modules including examples — use selectively
+make test-all   # runs modules with test_all: true — use selectively
 ```

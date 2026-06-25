@@ -1,31 +1,6 @@
 version: 1
 
 modules:
-  node-example:
-    path: modules/node-example
-    language: node
-    version: 0.1.0
-    test_all: false
-    toolchain:
-      node: "22"
-      yarn: "4"
-    commands:
-      install: yarn install --immutable
-      build: yarn build
-      test: yarn test
-
-  python-example:
-    path: modules/python-example
-    language: python
-    version: 0.1.0
-    test_all: false
-    toolchain:
-      python: "3.12"
-    commands:
-      install: uv sync --dev
-      build: uv sync
-      test: uv run pytest
-
   harness-state:
     path: modules/harness-state
     language: python
@@ -38,38 +13,6 @@ modules:
       install: uv sync --locked
       build: SOURCE_DATE_EPOCH=0 uv build && uv run python scripts/build_release_artifacts.py
       test: uv run pytest
-
-  java-example:
-    path: modules/java-example
-    language: java
-    version: 0.1.0
-    test_all: false
-    toolchain:
-      java: "21"
-    commands:
-      install: ./gradlew --version
-      build: ./gradlew assemble
-      test: ./gradlew test
-
-  ios-example:
-    path: modules/ios-example
-    language: ios
-    version: 0.1.0
-    test_all: false
-    toolchain:
-      xcode: "16"
-    commands:
-      install: "true"
-      build: >
-        xcodebuild -project ios-example.xcodeproj
-        -scheme ios-example
-        -destination 'platform=iOS Simulator,name=iPhone 16'
-        build
-      test: >
-        xcodebuild -project ios-example.xcodeproj
-        -scheme ios-example
-        -destination 'platform=iOS Simulator,name=iPhone 16'
-        test
 
   ios-xq-finance-app:
     path: modules/ios-xq-finance-app
@@ -89,6 +32,28 @@ modules:
       test: >
         xcodebuild -project ios-xq-finance-app.xcodeproj
         -scheme ios-xq-finance-app
+        -destination 'platform=iOS Simulator,name=iPhone 16'
+        test
+
+  xq-ios-shell-app:
+    path: modules/xq-ios-shell-app
+    language: ios
+    version: 0.1.0
+    test_all: false
+    toolchain:
+      xcode: "16"
+      xcodegen: required
+      node: ">=18"
+    commands:
+      install: "true"
+      build: >
+        xcodebuild -project xq-ios-shell-app.xcodeproj
+        -scheme xq-ios-shell-app
+        -destination 'platform=iOS Simulator,name=iPhone 16'
+        build
+      test: >
+        xcodebuild -project xq-ios-shell-app.xcodeproj
+        -scheme xq-ios-shell-app
         -destination 'platform=iOS Simulator,name=iPhone 16'
         test
 
