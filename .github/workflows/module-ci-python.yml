@@ -1,0 +1,36 @@
+name: Module CI (Python)
+
+on:
+  workflow_call:
+    inputs:
+      module:
+        description: Module registry key (e.g. harness-state)
+        required: true
+        type: string
+      python_version:
+        description: Python version
+        required: false
+        type: string
+        default: "3.12"
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python_version }}
+
+      - uses: astral-sh/setup-uv@v5
+
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.45.1/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: CI module
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./scripts/module ci ${{ inputs.module }}

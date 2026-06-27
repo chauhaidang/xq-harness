@@ -9,6 +9,7 @@ reusable templates.
 ```text
 .github/workflows/
   module-ci-node.yml              # CI template (Node / yarn modules)
+  module-ci-python.yml            # CI template (Python / uv modules)
   module-cd-github-packages.yml   # CD template (npm publish)
   module-cd-tarball.yml           # CD template (GitHub Release tarball)
   ci-<module>.yml                 # Per-module CI (owners edit)
@@ -30,6 +31,18 @@ workflow YAML.
 | `playwright_skip_browser` | `false` | Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` |
 
 Runs: `./scripts/module ci <module>`
+
+### `module-ci-python.yml`
+
+| Input | Default | Purpose |
+| --- | --- | --- |
+| `module` | (required) | Registry key, e.g. `harness-state` |
+| `python_version` | `3.12` | Python version |
+
+Runs: `./scripts/module ci <module>` after installing Python, uv, and yq. For
+Python modules that need BasedPyright, copy
+[`docs/templates/python-basedpyright-module`](templates/python-basedpyright-module/)
+and let the module's `build` command run `uv run basedpyright`.
 
 ### `module-cd-github-packages.yml`
 

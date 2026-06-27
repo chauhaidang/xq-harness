@@ -158,3 +158,13 @@ modules:
       install: "true"
       build: "true"
       test: "true"
+
+  poc:
+    path: modules/poc
+    language: mixed
+    version: 0.0.0
+    test_all: false
+    commands:
+      install: "true"
+      build: "true"
+      test: "true"

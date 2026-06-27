@@ -39,6 +39,7 @@ make test-all          # all xq modules with test_all: true
 
 Requires [yq](https://github.com/mikefarah/yq) and the toolchain for the module
 you touch (Node 18+, etc.). See [docs/modules/README.md](docs/modules/README.md).
+Migrating from another repo: [docs/modules/onboarding.md](docs/modules/onboarding.md).
 
 CI/CD is per-module: [docs/github-actions.md](docs/github-actions.md).
 
@@ -54,7 +55,8 @@ modules/
   xq-test-infra/          # xq-infra CLI (Docker test environments)
   xq-test-harness/        # Playwright + Gherkin API harness
   xq-scripts/             # release tarball scripts (not npm)
-  *-example/              # polyglot layout examples (not published)
+  harness-state/          # project memory CLI
+  ios-xq-finance-app/     # SwiftUI sample app
 docs/                     # contributor and package documentation
 ```
 
