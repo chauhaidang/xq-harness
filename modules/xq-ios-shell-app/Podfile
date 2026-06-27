@@ -1,0 +1,26 @@
+require_relative './node_modules/react-native/scripts/react_native_pods'
+
+platform :ios, min_ios_version_supported
+
+prepare_react_native_project!
+
+react_native_path = File.expand_path('./node_modules/react-native', __dir__)
+
+target 'xq-ios-shell-app' do
+  use_react_native!(
+    :path => react_native_path,
+    :app_path => "#{Pod::Config.instance.installation_root}"
+  )
+
+  target 'xq-ios-shell-appTests' do
+    inherit! :complete
+  end
+end
+
+post_install do |installer|
+  react_native_post_install(
+    installer,
+    react_native_path,
+    :mac_catalyst_enabled => false
+  )
+end
