@@ -1,0 +1,12 @@
+{
+  "id": "portfolio-home",
+  "version": "0.3.0",
+  "runtimeVersion": "rn-shell-v1",
+  "hostApiVersion": "1.0",
+  "title": "Remote Portfolio RN",
+  "payload": {
+    "kind": "react-native",
+    "url": "http://127.0.0.1:8123/portfolio.ios.bundle",
+    "moduleName": "PortfolioRemote"
+  }
+}

@@ -47,12 +47,12 @@ modules:
     commands:
       install: "true"
       build: >
-        xcodebuild -project xq-ios-shell-app.xcodeproj
+        xcodebuild -workspace xq-ios-shell-app.xcworkspace
         -scheme xq-ios-shell-app
         -destination 'platform=iOS Simulator,name=iPhone 16'
         build
       test: >
-        xcodebuild -project xq-ios-shell-app.xcodeproj
+        xcodebuild -workspace xq-ios-shell-app.xcworkspace
         -scheme xq-ios-shell-app
         -destination 'platform=iOS Simulator,name=iPhone 16'
         test

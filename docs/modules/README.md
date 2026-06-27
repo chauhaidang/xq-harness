@@ -3,6 +3,10 @@
 This repository hosts independent language modules. Each module builds and tests
 on its own with its own lockfile (where applicable).
 
+**Bringing a module from another GitHub repo?** Read
+[Onboarding a module from another repository](./onboarding.md) first — sanitize
+secrets and old CI in the source repo before opening a PR here.
+
 ## Registry
 
 `modules.yaml` at the repo root is the single source of truth for:
@@ -17,21 +21,12 @@ Do not duplicate those commands in the Makefile or CI workflows.
 
 ```bash
 ./scripts/module list
-./scripts/module ci node-example
-make test MODULE=python-example
+./scripts/module ci xq-common-kit
+make test MODULE=harness-state
 ./scripts/module test-all
 ```
 
 Requires [yq](https://github.com/mikefarah/yq).
-
-## Example modules
-
-Scaffold modules for polyglot layout reference. Not included in CI or
-`make test-all` (`test_all: false` in `modules.yaml`). Run manually:
-
-```bash
-./scripts/module ci node-example
-```
 
 ## POCs
 
@@ -85,16 +80,45 @@ Or from the repo root:
 ./scripts/module test xq-common-kit
 ```
 
+## Python BasedPyright modules
+
+Use [`docs/templates/python-basedpyright-module`](../templates/python-basedpyright-module/)
+when a Python module needs the standard BasedPyright type-checking setup.
+The template includes:
+
+- `pyproject.toml` dev dependencies for `basedpyright` and `pytest`
+- `[tool.basedpyright]` settings scoped to module-local `src` and `tests`
+- execution environments so tests can import module code from `src`
+- a smoke import test that keeps the scaffold buildable
+
+Register the module through `modules.yaml` and keep the runner commands there:
+
+```yaml
+commands:
+  install: uv sync --locked
+  build: uv run basedpyright && uv build
+  test: uv run pytest
+```
+
+For GitHub Actions, create a caller workflow that uses
+`.github/workflows/module-ci-python.yml`.
+
 ## iOS project regeneration
 
 When `project.yml` changes:
 
 ```bash
-cd modules/ios-example
+cd modules/ios-xq-finance-app
 xcodegen generate
 ```
 
-Commit the updated `ios-example.xcodeproj`.
+Commit the updated `ios-xq-finance-app.xcodeproj`.
+
+## iOS React Native shell adoption
+
+Use [iOS React Native Shell Adoption Guide](./ios-react-native-shell-adoption.md)
+when a consumer wants a native iOS shell that validates a remote manifest and
+mounts a React Native payload through an embedded RN runtime.
 
 ## GitHub Actions
 

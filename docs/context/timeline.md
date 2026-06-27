@@ -3,8 +3,50 @@
 - `0001` 2026-06-24T15:01:30+00:00 **task.created** `TASK-C33A7FBC` Recompose AGENTS.md
 - `0002` 2026-06-24T15:01:33+00:00 **task.status_changed** `TASK-C33A7FBC`
 - `0003` 2026-06-24T15:01:34+00:00 **decision.recorded** `DEC-5B67B144` AGENTS.md structure
-- `0046` 2026-06-27T13:49:21+00:00 **requirement.created** `REQ-83D6E609` POCs need a registered module home
-- `0047` 2026-06-27T13:49:28+00:00 **decision.recorded** `DEC-4895574E` Use a dedicated poc module for exploratory initiatives
-- `0048` 2026-06-27T13:49:36+00:00 **task.created** `TASK-3D112B63` Add registered poc module
-- `0049` 2026-06-27T13:49:39+00:00 **task.status_changed** `TASK-3D112B63`
-- `0050` 2026-06-27T13:49:43+00:00 **workspace.observed** `WS-ED063F3C`
+- `0004` 2026-06-25T14:51:40+00:00 **task.created** `TASK-DA922FC0` Build xq-ios-shell-app POC
+- `0005` 2026-06-25T14:51:56+00:00 **requirement.created** `REQ-D0E5BB8C` Prototype remote-loaded iOS shell module
+- `0006` 2026-06-25T14:57:48+00:00 **decision.recorded** `DEC-7296993C` POC uses hosted web payload seam instead of full React Native runtime
+- `0007` 2026-06-25T14:57:52+00:00 **task.status_changed** `TASK-DA922FC0`
+- `0008` 2026-06-25T15:29:47+00:00 **spec.created** `SPEC-B98B924D` Module onboarding from external repos
+- `0009` 2026-06-25T15:39:31+00:00 **decision.recorded** `DEC-348DAAF3` POC adds jsbundle bootstrap payload kind
+- `0010` 2026-06-25T15:46:20+00:00 **workspace.observed** `WS-21A11F03`
+- `0011` 2026-06-26T00:23:34+00:00 **requirement.created** `REQ-6A52FA75` Python modules need a Playwright template
+- `0012` 2026-06-26T00:25:12+00:00 **decision.recorded** `DEC-3F8EC55D` Python Playwright setup lives as a reusable module template
+- `0013` 2026-06-26T00:25:24+00:00 **task.created** `TASK-A730801C` Add Python Playwright module template
+- `0014` 2026-06-26T00:25:46+00:00 **spec.created** `SPEC-E28E9970` Python Playwright module template contract
+- `0015` 2026-06-26T00:25:50+00:00 **solution.proposed** `SOL-7D58243F` Copyable Python Playwright scaffold
+- `0016` 2026-06-26T00:25:54+00:00 **task.status_changed** `TASK-A730801C`
+- `0017` 2026-06-26T00:26:01+00:00 **workspace.observed** `WS-9BBEED4A`
+- `0018` 2026-06-26T00:27:32+00:00 **requirement.created** `REQ-A2C937FB` Python modules need a BasedPyright template
+- `0019` 2026-06-26T00:28:43+00:00 **decision.recorded** `DEC-292C7867` Supersede Playwright template with BasedPyright template
+- `0020` 2026-06-26T00:28:47+00:00 **spec.created** `SPEC-2EFD88B4` Python BasedPyright module template contract
+- `0021` 2026-06-26T00:28:52+00:00 **solution.proposed** `SOL-B79B25A8` Python BasedPyright scaffold
+- `0022` 2026-06-26T00:28:58+00:00 **workspace.observed** `WS-AB3A1A92`
+- `0023` 2026-06-26T00:41:04+00:00 **requirement.created** `REQ-93877C8E` Persist FastAPI learning instructions
+- `0024` 2026-06-26T00:41:09+00:00 **task.created** `TASK-F20BD38B` Document FastAPI beginner guide
+- `0025` 2026-06-26T00:41:32+00:00 **spec.created** `SPEC-5C3C1D53` FastAPI learning guide
+- `0026` 2026-06-26T00:41:37+00:00 **solution.proposed** `SOL-6028E2E7` FastAPI step-by-step Markdown guide
+- `0027` 2026-06-26T00:41:40+00:00 **task.status_changed** `TASK-F20BD38B`
+- `0028` 2026-06-26T00:41:44+00:00 **workspace.observed** `WS-DAF4C83B`
+- `0029` 2026-06-26T00:45:08+00:00 **decision.recorded** `DEC-1BAEAB59` Expo remote component feasibility for iOS shell
+- `0030` 2026-06-26T00:45:12+00:00 **workspace.observed** `WS-8C59908D`
+- `0031` 2026-06-26T00:48:49+00:00 **decision.recorded** `DEC-D3845B86` Recommended path for RN runtime in iOS shell
+- `0032` 2026-06-26T00:57:14+00:00 **task.created** `TASK-FBB01C19` Update iOS shell POC to React Native payload seam
+- `0033` 2026-06-26T00:57:20+00:00 **task.status_changed** `TASK-FBB01C19`
+- `0034` 2026-06-26T00:57:20+00:00 **workspace.observed** `WS-BC7ABAF2`
+- `0035` 2026-06-26T10:08:29+00:00 **task.created** `TASK-05933538` Demo React Native shell POC
+- `0036` 2026-06-26T10:08:33+00:00 **task.status_changed** `TASK-05933538`
+- `0037` 2026-06-26T10:08:33+00:00 **workspace.observed** `WS-7E567210`
+- `0038` 2026-06-26T10:29:31+00:00 **decision.recorded** `DEC-1186AAED` iOS shell links React Native through CocoaPods workspace
+- `0039` 2026-06-26T10:29:38+00:00 **task.created** `TASK-A53715F2` Link RN runtime into iOS shell
+- `0040` 2026-06-26T10:29:40+00:00 **task.status_changed** `TASK-A53715F2`
+- `0041` 2026-06-26T10:29:44+00:00 **workspace.observed** `WS-D33C52F9`
+- `0042` 2026-06-26T10:46:14+00:00 **requirement.created** `REQ-BF104DDB` Document RN shell consumer adoption
+- `0043` 2026-06-26T10:46:18+00:00 **task.created** `TASK-66CBADB8` Write RN shell adoption guide
+- `0044` 2026-06-26T10:46:23+00:00 **task.status_changed** `TASK-66CBADB8`
+- `0045` 2026-06-26T10:46:32+00:00 **workspace.observed** `WS-5386DFB8`
+- `0046` 2026-06-27T16:20:17+00:00 **requirement.created** `REQ-8E704F4D` POCs need a registered module home
+- `0047` 2026-06-27T16:20:23+00:00 **decision.recorded** `DEC-4A3FDC8F` Use a dedicated poc module for exploratory initiatives
+- `0048` 2026-06-27T16:20:27+00:00 **task.created** `TASK-58E5A43B` Add registered poc module
+- `0049` 2026-06-27T16:20:31+00:00 **task.status_changed** `TASK-58E5A43B`
+- `0050` 2026-06-27T16:20:35+00:00 **workspace.observed** `WS-44D33CC4`

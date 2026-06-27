@@ -22,6 +22,9 @@ dist/
 *.xcuserstate
 *.xcuserdata/
 **/ios-**/build
+**/Pods/
+modules/xq-ios-shell-app/build/
+modules/xq-ios-shell-app/.xcode.env.local
 
 # xq-toolbox workspace artifacts
 modules/xq-*/.task/
