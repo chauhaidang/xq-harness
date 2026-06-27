@@ -29,3 +29,9 @@ Create a Markdown file containing the step-by-step FastAPI coding instructions, 
 Status: `active`
 
 Persist the verified xq-ios-shell-app React Native runtime POC details and provide an implementation guideline for consumers who want to adopt the native iOS shell plus remote RN payload pattern.
+
+## REQ-8E704F4D — POCs need a registered module home
+
+Status: `active`
+
+Exploratory initiatives such as learning MCP server development should have a dedicated repo module before they become durable product or package work.

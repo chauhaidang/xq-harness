@@ -63,3 +63,11 @@ Status: `accepted`
 xq-ios-shell-app now embeds a brownfield React Native runtime using React Native 0.86, CocoaPods, RCTReactNativeFactory, and a generated RN bundle served from the existing remote manifest seam. The module runner builds/tests the .xcworkspace instead of the .xcodeproj.
 
 **Rationale:** React Native pods and generated dependency providers are integrated by CocoaPods, so the native shell must build from the workspace. Keeping the existing manifest seam lets the shell validate runtime/host API before mounting the RN module.
+
+## DEC-4A3FDC8F — Use a dedicated poc module for exploratory initiatives
+
+Status: `accepted`
+
+Add modules/poc as a registered mixed-language module for prototypes, learning spikes, and short-lived initiatives. Keep it out of test-all and give it no-op module runner commands until a POC graduates into a durable module.
+
+**Rationale:** Exploratory work like MCP learning should be discoverable through the same module registry as the rest of the repo, but should not create package, release, or CI obligations before the idea has proven useful.

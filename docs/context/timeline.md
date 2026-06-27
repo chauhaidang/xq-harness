@@ -45,3 +45,8 @@
 - `0043` 2026-06-26T10:46:18+00:00 **task.created** `TASK-66CBADB8` Write RN shell adoption guide
 - `0044` 2026-06-26T10:46:23+00:00 **task.status_changed** `TASK-66CBADB8`
 - `0045` 2026-06-26T10:46:32+00:00 **workspace.observed** `WS-5386DFB8`
+- `0046` 2026-06-27T16:20:17+00:00 **requirement.created** `REQ-8E704F4D` POCs need a registered module home
+- `0047` 2026-06-27T16:20:23+00:00 **decision.recorded** `DEC-4A3FDC8F` Use a dedicated poc module for exploratory initiatives
+- `0048` 2026-06-27T16:20:27+00:00 **task.created** `TASK-58E5A43B` Add registered poc module
+- `0049` 2026-06-27T16:20:31+00:00 **task.status_changed** `TASK-58E5A43B`
+- `0050` 2026-06-27T16:20:35+00:00 **workspace.observed** `WS-44D33CC4`

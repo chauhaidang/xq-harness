@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "python-basedpyright-example"
+version = "0.1.0"
+description = "Python module with BasedPyright type checking"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "basedpyright",
+  "hatchling",
+  "pytest>=8.0",
+]
+
+[tool.uv]
+package = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/python_basedpyright_example"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.basedpyright]
+include = ["src", "tests"]
+exclude = [
+  "**/__pycache__",
+  ".venv",
+  "dist",
+]
+pythonVersion = "3.12"
+pythonPlatform = "All"
+typeCheckingMode = "recommended"
+reportMissingTypeStubs = false
+
+executionEnvironments = [
+  { root = "src" },
+  { root = "tests", extraPaths = ["src"] },
+]

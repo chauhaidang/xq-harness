@@ -28,6 +28,13 @@ make test MODULE=harness-state
 
 Requires [yq](https://github.com/mikefarah/yq).
 
+## POCs
+
+`modules/poc` is the repo home for prototypes, learning spikes, and exploratory
+initiatives before they justify a durable module. It is registered in
+`modules.yaml` with no-op commands and `test_all: false`, so it can be run
+manually through `./scripts/module ci poc` without joining the default CI set.
+
 ## XQ packages (Level C — independent)
 
 Each `modules/xq-*` package has its own `yarn.lock` and `.yarnrc.yml` for
