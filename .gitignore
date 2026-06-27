@@ -18,13 +18,13 @@ __pycache__/
 dist/
 *.egg-info/
 
-# Java / iOS examples
-modules/java-example/.gradle/
-modules/java-example/build/
-modules/ios-example/DerivedData/
+# iOS / Xcode
 *.xcuserstate
 *.xcuserdata/
 **/ios-**/build
+**/Pods/
+modules/xq-ios-shell-app/build/
+modules/xq-ios-shell-app/.xcode.env.local
 
 # xq-toolbox workspace artifacts
 modules/xq-*/.task/

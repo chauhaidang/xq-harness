@@ -179,7 +179,6 @@ dependency.
 | --- | --- | --- |
 | **xq-scripts** | GitHub Release tarball (`xq-scripts/v*`) | `sync-openapi.sh`, `generate-report.js`, `install-skills.js` |
 | **xq-test-harness-e2e-consumer** | Monorepo only (`private`) | Dogfood example; not for external use |
-| **Example modules** (`node-example`, etc.) | Clone repo | Polyglot runner demos only |
 
 ### xq-scripts (tarball)
 

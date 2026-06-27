@@ -5,10 +5,10 @@ MODULE ?=
 help:
 	@echo "Usage:"
 	@echo "  make list"
-	@echo "  make install MODULE=node-example"
-	@echo "  make build MODULE=node-example"
-	@echo "  make test MODULE=node-example"
-	@echo "  make ci MODULE=node-example"
+	@echo "  make install MODULE=xq-common-kit"
+	@echo "  make build MODULE=xq-common-kit"
+	@echo "  make test MODULE=xq-common-kit"
+	@echo "  make ci MODULE=xq-common-kit"
 	@echo "  make test-all"
 
 list:

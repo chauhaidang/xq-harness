@@ -1,0 +1,17 @@
+{
+  "name": "xq-ios-shell-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "bundle:ios": "react-native bundle --entry-file index.js --platform ios --dev false --bundle-output remote-payload/portfolio.ios.bundle --assets-dest remote-payload"
+  },
+  "dependencies": {
+    "@react-native/metro-config": "0.86.0",
+    "react": "19.2.3",
+    "react-native": "0.86.0"
+  },
+  "devDependencies": {
+    "@react-native-community/cli": "^20.2.0"
+  }
+}
