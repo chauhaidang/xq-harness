@@ -21,6 +21,7 @@ class RuntimeConfig:
 
 
 class RuntimeState:
+    """Runtime state for the MCP server. It will manage information of the test execution"""
     def __init__(self) -> None:
         self._config: RuntimeConfig | None = None
 
@@ -64,6 +65,3 @@ class RuntimeState:
                 "Runtime environment is not configured. Call configure_environment first."
             )
         return self._config
-
-
-runtime_state = RuntimeState()

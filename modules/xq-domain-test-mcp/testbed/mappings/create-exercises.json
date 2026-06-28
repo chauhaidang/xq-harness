@@ -1,0 +1,63 @@
+{
+  "scenario": "create-exercises.md",
+  "description": "Agent-side mapping used by automated e2e tests. The MCP server does not parse scenario Markdown.",
+  "steps": [
+    {
+      "tool": "configure_environment",
+      "arguments": {
+        "environment": "testbed",
+        "api_base_url": "{{mock_api_base_url}}",
+        "api_token": "testbed-token"
+      }
+    },
+    {
+      "tool": "call_rest_api",
+      "arguments": {
+        "method": "POST",
+        "path": "/exercises",
+        "body": {
+          "lesson_id": "lesson-a",
+          "count": 5,
+          "type": "vocabulary"
+        },
+        "expected_status": 201
+      },
+      "expect": {
+        "json.lesson_id": "lesson-a",
+        "json.count": 5,
+        "assertion.passed": true
+      }
+    },
+    {
+      "tool": "call_rest_api",
+      "arguments": {
+        "method": "GET",
+        "path": "/exercises?lesson_id=lesson-a",
+        "expected_status": 200
+      },
+      "expect": {
+        "json.exercises[0].lesson_id": "lesson-a",
+        "json.exercises[0].count": 5,
+        "json.exercises[0].type": "vocabulary",
+        "assertion.passed": true
+      }
+    },
+    {
+      "tool": "get_environment",
+      "arguments": {},
+      "expect": {
+        "configured": true,
+        "environment": "testbed",
+        "has_api_token": true
+      }
+    },
+    {
+      "tool": "clear_environment",
+      "arguments": {},
+      "expect": {
+        "status": "cleared",
+        "configured": false
+      }
+    }
+  ]
+}
