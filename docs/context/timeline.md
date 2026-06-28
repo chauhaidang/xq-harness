@@ -50,3 +50,61 @@
 - `0048` 2026-06-27T16:20:27+00:00 **task.created** `TASK-58E5A43B` Add registered poc module
 - `0049` 2026-06-27T16:20:31+00:00 **task.status_changed** `TASK-58E5A43B`
 - `0050` 2026-06-27T16:20:35+00:00 **workspace.observed** `WS-44D33CC4`
+- `0051` 2026-06-27T16:41:46+00:00 **requirement.created** `REQ-09BD331B` Plan automation testing MCP server
+- `0052` 2026-06-27T16:41:55+00:00 **spec.created** `SPEC-C6FE7ABA` Automation testing MCP server POC contract
+- `0053` 2026-06-27T16:42:01+00:00 **decision.recorded** `DEC-503CF849` Automation MCP starts as poc module server
+- `0054` 2026-06-27T16:42:06+00:00 **solution.proposed** `SOL-5F6F61A1` POC MCP server for XQ automation testing
+- `0055` 2026-06-27T16:42:11+00:00 **workspace.observed** `WS-8E053D5F`
+- `0056` 2026-06-28T05:08:57+00:00 **solution.proposed** `SOL-D9BE644A` Automation testing MCP phased implementation plan
+- `0057` 2026-06-28T05:09:03+00:00 **workspace.observed** `WS-66D74C12`
+- `0058` 2026-06-28T05:14:53+00:00 **requirement.created** `REQ-D745B4DE` MCP runs scenarios from Markdown mapping input
+- `0059` 2026-06-28T05:15:00+00:00 **spec.created** `SPEC-28FCFE37` Markdown scenario mapping runner contract
+- `0060` 2026-06-28T05:15:06+00:00 **solution.proposed** `SOL-83E60D8F` Scenario mapping MCP runner
+- `0061` 2026-06-28T05:15:12+00:00 **decision.recorded** `DEC-329DC770` Automation MCP centers on explicit scenario mappings
+- `0062` 2026-06-28T05:17:54+00:00 **requirement.created** `REQ-A3B27F3E` MCP exposes domain test actions called from scenario mappings
+- `0063` 2026-06-28T05:18:03+00:00 **decision.recorded** `DEC-844B97D6` Scenario mapping belongs to the agent, not the MCP server
+- `0064` 2026-06-28T05:18:13+00:00 **spec.created** `SPEC-F1F123B9` Domain action MCP tool contract
+- `0065` 2026-06-28T05:18:19+00:00 **solution.proposed** `SOL-3149CE10` Domain tool automation MCP
+- `0066` 2026-06-28T06:02:53+00:00 **decision.recorded** `DEC-6E2869E6` Automation MCP POC uses Python
+- `0067` 2026-06-28T06:03:37+00:00 **decision.recorded** `DEC-49216755` Name MCP server xq-domain-test-mcp
+- `0068` 2026-06-28T06:40:27+00:00 **decision.recorded** `DEC-25FF9DAD` Use xq_mcp as Python import package
+- `0069` 2026-06-28T06:46:15+00:00 **requirement.created** `REQ-9D413F74` Domain MCP tools leverage generated Python API client
+- `0070` 2026-06-28T06:53:49+00:00 **requirement.created** `REQ-1747A8CF` MCP domain tools use reusable templates
+- `0071` 2026-06-28T06:53:59+00:00 **decision.recorded** `DEC-9BF4DEEF` Compose MCP tools from templates
+- `0072` 2026-06-28T06:57:48+00:00 **requirement.created** `REQ-BC804832` MCP tools are grouped by category
+- `0073` 2026-06-28T06:57:59+00:00 **decision.recorded** `DEC-36F388FD` First MCP tool category is domain api tool
+- `0074` 2026-06-28T06:59:32+00:00 **requirement.created** `REQ-343950B8` MCP includes rest api tool category
+- `0075` 2026-06-28T06:59:37+00:00 **decision.recorded** `DEC-1FFC1869` Add rest api tool category
+- `0076` 2026-06-28T07:09:17+00:00 **decision.recorded** `DEC-3F148306` Defer MCP tool template abstraction for MVP
+- `0077` 2026-06-28T07:22:56+00:00 **requirement.created** `REQ-CAED9D96` MCP runtime config is set through tools and stored in memory
+- `0078` 2026-06-28T07:23:05+00:00 **spec.created** `SPEC-085516FA` xq-domain-test-mcp MVP implementation contract
+- `0079` 2026-06-28T07:23:17+00:00 **decision.recorded** `DEC-883CDDEC` MVP runtime config uses explicit in-memory environment tools
+- `0080` 2026-06-28T07:23:24+00:00 **solution.proposed** `SOL-AB3FBA5D` Implement xq-domain-test-mcp MVP in phased slices
+- `0081` 2026-06-28T07:23:33+00:00 **task.created** `TASK-5A78574B` Implement xq-domain-test-mcp MVP scaffold and runtime config
+- `0082` 2026-06-28T07:52:38+00:00 **task.status_changed** `TASK-5A78574B`
+- `0083` 2026-06-28T07:52:38+00:00 **workspace.observed** `WS-C891DCAE`
+- `0084` 2026-06-28T08:12:22+00:00 **requirement.created** `REQ-788A67C0` MVP focuses on REST API testing tools
+- `0085` 2026-06-28T08:12:30+00:00 **decision.recorded** `DEC-6BB7EDE5` Park generated API client integration for REST API MVP
+- `0086` 2026-06-28T08:15:31+00:00 **solution.proposed** `SOL-75F2D587` REST API focused xq-domain-test-mcp MVP
+- `0087` 2026-06-28T08:20:19+00:00 **task.created** `TASK-6B81037F` Create provider skill for xq-domain-test-mcp
+- `0088` 2026-06-28T08:20:33+00:00 **task.status_changed** `TASK-6B81037F`
+- `0089` 2026-06-28T09:38:48+00:00 **workspace.observed** `WS-B953CB5F`
+- `0090` 2026-06-28T09:56:29+00:00 **workspace.observed** `WS-00938BBB`
+- `0091` 2026-06-28T10:11:41+00:00 **task.created** `TASK-56A7B7A6` Update xq-domain-test-mcp skill for global tool usage
+- `0092` 2026-06-28T10:11:54+00:00 **task.status_changed** `TASK-56A7B7A6`
+- `0093` 2026-06-28T10:25:12+00:00 **task.created** `TASK-69038F46` Make xq-domain-test-mcp skill consumer-only
+- `0094` 2026-06-28T10:25:24+00:00 **task.status_changed** `TASK-69038F46`
+- `0095` 2026-06-28T11:49:54+00:00 **requirement.created** `REQ-36A5C7F5` Scenario Markdown needs a mappable authoring contract
+- `0096` 2026-06-28T11:50:38+00:00 **decision.recorded** `DEC-A89AA4ED` Scenario Markdown is an agent-side mapping contract
+- `0097` 2026-06-28T12:37:01+00:00 **requirement.created** `REQ-DE2D1D4A` Scenario Markdown stays business-specific
+- `0098` 2026-06-28T12:37:50+00:00 **decision.recorded** `DEC-52B7A840` Scenario Markdown remains business-specific
+- `0099` 2026-06-28T12:45:28+00:00 **requirement.created** `REQ-A4A0D73E` MCP supports E2E API scenario flows
+- `0100` 2026-06-28T13:30:36+00:00 **task.created** `TASK-9EAA6EA9` Create xq-domain-test-mcp handoff
+- `0101` 2026-06-28T13:30:45+00:00 **task.status_changed** `TASK-9EAA6EA9`
+- `0102` 2026-06-28T13:37:07+00:00 **requirement.created** `REQ-DEC6E69D` Promote xq-domain-test-mcp to production module
+- `0103` 2026-06-28T13:37:16+00:00 **spec.created** `SPEC-D0C96337` xq-domain-test-mcp production module contract
+- `0104` 2026-06-28T13:37:27+00:00 **decision.recorded** `DEC-684EDD9D` Promote xq-domain-test-mcp out of poc
+- `0105` 2026-06-28T13:37:39+00:00 **task.created** `TASK-5473382C` Promote xq-domain-test-mcp to registered module
+- `0106` 2026-06-28T13:41:53+00:00 **solution.proposed** `SOL-B55DD9B3` Promoted xq-domain-test-mcp production module
+- `0107` 2026-06-28T13:42:02+00:00 **task.status_changed** `TASK-5473382C`
+- `0108` 2026-06-28T13:42:03+00:00 **workspace.observed** `WS-10CCC655`

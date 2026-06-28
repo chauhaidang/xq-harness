@@ -35,6 +35,17 @@ initiatives before they justify a durable module. It is registered in
 `modules.yaml` with no-op commands and `test_all: false`, so it can be run
 manually through `./scripts/module ci poc` without joining the default CI set.
 
+## MCP modules
+
+`xq-domain-test-mcp` is a Python/uv MCP server module for REST API testing in
+business-specific E2E API scenario workflows. It exposes a stdio command named
+`xq-domain-test-mcp`; agents configure an environment and call REST primitives
+while keeping scenario Markdown business-readable.
+
+```bash
+./scripts/module ci xq-domain-test-mcp
+```
+
 ## XQ packages (Level C — independent)
 
 Each `modules/xq-*` package has its own `yarn.lock` and `.yarnrc.yml` for

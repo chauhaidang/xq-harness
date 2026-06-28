@@ -54,6 +54,7 @@ modules/
   xq-test-utils/          # Jest / DB / Detox helpers
   xq-test-infra/          # xq-infra CLI (Docker test environments)
   xq-test-harness/        # Playwright + Gherkin API harness
+  xq-domain-test-mcp/     # Python MCP server for REST/E2E API test calls
   xq-scripts/             # release tarball scripts (not npm)
   harness-state/          # project memory CLI
   ios-xq-finance-app/     # SwiftUI sample app
