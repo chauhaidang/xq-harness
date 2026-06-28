@@ -179,5 +179,5 @@ uv tool install --force \
 ```
 
 Push tag `xq-domain-test-mcp-v<version>` (must match `pyproject.toml`) to trigger
-`.github/workflows/xq-domain-test-mcp-release.yml`. Until then, use the local wheel
+`.github/workflows/cd-xq-domain-test-mcp.yml`. Until then, use the local wheel
 or `uv tool install --force .`.

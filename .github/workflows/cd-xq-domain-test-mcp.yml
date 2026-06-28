@@ -1,4 +1,4 @@
-name: xq-domain-test-mcp Release
+name: CD xq-domain-test-mcp
 
 on:
   push:

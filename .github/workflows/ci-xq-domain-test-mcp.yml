@@ -7,7 +7,7 @@ on:
       - modules.yaml
       - scripts/module
       - .github/workflows/ci-xq-domain-test-mcp.yml
-      - .github/workflows/xq-domain-test-mcp-release.yml
+      - .github/workflows/cd-xq-domain-test-mcp.yml
       - .github/workflows/module-ci-python.yml
   push:
     branches: [main]
