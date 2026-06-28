@@ -71,3 +71,123 @@ Status: `accepted`
 Add modules/poc as a registered mixed-language module for prototypes, learning spikes, and short-lived initiatives. Keep it out of test-all and give it no-op module runner commands until a POC graduates into a durable module.
 
 **Rationale:** Exploratory work like MCP learning should be discoverable through the same module registry as the rest of the repo, but should not create package, release, or CI obligations before the idea has proven useful.
+
+## DEC-503CF849 — Automation MCP starts as poc module server
+
+Status: `accepted`
+
+Build the automation testing MCP server first under modules/poc, not as a published xq-harness package. Keep the MCP interface focused on automation testing workflows and wire execution through ./scripts/module where repo modules are involved.
+
+**Rationale:** The repo already has an accepted decision that exploratory initiatives such as MCP learning live in modules/poc. Starting there keeps experimentation discoverable without adding release, package, or test-all obligations, while the module runner keeps commands aligned with modules.yaml.
+
+## DEC-329DC770 — Automation MCP centers on explicit scenario mappings
+
+Status: `accepted`
+
+The automation testing MCP POC should expose tools for validating and running mapped test scenarios from agent-provided Markdown scenario mappings, rather than accepting free-form natural language or arbitrary shell commands.
+
+**Rationale:** The user clarified that the input is the mapping from scenarios Markdown. Making the mapping explicit gives the agent a stable contract while preserving safety: the server can validate fields, reject ambiguity, and route execution only through known test adapters and module commands.
+
+## DEC-844B97D6 — Scenario mapping belongs to the agent, not the MCP server
+
+Status: `accepted`
+
+Automation MCP tools should be domain actions such as create-exercises. The agent reads scenarios Markdown, decides which tool and arguments match a scenario, and calls the MCP tool. The server validates and executes the requested action.
+
+**Rationale:** The user clarified that the MCP server should expose callable tools, while the agent is responsible for mapping scenarios. Keeping mapping outside the server preserves MCP as an action boundary and avoids coupling the server to a specific Markdown scenario format.
+
+## DEC-6E2869E6 — Automation MCP POC uses Python
+
+Status: `accepted`
+
+Build the domain-tool catalog MCP POC in Python rather than TypeScript.
+
+**Rationale:** The user explicitly prefers Python. The repo already uses Python and uv for harness-state, and the official MCP Python SDK provides FastMCP for concise tool definitions, which fits a POC domain tool catalog.
+
+## DEC-49216755 — Name MCP server xq-domain-test-mcp
+
+Status: `accepted`
+
+The automation testing MCP server POC should be named xq-domain-test-mcp.
+
+**Rationale:** The user explicitly named the server. The name communicates that this is an MCP server for domain-level test actions, not a generic runner or scenario parser.
+
+## DEC-25FF9DAD — Use xq_mcp as Python import package
+
+Status: `accepted`
+
+The xq-domain-test-mcp POC should use xq_mcp as the Python import package name while keeping xq-domain-test-mcp as the project, CLI, and MCP server name.
+
+**Rationale:** The user prefers a shorter Python package name. This preserves the public server/project name while avoiding repeated long nested identifiers in Python imports.
+
+## DEC-9BF4DEEF — Compose MCP tools from templates
+
+Status: `accepted`
+
+Build xq-domain-test-mcp around a reusable domain tool template instead of hard-coding every MCP tool method. Each tool definition should provide name, description, input schema, output schema, adapter operation, and examples; the template handles validation, invocation, error mapping, and structured responses.
+
+**Rationale:** The user clarified that generated API client leverage is only part of the idea. A template-first approach gives repeatable tool construction, keeps the MCP catalog consistent, and lets new domain actions be added by configuration plus small adapter operations rather than duplicating boilerplate tool handlers.
+
+## DEC-36F388FD — First MCP tool category is domain api tool
+
+Status: `accepted`
+
+Organize xq-domain-test-mcp tools by category, starting with the domain api tool category for tools backed by domain API clients.
+
+**Rationale:** The user wants tool categories, and the first use case wraps generated Python API clients. Category metadata and module layout make the catalog easier for agents to discover and keep future tool types separate from API-backed actions.
+
+## DEC-1FFC1869 — Add rest api tool category
+
+Status: `accepted`
+
+xq-domain-test-mcp should support a rest api tool category alongside domain api tool. Domain api tools expose higher-level domain actions backed by generated/domain clients. Rest api tools expose direct configured HTTP endpoint calls with request/response validation.
+
+**Rationale:** The user identified REST API tools as a separate category. Keeping this separate prevents low-level HTTP mechanics from leaking into domain tools, while still supporting scenarios where direct REST endpoint testing is the correct abstraction.
+
+## DEC-3F148306 — Defer MCP tool template abstraction for MVP
+
+Status: `accepted`
+
+Remove the template concept from the xq-domain-test-mcp MVP. Implement the first tools with explicit category modules and direct registration. Shared registration/runtime abstractions can be extracted later only after repeated tool implementations prove the shape.
+
+**Rationale:** The user found the template concept too vague for MVP. Deferring it keeps the first implementation easier to understand and reduces premature abstraction while preserving categorized tool organization.
+
+## DEC-883CDDEC — MVP runtime config uses explicit in-memory environment tools
+
+Status: `accepted`
+
+Implement runtime environment parameters with configure_environment, get_environment, and clear_environment tools backed by in-memory process state.
+
+**Rationale:** The user agreed with the in-memory one-off configuration approach. It keeps the MVP simple, avoids polluting every domain tool input with environment parameters, and gives agents an explicit setup step before scenario-driven domain tool calls.
+
+## DEC-6BB7EDE5 — Park generated API client integration for REST API MVP
+
+Status: `accepted`
+
+Refocus xq-domain-test-mcp MVP on REST API testing tools. Remove domain_api/generated-client scaffolding from the MVP and defer it until the REST API test bed proves useful.
+
+**Rationale:** The current scaffold introduced more architecture than the MVP needs. Focusing on REST API testing gives a smaller executable surface: configure environment, inspect config, clear config, call REST endpoints, and assert REST responses.
+
+## DEC-A89AA4ED — Scenario Markdown is an agent-side mapping contract
+
+Status: `accepted`
+
+Define a scenario Markdown authoring contract with frontmatter and one explicit REST action so humans and agents can map scenarios to configure_environment and call_rest_api. The MCP server remains a tool executor and does not parse Markdown in the MVP.
+
+**Rationale:** The user identified that humans and AI agents need guardrails for scenario shape. Keeping the contract in the consumer skill gives mapping consistency without expanding the MCP server runtime into a Markdown parser.
+
+## DEC-52B7A840 — Scenario Markdown remains business-specific
+
+Status: `accepted`
+
+Scenario Markdown for xq-domain-test-mcp should describe business intent, entities, inputs, and expected outcomes. It should not require authors to specify REST method, path, headers, or payload. The agent maps business scenarios to call_rest_api using available domain/API context and asks for clarification when mapping is unsafe.
+
+**Rationale:** The user clarified that scenarios are business-specific. Keeping scenarios business-readable preserves human authoring quality while still letting agents translate to REST MCP calls.
+
+## DEC-684EDD9D — Promote xq-domain-test-mcp out of poc
+
+Status: `accepted`
+
+Move xq-domain-test-mcp from modules/poc into modules/xq-domain-test-mcp and register it as an independent Python module in modules.yaml.
+
+**Rationale:** The user declared the POC ready for the next phase. A dedicated registered module gives rapid development a stable path, real install/build/test commands, and a clear ownership boundary while keeping modules/poc reserved for disposable exploratory work.

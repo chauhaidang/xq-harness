@@ -23,3 +23,59 @@ Status: `proposed`
 Spec: `SPEC-5C3C1D53`
 
 Added docs/learning/fastapi-step-by-step.md with setup, route, path/query/body, CRUD, error handling, complete main.py, practice tasks, and mental model sections. Updated docs/README.md to include docs/learning.
+
+## SOL-5F6F61A1 — POC MCP server for XQ automation testing
+
+Status: `proposed`
+
+Spec: `SPEC-C6FE7ABA`
+
+Implement a Node/TypeScript MCP server under modules/poc/automation-testing-mcp. Start with read-only discovery and scaffolding tools, then add guarded execution tools that call ./scripts/module for registered modules. Tools should cover module discovery, BDD harness setup guidance, mobile E2E helper guidance, config validation, and test execution summaries.
+
+## SOL-D9BE644A — Automation testing MCP phased implementation plan
+
+Status: `proposed`
+
+Spec: `SPEC-C6FE7ABA`
+
+Phase 1 builds a Node/TypeScript MCP server under modules/poc/automation-testing-mcp with read-only tools for module discovery, BDD setup guidance, mobile E2E setup guidance, and structure validation. Phase 2 adds guarded execution tools that accept explicit module names and delegate to ./scripts/module install/build/test, returning structured summaries. Phase 3 evaluates whether the POC should graduate into a package or remain a local Codex/MCP utility. The server should expose small task-oriented tools, avoid broad filesystem access, and reuse xq-test-harness and xq-test-utils conventions rather than inventing a new test DSL.
+
+## SOL-83E60D8F — Scenario mapping MCP runner
+
+Status: `proposed`
+
+Spec: `SPEC-28FCFE37`
+
+Refocus the POC around scenario execution from agent-provided Markdown mappings. Provide tools such as xq_validate_scenario_mapping, xq_list_mapped_scenarios, xq_dry_run_scenario, and xq_run_scenario. Keep the mapping payload structured and explicit; the MCP server should not infer arbitrary commands from prose. Scenario targets should resolve to known runner adapters: BDD/Playwright scenarios, Detox/Jest E2E tests, or registered module runner commands. Execution must be guarded by allowlisted modules/paths and return structured run evidence for the agent to summarize.
+
+## SOL-3149CE10 — Domain tool automation MCP
+
+Status: `proposed`
+
+Spec: `SPEC-F1F123B9`
+
+Build the POC MCP server as a catalog of domain-specific automation tools rather than a scenario runner. Initial tools can include create-exercises plus supporting read/validate/list actions as needed by the scenario workflow. The agent parses scenarios Markdown, maps a scenario to a tool call, and invokes the matching MCP tool with typed arguments. The server validates inputs, performs the domain action, optionally triggers test execution through approved runners, and returns structured results for the agent to report.
+
+## SOL-AB3FBA5D — Implement xq-domain-test-mcp MVP in phased slices
+
+Status: `proposed`
+
+Spec: `SPEC-085516FA`
+
+Phase 1 scaffold modules/poc/xq-domain-test-mcp as a uv Python FastMCP project with package xq_mcp and CLI xq-domain-test-mcp. Phase 2 implement runtime state and environment tools: configure_environment, get_environment, clear_environment. Phase 3 add catalog/category metadata for domain_api and rest_api. Phase 4 implement the first concrete domain_api tool using a fake/injected adapter first, then wire the generated Python API client behind an adapter. Phase 5 implement one rest_api tool backed by a configured HTTP client. Phase 6 add tests for runtime config, missing-config failures, tool registration, redaction, and adapter invocation. Phase 7 document the agent flow from scenario Markdown to MCP tool calls.
+
+## SOL-75F2D587 — REST API focused xq-domain-test-mcp MVP
+
+Status: `proposed`
+
+Spec: `SPEC-085516FA`
+
+Shrink the xq-domain-test-mcp MVP to a minimal REST API testing server. Keep runtime.py for in-memory environment config, tools.py for configure/get/clear environment plus call_rest_api, and server.py for FastMCP registration. Remove domain_api/generated-client scaffolding, catalog registry, and adapter folders from the MVP. Generated API client support is parked for a later phase after the REST API testing workflow is validated.
+
+## SOL-B55DD9B3 — Promoted xq-domain-test-mcp production module
+
+Status: `proposed`
+
+Spec: `SPEC-D0C96337`
+
+Moved xq-domain-test-mcp into modules/xq-domain-test-mcp as an independent Python uv module, registered it in modules.yaml with install/build/test commands, updated README and docs/modules documentation, removed the old POC directory, verified ./scripts/module ci xq-domain-test-mcp, cleaned generated artifacts, and refreshed the global uv tool install from the production module path.
