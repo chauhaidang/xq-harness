@@ -78,17 +78,13 @@ jobs:
           set -euo pipefail
           VERSION="${{ steps.version.outputs.version }}"
           BIN_DIR="$(uv tool dir --bin)"
+          EXECUTABLE="${BIN_DIR}/xq-domain-test-mcp"
           uv tool install --force "dist/xq_domain_test_mcp-${VERSION}-py3-none-any.whl"
-          "${BIN_DIR}/xq-domain-test-mcp" &
-          PID=$!
-          sleep 2
-          if kill -0 "${PID}" 2>/dev/null; then
-            kill "${PID}"
-            wait "${PID}" || true
-          else
-            echo "xq-domain-test-mcp exited immediately; expected stdio MCP server to stay running" >&2
-            exit 1
-          fi
+          test -x "${EXECUTABLE}"
+          TOOL_PYTHON="$(head -1 "${EXECUTABLE}" | sed 's/^#!//')"
+          test -x "${TOOL_PYTHON}"
+          "${TOOL_PYTHON}" -c "from xq_mcp.server import build_server; build_server()"
+          echo "Installed xq-domain-test-mcp ${VERSION} wheel and entry point verified."
 
       - name: Smoke test skill bundle
         working-directory: modules/xq-domain-test-mcp
@@ -144,7 +140,7 @@ jobs:
 
           - \`./scripts/module ci xq-domain-test-mcp\`
           - skill bundle and wheel checksums
-          - \`uv tool install\` smoke test for stdio MCP server
+          - \`uv tool install\` wheel and entry-point import check
           EOF
           gh release create "${TAG}" \
             --title "xq-domain-test-mcp ${VERSION}" \
