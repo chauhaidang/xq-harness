@@ -1,16 +1,13 @@
 import unittest
 
 from xq_mcp.runtime import MissingRuntimeConfigError, RuntimeState
-from xq_mcp.server import register_tools
-from xq_mcp.tools import (
-    call_rest_api,
-    clear_environment,
-    configure_environment,
-    get_environment,
-)
+from xq_mcp.tools.rest_api import JsonValue, call_rest_api
+from xq_mcp.tools.runtime_config import configure_environment
 
 
 class RecordingRequester:
+    status_code: int
+
     def __init__(self, status_code: int = 200) -> None:
         self.status_code = status_code
         self.calls: list[dict[str, object]] = []
@@ -21,9 +18,9 @@ class RecordingRequester:
         method: str,
         url: str,
         headers: dict[str, str],
-        body: dict[str, object] | None,
+        body: dict[str, JsonValue] | None,
         timeout_seconds: float,
-    ) -> dict[str, object]:
+    ) -> dict[str, JsonValue]:
         self.calls.append(
             {
                 "method": method,
@@ -40,64 +37,14 @@ class RecordingRequester:
         }
 
 
-class FakeMcp:
-    def __init__(self) -> None:
-        self.tools: dict[str, object] = {}
-
-    def tool(self):
-        def decorator(func):
-            self.tools[func.__name__] = func
-            return func
-
-        return decorator
-
-
-class RestApiMvpTest(unittest.TestCase):
-    def test_environment_config_is_in_memory_and_redacted(self) -> None:
-        state = RuntimeState()
-
-        result = configure_environment(
-            state,
-            environment="dev",
-            api_base_url="https://api.example.test/",
-            api_token="secret-token",
-        )
-
-        self.assertEqual(result["status"], "configured")
-        self.assertEqual(result["api_base_url"], "https://api.example.test")
-        self.assertEqual(result["has_api_token"], True)
-        self.assertNotIn("secret-token", repr(result))
-        self.assertEqual(
-            get_environment(state),
-            {
-                "configured": True,
-                "environment": "dev",
-                "api_base_url": "https://api.example.test",
-                "has_api_token": True,
-            },
-        )
-
-    def test_clear_environment_removes_config(self) -> None:
-        state = RuntimeState()
-        configure_environment(
-            state,
-            environment="dev",
-            api_base_url="https://api.example.test",
-        )
-
-        self.assertEqual(
-            clear_environment(state),
-            {"status": "cleared", "was_configured": True, "configured": False},
-        )
-        self.assertEqual(get_environment(state), {"configured": False})
-
+class RestApiToolsTest(unittest.TestCase):
     def test_call_rest_api_requires_config(self) -> None:
         with self.assertRaises(MissingRuntimeConfigError):
-            call_rest_api(RuntimeState(), method="GET", path="/health")
+            _ = call_rest_api(RuntimeState(), method="GET", path="/health")
 
     def test_call_rest_api_uses_config_and_asserts_status(self) -> None:
         state = RuntimeState()
-        configure_environment(
+        _ = configure_environment(
             state,
             environment="dev",
             api_base_url="https://api.example.test/root",
@@ -141,7 +88,7 @@ class RestApiMvpTest(unittest.TestCase):
 
     def test_call_rest_api_reports_failed_status_assertion(self) -> None:
         state = RuntimeState()
-        configure_environment(
+        _ = configure_environment(
             state,
             environment="dev",
             api_base_url="https://api.example.test",
@@ -159,22 +106,3 @@ class RestApiMvpTest(unittest.TestCase):
             result["assertion"],
             {"expected_status": 200, "actual_status": 500, "passed": False},
         )
-
-    def test_server_registers_only_rest_api_mvp_tools(self) -> None:
-        mcp = FakeMcp()
-
-        register_tools(mcp)
-
-        self.assertEqual(
-            set(mcp.tools),
-            {
-                "configure_environment",
-                "get_environment",
-                "clear_environment",
-                "call_rest_api",
-            },
-        )
-
-
-if __name__ == "__main__":
-    unittest.main()

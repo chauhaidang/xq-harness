@@ -1,9 +1,15 @@
 import json
-from typing import Any, Protocol
+from http.client import HTTPResponse
+from typing import Protocol, cast
 from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 
+from mcp.server.fastmcp import FastMCP
+
 from xq_mcp.runtime import RuntimeState
+
+type JsonPrimitive = str | int | float | bool | None
+type JsonValue = JsonPrimitive | dict[str, JsonValue] | list[JsonValue]
 
 
 class HttpRequester(Protocol):
@@ -13,9 +19,9 @@ class HttpRequester(Protocol):
         method: str,
         url: str,
         headers: dict[str, str],
-        body: dict[str, Any] | None,
+        body: dict[str, JsonValue] | None,
         timeout_seconds: float,
-    ) -> dict[str, Any]:
+    ) -> dict[str, JsonValue]:
         ...
 
 
@@ -26,41 +32,20 @@ class UrllibHttpRequester:
         method: str,
         url: str,
         headers: dict[str, str],
-        body: dict[str, Any] | None,
+        body: dict[str, JsonValue] | None,
         timeout_seconds: float,
-    ) -> dict[str, Any]:
+    ) -> dict[str, JsonValue]:
         payload = None if body is None else json.dumps(body).encode("utf-8")
         request = Request(url, data=payload, headers=headers, method=method)
-        with urlopen(request, timeout=timeout_seconds) as response:
-            response_body = response.read().decode("utf-8")
-            parsed = json.loads(response_body) if response_body else None
+        http_response = cast(HTTPResponse, urlopen(request, timeout=timeout_seconds))
+        with http_response:
+            response_body = http_response.read().decode("utf-8")
+            parsed: JsonValue = json.loads(response_body) if response_body else None
             return {
-                "status_code": response.status,
+                "status_code": http_response.status,
                 "url": url,
                 "json": parsed,
             }
-
-
-def configure_environment(
-    state: RuntimeState,
-    *,
-    environment: str,
-    api_base_url: str,
-    api_token: str | None = None,
-) -> dict[str, object]:
-    return state.configure(
-        environment=environment,
-        api_base_url=api_base_url,
-        api_token=api_token,
-    )
-
-
-def get_environment(state: RuntimeState) -> dict[str, object]:
-    return state.status()
-
-
-def clear_environment(state: RuntimeState) -> dict[str, object]:
-    return state.clear()
 
 
 def call_rest_api(
@@ -68,7 +53,7 @@ def call_rest_api(
     *,
     method: str,
     path: str,
-    body: dict[str, Any] | None = None,
+    body: dict[str, JsonValue] | None = None,
     expected_status: int | None = None,
     timeout_seconds: float = 10.0,
     requester: HttpRequester | None = None,
@@ -117,3 +102,42 @@ def call_rest_api(
         **response,
         "assertion": assertion,
     }
+
+
+class RestApiTools:
+    _state: RuntimeState
+    _requester: HttpRequester | None
+
+    def __init__(
+        self,
+        state: RuntimeState,
+        *,
+        requester: HttpRequester | None = None,
+    ) -> None:
+        self._state = state
+        self._requester = requester
+
+    def register(self, mcp: FastMCP) -> None:
+        state = self._state
+        requester = self._requester
+
+        @mcp.tool(name="call_rest_api")
+        def call_rest_api_tool(
+            method: str,
+            path: str,
+            body: dict[str, JsonValue] | None = None,
+            expected_status: int | None = None,
+            timeout_seconds: float = 10.0,
+        ) -> dict[str, object]:
+            """Call a REST endpoint using the configured runtime environment."""
+            return call_rest_api(
+                state,
+                method=method,
+                path=path,
+                body=body,
+                expected_status=expected_status,
+                timeout_seconds=timeout_seconds,
+                requester=requester,
+            )
+
+        _ = call_rest_api_tool

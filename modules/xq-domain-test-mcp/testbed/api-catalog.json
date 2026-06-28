@@ -1,0 +1,32 @@
+{
+  "domain": "learning",
+  "description": "REST surface for business scenarios in testbed/scenarios/",
+  "endpoints": [
+    {
+      "capability": "health-check",
+      "method": "GET",
+      "path": "/health",
+      "auth": false,
+      "success_status": 200
+    },
+    {
+      "capability": "exercise-authoring",
+      "method": "POST",
+      "path": "/exercises",
+      "auth": true,
+      "body": {
+        "lesson_id": "string",
+        "count": "integer",
+        "type": "string"
+      },
+      "success_status": 201
+    },
+    {
+      "capability": "exercise-review",
+      "method": "GET",
+      "path": "/exercises?lesson_id={lesson_id}",
+      "auth": true,
+      "success_status": 200
+    }
+  ]
+}

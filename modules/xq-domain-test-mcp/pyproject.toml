@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "xq-domain-test-mcp"
-version = "0.1.0"
+version = "1.0.0"
 description = "MCP server exposing REST API test tools for XQ E2E API scenarios"
 requires-python = ">=3.12"
 dependencies = [
@@ -16,6 +16,7 @@ xq-domain-test-mcp = "xq_mcp.server:main"
 
 [dependency-groups]
 dev = [
+  "basedpyright",
   "pytest>=8.0",
 ]
 
@@ -27,4 +28,23 @@ packages = ["src/xq_mcp"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["src", "."]
+
+[tool.basedpyright]
+include = ["src", "tests"]
+exclude = [
+  "**/__pycache__",
+  ".venv",
+  "dist",
+  "testbed/**",
+  "tests/e2e/**",
+]
+pythonVersion = "3.12"
+pythonPlatform = "All"
+typeCheckingMode = "recommended"
+reportMissingTypeStubs = false
+
+executionEnvironments = [
+  { root = "src" },
+  { root = "tests", extraPaths = ["src", "."] },
+]

@@ -1,0 +1,24 @@
+name: CI xq-domain-test-mcp
+
+on:
+  pull_request:
+    paths: &paths
+      - modules/xq-domain-test-mcp/**
+      - modules.yaml
+      - scripts/module
+      - .github/workflows/ci-xq-domain-test-mcp.yml
+      - .github/workflows/xq-domain-test-mcp-release.yml
+      - .github/workflows/module-ci-python.yml
+  push:
+    branches: [main]
+    paths: *paths
+
+concurrency:
+  group: ci-xq-domain-test-mcp-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: ./.github/workflows/module-ci-python.yml
+    with:
+      module: xq-domain-test-mcp
