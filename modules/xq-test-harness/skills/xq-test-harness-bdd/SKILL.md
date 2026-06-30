@@ -99,7 +99,8 @@ Install an extension that supports **Cucumber autocomplete** using workspace set
 
 **Why `node_modules/.../dist/`:** the published harness ships **compiled** step-related exports under `dist/`. Your own steps live under `features/` and `steps/` as TypeScript. The globs let autocomplete and “go to step” see **both** local steps and harness internals when useful.
 
-**Canonical JSON in the xq-toolbox monorepo:** [docs/vscode-settings.example.json](https://github.com/chauhaidang/xq-toolbox/blob/main/docs/vscode-settings.example.json) — copy the same keys into your consumer `.vscode/settings.json`.
+**Example VS Code settings:** copy keys from your consumer `.vscode/settings.json`
+or from harness docs when adopting the package.
 
 ### 4.2 Playwright (recommended)
 

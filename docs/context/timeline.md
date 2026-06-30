@@ -138,3 +138,4 @@
 - `0136` 2026-06-30T13:48:51+00:00 **decision.recorded** `DEC-635D1F78` Allow install-skills to explicitly scan global npm packages
 - `0137` 2026-06-30T14:21:34+00:00 **requirement.created** `REQ-5E14D688` xq-test-infra needs pluggable extension seams
 - `0138` 2026-06-30T14:21:42+00:00 **solution.proposed** `SOL-B751DD5C` Deep InfraApplication and PluginRegistry for xq-test-infra
+- `0139` 2026-06-30T16:28:28+00:00 **decision.recorded** `DEC-0E7E6A71` Level C onboarding + dependency seam validation

@@ -3,6 +3,8 @@
 This repository hosts independent language modules. Each module builds and tests
 on its own with its own lockfile (where applicable).
 
+**New contributor?** Read [Contributor map](./contributor-map.md) first.
+
 **Bringing a module from another GitHub repo?** Read
 [Onboarding a module from another repository](./onboarding.md) first — sanitize
 secrets and old CI in the source repo before opening a PR here.

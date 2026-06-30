@@ -67,11 +67,6 @@ module_depends_on() {
     | sed '/^$/d'
 }
 
-module_workspace() {
-  local module="$1"
-  yq -r ".modules[\"${module}\"].workspace // \"\"" "${REGISTRY}"
-}
-
 validate_depends_on() {
   local module="$1"
   local dep
@@ -153,15 +148,13 @@ show_module_info() {
     exit 1
   fi
 
-  local workspace deps test_all
-  workspace="$(module_workspace "${module}")"
+  local deps test_all
   test_all="$(module_test_all "${module}")"
   deps="$(module_depends_on "${module}" | tr '\n' ',' | sed 's/,$//')"
 
   echo "module: ${module}"
   echo "path: $(module_path "${module}")"
   echo "version: $(module_version "${module}")"
-  echo "workspace: ${workspace:-none}"
   echo "depends_on: ${deps:-none}"
   echo "test_all: ${test_all}"
 }
@@ -180,8 +173,8 @@ Usage:
   ./scripts/module test-all
 
 Modules with depends_on run dependency modules first (build/test/ci).
-Workspace members (e.g. xq-toolbox packages) share a Yarn root install and
-are not independent; use ./scripts/module ci xq-toolbox for the full graph.
+Sibling npm deps use portal: in package.json; keep depends_on in sync —
+run: node scripts/check-module-deps.js
 EOF
 }
 

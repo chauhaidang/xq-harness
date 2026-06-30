@@ -2,7 +2,7 @@
 
 A simplified CLI tool for spinning up Docker-based test environments with automatic log capture and built-in gateway support.
 
-Part of [xq-toolbox](https://github.com/chauhaidang/xq-toolbox). CI runs in the monorepo.
+Part of **xq-harness** (`modules/xq-test-infra/`). CI: `./scripts/module ci xq-test-infra`.
 ## 🚀 Quick Start
 
 ```bash
@@ -98,12 +98,12 @@ xq-infra --version
 xq-infra --help
 ```
 
-### Install from Source
+### Install from source (xq-harness contributors)
+
 ```bash
-git clone https://github.com/chauhaidang/xq-toolbox.git
-cd xq-toolbox/packages/xq-harness-test-infra
-npm install
-npm link  # Optional: make xq-infra available globally
+git clone https://github.com/chauhaidang/xq-harness.git
+cd xq-harness
+./scripts/module ci xq-test-infra
 ```
 
 ### Verify Installation
@@ -1124,8 +1124,8 @@ Current version: **0.1.0** - Key improvements:
 
 ## 🔗 Links
 
-- **Repository**: https://github.com/chauhaidang/xq-toolbox (package: `packages/xq-harness-test-infra`)
-- **Issues**: https://github.com/chauhaidang/xq-toolbox/issues
+- **Repository**: https://github.com/chauhaidang/xq-harness (module: `modules/xq-test-infra`)
+- **Issues**: https://github.com/chauhaidang/xq-harness/issues
 - **Examples**: [./examples/](./examples/)
 
 ## 📝 License
@@ -1137,4 +1137,4 @@ Apache License 2.0 - see [LICENSE](LICENSE) file for details.
 **Getting Help**
 - Check command help: `xq-infra <command> --help`
 - View logs: `xq-infra logs`
-- Report issues: https://github.com/chauhaidang/xq-toolbox/issues
+- Report issues: https://github.com/chauhaidang/xq-harness/issues

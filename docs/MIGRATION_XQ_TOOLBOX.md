@@ -1,6 +1,11 @@
-# xq-toolbox Migration Plan
+# xq-toolbox Migration Plan (archived)
 
-Legacy monorepo copied to `xq-toolbox/`. This document is the integration
+> **Historical.** Level C decoupling is complete. For the current layout use
+> [docs/modules/contributor-map.md](modules/contributor-map.md) and
+> [ADR 0009](decisions/0009-xq-toolbox-level-c-decoupling.md).
+> Do not follow `xq-toolbox/`, `task build:*`, or `workspace:*` instructions below.
+
+Legacy monorepo copied to `xq-toolbox/`. This document records the integration
 pathway into xq-harness: module registry, harness operating model, CI, and
 product truth.
 

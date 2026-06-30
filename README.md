@@ -7,7 +7,7 @@ packages ship to GitHub Packages as `@chauhaidang/xq-harness-*`.
 
 Install published packages in your own repo. Start here:
 
-- **[exposure/catalogue.md](CATALOGUE.md)** — package index, APIs, CLIs, and install notes
+- **[CATALOGUE.md](CATALOGUE.md)** — package index, APIs, CLIs, and install notes
 - [modules/xq-test-harness/docs/CONSUMER-GUIDE.md](modules/xq-test-harness/docs/CONSUMER-GUIDE.md) — Playwright BDD harness setup
 
 Registry scope: `@chauhaidang`. Requires a GitHub token with `read:packages`
@@ -38,7 +38,7 @@ make test-all          # all xq modules with test_all: true
 ```
 
 Requires [yq](https://github.com/mikefarah/yq) and the toolchain for the module
-you touch (Node 18+, etc.). See [docs/modules/README.md](docs/modules/README.md).
+you touch (Node 18+, etc.). Start with [docs/modules/contributor-map.md](docs/modules/contributor-map.md).
 Migrating from another repo: [docs/modules/onboarding.md](docs/modules/onboarding.md).
 
 CI/CD is per-module: [docs/github-actions.md](docs/github-actions.md).
@@ -48,7 +48,7 @@ CI/CD is per-module: [docs/github-actions.md](docs/github-actions.md).
 ```text
 modules.yaml              # module registry (paths, versions, commands)
 scripts/module            # install / build / test / ci runner
-exposure/catalogue.md     # consumer-facing package index
+CATALOGUE.md              # consumer-facing package index
 modules/
   xq-common-kit/          # shared TS utilities
   xq-test-utils/          # Jest / DB / Detox helpers
@@ -68,4 +68,6 @@ docs/                     # contributor and package documentation
 | Module registry | [docs/modules/README.md](docs/modules/README.md) |
 | CI/CD (per module) | [docs/github-actions.md](docs/github-actions.md) |
 | Package rename (legacy vs harness) | [docs/decisions/0010-xq-harness-package-rename.md](docs/decisions/0010-xq-harness-package-rename.md) |
-| Migration history | [docs/MIGRATION_XQ_TOOLBOX.md](docs/MIGRATION_XQ_TOOLBOX.md) |
+| Contributor map | [docs/modules/contributor-map.md](docs/modules/contributor-map.md) |
+| Migration history (archived) | [docs/MIGRATION_XQ_TOOLBOX.md](docs/MIGRATION_XQ_TOOLBOX.md) |
+| Level C decoupling | [docs/decisions/0009-xq-toolbox-level-c-decoupling.md](docs/decisions/0009-xq-toolbox-level-c-decoupling.md) |

@@ -311,3 +311,11 @@ Status: `accepted`
 xq-scripts/scripts/install-skills.js now supports --include-global. By default it scans only the consumer project's node_modules/@chauhaidang/*/skills. With --include-global, it also scans /usr/local/lib/node_modules/@chauhaidang/*/skills so globally installed MCP packages can provide skills. Project-local skills are copied after global skills, so local dependencies win on name conflicts.
 
 **Rationale:** xq-domain-test-mcp can be delivered as a global npm package, while the existing skill installer only scanned project-local dependencies. An explicit flag supports global MCP installs without unexpectedly importing unrelated global skills by default.
+
+## DEC-0E7E6A71 — Level C onboarding + dependency seam validation
+
+Status: `accepted`
+
+Added ADR 0009, docs/modules/contributor-map.md, scripts/check-module-deps.js, ci-validate-registry workflow. Scrubbed stale xq-toolbox/workspace/task refs from package READMEs and scripts/module. Marked MIGRATION_XQ_TOOLBOX.md archived and superseded ADR 0008-xq-toolbox-integration.
+
+**Rationale:** Architecture review top recommendation: contradictory onboarding docs and dual dependency graphs blocked scale and agent onboarding. CI-enforced portal/depends_on parity gives one seam without requiring a generator yet.

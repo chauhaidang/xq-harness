@@ -4,7 +4,7 @@ Date: 2026-06-13
 
 ## Status
 
-Accepted
+Superseded by [0009 xq-toolbox Level C module decoupling](0009-xq-toolbox-level-c-decoupling.md)
 
 ## Context
 

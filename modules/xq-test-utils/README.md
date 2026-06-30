@@ -21,11 +21,12 @@ This package is structured into several core modules to provide organized test u
 npm install @chauhaidang/xq-harness-test-utils
 ```
 
-For use from the xq-toolbox monorepo, link the workspace package:
+For monorepo development, sibling packages use Yarn `portal:` (see
+[contributor map](../../docs/modules/contributor-map.md)):
 
 ```json
 "devDependencies": {
-  "@chauhaidang/xq-harness-test-utils": "file:../xq-toolbox/packages/xq-harness-test-utils"
+  "@chauhaidang/xq-harness-test-utils": "portal:../xq-test-utils"
 }
 ```
 
@@ -121,12 +122,20 @@ Options: `rootDir`, `testMatch`, `setupPath`, `teardownPath`, `helpersPath` (opt
 
 ## Development
 
-Part of the `xq-toolbox` monorepo.
+Part of the **xq-harness** monorepo (`modules/xq-test-utils/`).
+
+From repo root:
 
 ```sh
-npm run build
-npm test
-npm run lint
+./scripts/module ci xq-test-utils
+```
+
+From this directory:
+
+```sh
+yarn build
+yarn test
+yarn lint
 ```
 
 ---

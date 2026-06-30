@@ -22,9 +22,10 @@ secrets, build artifacts, or repo-specific wiring from the old home.
 Modules are **independent**: they build and test on their own. They do not
 share `node_modules` across module directories. Cross-module deps are declared
 explicitly in `modules.yaml` (`depends_on`) and in package manifests (`portal:`
-for sibling npm packages).
+for sibling npm packages). CI enforces parity via `scripts/check-module-deps.js`.
 
-See [Polyglot modules](./README.md) and [ADR 0008](../decisions/0008-polyglot-monorepo-modules.md).
+See [Contributor map](./contributor-map.md), [Polyglot modules](./README.md), and
+[ADR 0009](../decisions/0009-xq-toolbox-level-c-decoupling.md).
 
 ---
 
@@ -314,7 +315,9 @@ Example (iOS):
         test
 ```
 
-If the module depends on another registry module:
+If the module depends on another registry module, declare both `depends_on` and
+a matching `portal:../<sibling>` in `package.json`, then run
+`node scripts/check-module-deps.js`.
 
 ```yaml
     depends_on:
@@ -333,6 +336,7 @@ If the module depends on another registry module:
 
 ```bash
 ./scripts/module ci <module-name>
+node scripts/check-module-deps.js   # when package.json has portal: siblings
 ```
 
 Requires [yq](https://github.com/mikefarah/yq). Fix failures before requesting

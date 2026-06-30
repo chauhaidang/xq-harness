@@ -1,7 +1,7 @@
-# xq-toolbox packages (Level C)
+# xq-harness packages (Level C)
 
-**Status:** Decoupled into `modules/xq-*` (2026-06-13). Renamed npm packages per
-ADR 0010 (2026-06-14).
+**Status:** Independent modules under `modules/xq-*`. See
+[Contributor map](../modules/contributor-map.md).
 
 Legacy workspace archived at `archive/xq-toolbox-workspace/`.
 
@@ -37,6 +37,7 @@ External consumers install semver from GitHub Packages after publish, e.g.
 
 ```bash
 ./scripts/module ci xq-common-kit
+node scripts/check-module-deps.js
 make test-all
 ```
 
@@ -50,4 +51,4 @@ Version detection: `scripts/check-xq-version-changes.js`
 
 - `docs/decisions/0010-xq-harness-package-rename.md`
 - `docs/decisions/0009-xq-toolbox-level-c-decoupling.md`
-- `docs/MIGRATION_XQ_TOOLBOX.md`
+- `docs/modules/contributor-map.md`

@@ -1,6 +1,7 @@
 # @chauhaidang/xq-harness-common-kit
 
-Lightweight TypeScript utility library for XQ projects. Part of the `xq-toolbox` monorepo.
+Lightweight TypeScript utility library for XQ projects. Part of the **xq-harness**
+monorepo at `modules/xq-common-kit/`.
 
 **Package**: `@chauhaidang/xq-harness-common-kit` (v1.0.12)  
 **Entry point**: `dist/index.js` (types: `dist/index.d.ts`)  
@@ -12,7 +13,7 @@ Lightweight TypeScript utility library for XQ projects. Part of the `xq-toolbox`
 ## Directory Structure
 
 ```
-packages/xq-harness-common-kit/
+modules/xq-common-kit/
 ├── src/
 │   ├── index.ts            # Barrel export — re-exports all public API
 │   ├── config.ts            # getConfig()
@@ -193,7 +194,7 @@ async function generateMarkdownFromJunit(xmlContent: string): Promise<string>
 
 ## Development Commands
 
-All commands should be run from **this package directory** (`packages/xq-harness-common-kit/`):
+All commands should be run from **this package directory** (`modules/xq-common-kit/`):
 
 | Command | Description |
 |---|---|

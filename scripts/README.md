@@ -1,13 +1,24 @@
 # Scripts
 
-This directory contains repository helper scripts.
+Repository helper scripts.
 
-## Module Runner
+## Module runner
 
-Use `scripts/module` to list modules and run each module's configured install,
-build, test, and CI commands.
+`scripts/module` lists modules and runs each module's install, build, test, and
+CI commands from `modules.yaml`.
 
 ```bash
-scripts/module list
-scripts/module ci xq-common-kit
+./scripts/module list
+./scripts/module ci xq-common-kit
 ```
+
+## Registry validation
+
+`scripts/check-module-deps.js` ensures `modules.yaml` `depends_on` matches
+`portal:` sibling links in `package.json`.
+
+```bash
+node scripts/check-module-deps.js
+```
+
+See [docs/modules/contributor-map.md](../docs/modules/contributor-map.md).

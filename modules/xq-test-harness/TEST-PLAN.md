@@ -12,12 +12,12 @@
 
 | ID | Case | Expect |
 |----|------|--------|
-| B1 | `task test:xq-test-harness-e2e-consumer` | Consumer runs BDD with **only** `workspace:*` harness dep (no direct Playwright deps) |
-| B2 | Parallel `task test` | Dogfood mock **19999**, consumer mock **19998**, no port clash |
+| B1 | `./scripts/module test xq-test-harness-e2e-consumer` | Consumer runs BDD with harness as primary dep |
+| B2 | Parallel `./scripts/module test` | Dogfood mock **19999**, consumer mock **19998**, no port clash |
 
 ## Tier C — publishing (manual / CI)
 
 | ID | Case | Expect |
 |----|------|--------|
-| C1 | Version bump on `main` | `check-version-changes` lists `xq-test-harness`; publish job can `yarn npm publish` |
+| C1 | Version bump on `main` | `check-xq-version-changes.js` lists `xq-test-harness`; publish job runs |
 | C2 | Consumer install doc | Single `@chauhaidang/xq-harness-test-harness` devDependency documented |

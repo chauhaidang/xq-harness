@@ -1,6 +1,7 @@
 # xq-scripts
 
-Consumer-facing shell scripts for the xq-toolbox monorepo. All scripts are portable (Linux, macOS, CI) and follow the shell-script-development skill.
+Consumer-facing shell scripts for **xq-harness** (`modules/xq-scripts/`). Released
+as a tarball (not npm). All scripts are portable (Linux, macOS, CI).
 
 ## Scripts
 

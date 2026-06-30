@@ -75,7 +75,7 @@ flowchart TB
 ## Package layout
 
 ```text
-packages/xq-harness-test-harness/
+modules/xq-test-harness/
 ├── src/                          # Published library (tsc → dist/)
 │   ├── fixtures/base.ts          # Canonical test + xq fixture
 │   ├── bdd-bound.ts              # createBdd(test) once → Tier A keywords
@@ -93,7 +93,9 @@ packages/xq-harness-test-harness/
 └── CHANGELOG.md
 ```
 
-Monorepo sibling: **`packages/xq-harness-test-harness-e2e-consumer/`** (private) depends only on `workspace:*` harness and proves the single-dependency consumer story (mock on a different port than dogfood).
+Monorepo sibling: **`modules/xq-test-harness-e2e-consumer/`** (private) depends
+only on `portal:../xq-test-harness` and proves the single-dependency consumer
+story (mock on a different port than dogfood).
 
 ---
 
@@ -155,21 +157,29 @@ Build: **`yarn build`** (`tsc` → `dist/`). Published **`files`**: `dist`, `REA
 
 ---
 
-## Validation in xq-toolbox
+## Validation in xq-harness
 
 | Layer | Location | Purpose |
 |-------|----------|---------|
 | **Contract** | `tests/*.contract.spec.ts` | Config merge behavior without full BDD run |
 | **Dogfood** | `bdd-dogfood/` + `playwright.config.ts` | Tier A steps against mock HTTP (port **19999**) |
-| **E2E consumer** | `packages/xq-harness-test-harness-e2e-consumer/` | External-style layout; only `workspace:*` harness dep (port **19998**) |
+| **E2E consumer** | `modules/xq-test-harness-e2e-consumer/` | External-style layout; `portal:../xq-test-harness` (port **19998**) |
 
-From repo root: `task build:xq-test-harness`, `task test:xq-test-harness`, `task test:xq-test-harness-e2e-consumer`, `task lint:xq-test-harness`.
+From repo root:
+
+```bash
+./scripts/module ci xq-test-harness
+./scripts/module ci xq-test-harness-e2e-consumer
+```
 
 ---
 
 ## Publishing
 
-Bump **`version`** in `package.json` on `main`; CI [`scripts/check-version-changes.js`](../../scripts/check-version-changes.js) publishes changed workspaces to GitHub Packages. See [`.github/workflows/publish.yml`](../../.github/workflows/publish.yml). API-only CI can set **`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1`** on install.
+Bump **`version`** in `package.json` on `main`; CI
+[`scripts/check-xq-version-changes.js`](../../scripts/check-xq-version-changes.js)
+publishes changed packages to GitHub Packages. See per-module `cd-*.yml` workflows
+in [docs/github-actions.md](../../docs/github-actions.md).
 
 ---
 
