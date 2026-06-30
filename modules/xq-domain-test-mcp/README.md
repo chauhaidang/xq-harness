@@ -139,6 +139,12 @@ copies each skill into `.agents/skills/`. For `npx`-only MCP usage, the server
 can run without installing this skill locally first; run `install-skills.js` when
 the agent runtime needs local skill files.
 
+If this MCP server is installed globally instead of as a project dependency, run:
+
+```bash
+node path/to/xq-scripts/scripts/install-skills.js --include-global
+```
+
 ### Option A: install globally
 
 ```bash

@@ -7,6 +7,7 @@ Consumer-facing shell scripts for the xq-toolbox monorepo. All scripts are porta
 | Script | Purpose |
 |-------|---------|
 | `scripts/sync-openapi.sh` | Download OpenAPI schemas from xq-apis and/or generate API client code |
+| `scripts/install-skills.js` | Copy bundled agent skills from installed `@chauhaidang/*` packages into `.agents/skills/` |
 
 ---
 
@@ -58,3 +59,32 @@ Download OpenAPI schemas from [xq-apis](https://github.com/chauhaidang/xq-apis) 
 | `GENERATOR` | Override default generator |
 
 See `./scripts/sync-openapi.sh -h` for full help.
+
+---
+
+## install-skills.js
+
+Copy agent skills from installed `@chauhaidang/*` npm packages into the current
+consumer project's `.agents/skills/` or `.agent/skills/` directory.
+
+By default, the script scans project dependencies only:
+
+```bash
+node path/to/xq-scripts/scripts/install-skills.js
+```
+
+For tools installed globally, such as a globally installed MCP server, include
+global npm packages explicitly:
+
+```bash
+node path/to/xq-scripts/scripts/install-skills.js --include-global
+```
+
+The script scans these package layouts:
+
+```text
+node_modules/@chauhaidang/*/skills/<skill-name>/
+$(npm root --global)/@chauhaidang/*/skills/<skill-name>/   # with --include-global
+```
+
+Project-local skills win over global skills with the same name.

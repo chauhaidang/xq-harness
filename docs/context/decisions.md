@@ -303,3 +303,11 @@ Status: `accepted`
 The xq-domain-test-mcp SKILL.md should be a consumer-agent playbook, not internal development or release documentation. It should explain when to use the MCP server, what context to gather, how to resolve xq-config.json, how to discover live MCP tool schemas, how to map business-readable scenarios to tool calls, execution guardrails, MCP client config examples, and final reporting expectations.
 
 **Rationale:** The user clarified that the skill is for LLM/AI agents such as Cursor, Claude, Codex, Gemini, and Copilot to understand how to use the MCP server to satisfy a human goal. Internal package delivery mechanics distract from that purpose and belong in README/catalogue docs instead.
+
+## DEC-635D1F78 — Allow install-skills to explicitly scan global npm packages
+
+Status: `accepted`
+
+xq-scripts/scripts/install-skills.js now supports --include-global. By default it scans only the consumer project's node_modules/@chauhaidang/*/skills. With --include-global, it also scans /usr/local/lib/node_modules/@chauhaidang/*/skills so globally installed MCP packages can provide skills. Project-local skills are copied after global skills, so local dependencies win on name conflicts.
+
+**Rationale:** xq-domain-test-mcp can be delivered as a global npm package, while the existing skill installer only scanned project-local dependencies. An explicit flag supports global MCP installs without unexpectedly importing unrelated global skills by default.
