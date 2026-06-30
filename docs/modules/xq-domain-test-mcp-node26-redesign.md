@@ -389,7 +389,6 @@ The release should prove:
 
 - `node --test` passes;
 - `yarn npm publish` publishes the package to GitHub Packages;
-- the published package installs globally from GitHub Packages;
 - the CLI starts and responds to an MCP initialization smoke test through the
   TypeScript MCP SDK stdio transport;
 - the package includes `skills/xq-domain-test-mcp/SKILL.md`.
