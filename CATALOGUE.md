@@ -162,7 +162,7 @@ dependency.
 
 ---
 
-### `@chauhaidang/xq-harness-domain-test-mcp` (1.0.0)
+### `@chauhaidang/xq-harness-domain-test-mcp` (1.0.1)
 
 **Purpose:** Node 26 stdio MCP server for scenario-driven REST API testing.
 

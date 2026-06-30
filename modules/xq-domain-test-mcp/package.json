@@ -1,6 +1,6 @@
 {
   "name": "@chauhaidang/xq-harness-domain-test-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server exposing REST API test tools for XQ E2E API scenarios",
   "type": "module",
   "packageManager": "yarn@4.13.0",
