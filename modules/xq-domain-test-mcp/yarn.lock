@@ -14,7 +14,7 @@ __metadata:
     typescript: "npm:^5.9.3"
     zod: "npm:^4.4.3"
   bin:
-    xq-harness-domain-test-mcp: ./dist/src/bin/xq-domain-test-mcp.js
+    xq-domain-test-mcp: ./dist/src/bin/xq-domain-test-mcp.js
   languageName: unknown
   linkType: soft
 
