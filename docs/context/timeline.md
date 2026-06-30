@@ -135,3 +135,4 @@
 - `0133` 2026-06-30T10:38:00+00:00 **decision.recorded** `DEC-5589D02F` Use npm registry only for xq-domain-test-mcp delivery
 - `0134` 2026-06-30T11:13:58+00:00 **decision.recorded** `DEC-CFF58D58` Ship xq-domain-test-mcp skill through npm package skills directory
 - `0135` 2026-06-30T11:21:47+00:00 **decision.recorded** `DEC-BB932361` Distill xq-domain-test-mcp skill for consumer agents
+- `0136` 2026-06-30T13:48:51+00:00 **decision.recorded** `DEC-635D1F78` Allow install-skills to explicitly scan global npm packages

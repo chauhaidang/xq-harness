@@ -218,7 +218,7 @@ into `.agents/skills/`.
 | --- | --- |
 | `scripts/sync-openapi.sh` | Download/generate OpenAPI clients from xq-apis |
 | `scripts/generate-report.js` | HTML test report from JUnit |
-| `scripts/install-skills.js` | Copy `skills/` from installed `@chauhaidang/*` into `.agents/skills/` |
+| `scripts/install-skills.js` | Copy `skills/` from installed `@chauhaidang/*` into `.agents/skills/`; use `--include-global` to also scan global npm packages |
 
 See [modules/xq-scripts/README.md](modules/xq-scripts/README.md).
 
@@ -229,6 +229,9 @@ See [modules/xq-scripts/README.md](modules/xq-scripts/README.md).
 Several packages ship `skills/` directories for Cursor-style agents. After
 installing npm packages, optionally run `install-skills.js` from the xq-scripts
 tarball to copy skills into your project's `.agents/skills/`.
+
+For globally installed tools, run it with `--include-global` so global
+`@chauhaidang/*/skills/` directories are scanned too.
 
 | Package | Skills |
 | --- | --- |
