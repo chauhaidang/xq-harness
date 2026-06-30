@@ -8,7 +8,7 @@ on:
       - scripts/module
       - .github/workflows/ci-xq-domain-test-mcp.yml
       - .github/workflows/cd-xq-domain-test-mcp.yml
-      - .github/workflows/module-ci-python.yml
+      - .github/workflows/module-ci-node.yml
   push:
     branches: [main]
     paths: *paths
@@ -19,6 +19,7 @@ concurrency:
 
 jobs:
   ci:
-    uses: ./.github/workflows/module-ci-python.yml
+    uses: ./.github/workflows/module-ci-node.yml
     with:
       module: xq-domain-test-mcp
+      node_version: "26"

@@ -37,10 +37,10 @@ manually through `./scripts/module ci poc` without joining the default CI set.
 
 ## MCP modules
 
-`xq-domain-test-mcp` is a Python/uv MCP server module for REST API testing in
-business-specific E2E API scenario workflows. It exposes a stdio command named
-`xq-domain-test-mcp`; agents configure an environment and call REST primitives
-while keeping scenario Markdown business-readable.
+`xq-domain-test-mcp` is a Node 26 TypeScript MCP server module for REST API
+testing in business-specific E2E API scenario workflows. It exposes a stdio
+command named `xq-domain-test-mcp`; agents configure an environment and call
+REST primitives while keeping scenario Markdown business-readable.
 
 ```bash
 ./scripts/module ci xq-domain-test-mcp
@@ -60,6 +60,7 @@ semver after publish.
 | `xq-test-infra` | 0.1.0 | `portal:../xq-common-kit` |
 | `xq-test-harness` | 0.1.0 | `@chauhaidang/xq-harness-test-harness` |
 | `xq-test-harness-e2e-consumer` | 0.0.0 | `portal:../xq-test-harness` |
+| `xq-domain-test-mcp` | 1.0.0 | `@chauhaidang/xq-harness-domain-test-mcp` |
 | `xq-scripts` | VERSION file | tarball release only |
 
 **Prerequisites:** Node ≥ 18, Corepack. `NODE_AUTH_TOKEN` only needed when

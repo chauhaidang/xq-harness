@@ -79,3 +79,33 @@ Status: `proposed`
 Spec: `SPEC-D0C96337`
 
 Moved xq-domain-test-mcp into modules/xq-domain-test-mcp as an independent Python uv module, registered it in modules.yaml with install/build/test commands, updated README and docs/modules documentation, removed the old POC directory, verified ./scripts/module ci xq-domain-test-mcp, cleaned generated artifacts, and refreshed the global uv tool install from the production module path.
+
+## SOL-6B66F019 — xq-domain-test-mcp delivery plan
+
+Status: `proposed`
+
+Spec: `SPEC-D0C96337`
+
+Deliver xq-domain-test-mcp as a tag-released Python wheel plus agent skill bundle. Gate release through ./scripts/module ci xq-domain-test-mcp, verify uv tool installation of the wheel, publish GitHub Release artifacts from tag xq-domain-test-mcp-v<version>, and validate consumer onboarding with xq-config.json, installed skill, MCP client config, and testbed scenario execution. Keep MVP scope to runtime environment tools and REST API primitives; defer generated domain-client tools until the REST workflow is proven.
+
+## SOL-DE603B19 — Node 26 standard-library MCP redesign
+
+Status: `proposed`
+
+Spec: `SPEC-A65A7404`
+
+Replace the Python FastMCP implementation with a Node.js 26 package whose external seam is a small MCP stdio server plus contract files. Implement src/contracts for loading JSON Schema, src/mcp for JSON-RPC/MCP method dispatch, src/tools for contract-backed tool registration, src/runtime for in-memory environment state, src/rest for REST execution, and test/ using node:test. Use package.json scripts for node --test, node --check, and a contract smoke test. Update modules.yaml and GitHub Actions to use node-version: 26. Release artifacts should include the npm/package artifact or tarball, the CLI bin xq-domain-test-mcp, and the agent skill bundle. Preserve the agent-owned scenario mapping model.
+
+## SOL-6D48F3AD — Node 26 TypeScript xq-domain-test-mcp implementation
+
+Status: `proposed`
+
+Spec: `SPEC-A65A7404`
+
+Implemented xq-domain-test-mcp as a Node 26 TypeScript package. Added McpTool<Input, Output>, runtime config tools, REST API tool, MCP SDK stdio server, generated JSON Schema contract bundle, contract examples, node:test coverage, Node testbed mock API, npm package lock, module runner updates, Node CI/CD workflows, and docs updates. Removed Python pyproject/uv lock/source/tests/testbed mock API after Node parity passed.
+
+## SOL-AF4A1306 — Node 26 TypeScript xq-domain-test-mcp final PR implementation
+
+Status: `proposed`
+
+Implemented xq-domain-test-mcp as a Node 26 TypeScript/Yarn 4 module. The implementation uses @modelcontextprotocol/sdk for stdio MCP wiring, one McpTool<Input, Output> interface for tool classes, Zod schemas for input/output validation, runtime config tools, call_rest_api, Node fetch, node:test coverage, MCP SDK stdio client smoke coverage, and a Node mock API testbed. Python uv/FastMCP artifacts were removed. No JSON contract bundle is shipped; tool schemas are exposed through MCP discovery. Release packaging uses yarn pack for the tarball and keeps npm only for global consumer CLI installation verification.

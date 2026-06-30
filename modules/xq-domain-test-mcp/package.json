@@ -1,0 +1,54 @@
+{
+  "name": "@chauhaidang/xq-harness-domain-test-mcp",
+  "version": "1.0.0",
+  "description": "MCP server exposing REST API test tools for XQ E2E API scenarios",
+  "type": "module",
+  "packageManager": "yarn@4.13.0",
+  "bin": "./dist/src/bin/xq-domain-test-mcp.js",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "skills",
+    "!testbed"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chauhaidang/xq-harness.git",
+    "directory": "modules/xq-domain-test-mcp"
+  },
+  "scripts": {
+    "clean": "node -e \"const fs = require('node:fs'); fs.rmSync('dist', { recursive: true, force: true }); fs.rmSync('dist-test', { recursive: true, force: true })\"",
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.json",
+    "build:test": "node -e \"require('node:fs').rmSync('dist-test', { recursive: true, force: true })\" && tsc -p tsconfig.test.json",
+    "test": "yarn build:test && node --test \"dist-test/test/**/*.test.js\"",
+    "ci": "yarn build && yarn test"
+  },
+  "engines": {
+    "node": ">=26.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "xq",
+    "testing",
+    "rest"
+  ],
+  "author": "chauhaidang",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/chauhaidang/xq-harness/issues"
+  },
+  "homepage": "https://github.com/chauhaidang/xq-harness#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "typescript": "^5.9.3"
+  }
+}
