@@ -109,3 +109,9 @@ Implemented xq-domain-test-mcp as a Node 26 TypeScript package. Added McpTool<In
 Status: `proposed`
 
 Implemented xq-domain-test-mcp as a Node 26 TypeScript/Yarn 4 module. The implementation uses @modelcontextprotocol/sdk for stdio MCP wiring, one McpTool<Input, Output> interface for tool classes, Zod schemas for input/output validation, runtime config tools, call_rest_api, Node fetch, node:test coverage, MCP SDK stdio client smoke coverage, and a Node mock API testbed. Python uv/FastMCP artifacts were removed. No JSON contract bundle is shipped; tool schemas are exposed through MCP discovery. Release packaging uses yarn pack for the tarball and keeps npm only for global consumer CLI installation verification.
+
+## SOL-B751DD5C — Deep InfraApplication and PluginRegistry for xq-test-infra
+
+Status: `proposed`
+
+Implement extensibility in phases: first introduce an InfraApplication module and PluginRegistry with built-in adapters that reproduce current behavior; then move spec loading and compose generation into registered adapters/pipeline transforms; then split gateway route planning/rendering, Docker runtime execution, registry auth, and test detection into explicit adapter seams. Preserve existing xq-infra command behavior during each slice.

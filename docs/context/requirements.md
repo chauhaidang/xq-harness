@@ -119,3 +119,9 @@ The xq-domain-test-mcp POC is ready for the next phase and should be promoted fr
 Status: `active`
 
 Redesign xq-domain-test-mcp so the implementation uses pure Node.js standard library as much as possible, targets Node.js 26 including the test runner, cross-checks GitHub Actions support for that Node line, and ensures everything exposed outside the module has explicit contracts such as interfaces, types, and language-neutral schemas.
+
+## REQ-5E14D688 — xq-test-infra needs pluggable extension seams
+
+Status: `active`
+
+xq-test-infra should become extensible and pluggable through explicit module interfaces for application orchestration, plugin registration, spec loading, compose transformation, gateway adapters, runtime adapters, auth providers, and test detection. Plugins should not need to patch singleton implementation internals or CLI handlers.
