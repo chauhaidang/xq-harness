@@ -191,3 +191,115 @@ Status: `accepted`
 Move xq-domain-test-mcp from modules/poc into modules/xq-domain-test-mcp and register it as an independent Python module in modules.yaml.
 
 **Rationale:** The user declared the POC ready for the next phase. A dedicated registered module gives rapid development a stable path, real install/build/test commands, and a clear ownership boundary while keeping modules/poc reserved for disposable exploratory work.
+
+## DEC-63C9E04F — Redesign xq-domain-test-mcp around Node 26 standard-library core
+
+Status: `accepted`
+
+The next xq-domain-test-mcp design should move away from Python FastMCP toward a Node.js 26 implementation that uses Node standard library primitives for stdio, HTTP, file IO, test running, and assertions wherever practical. External contracts should be language-neutral JSON Schema plus generated or maintained TypeScript declaration files, not implementation-only Python or TypeScript shapes.
+
+**Rationale:** The user wants a standard-library-heavy Node 26 module and polyglot external contracts. Node 26 is a supported Current release line on 2026-06-29 and GitHub setup-node accepts SemVer major versions, so CI can target node-version: 26 while acknowledging it becomes Active LTS on 2026-10-28.
+
+## DEC-D007DEC3 — Use TypeScript MCP SDK at the MCP protocol seam
+
+Status: `accepted`
+
+The Node 26 redesign of xq-domain-test-mcp may depend on @modelcontextprotocol/sdk for MCP server wiring, stdio transport integration, and protocol compatibility. The rest of the module remains standard-library first: runtime state, REST calls, contract validation, testbed execution, and tool contracts stay local and contract-backed.
+
+**Rationale:** The user clarified that using the MCP SDK for TypeScript is acceptable. That dependency earns its place at a real seam because MCP protocol compatibility is external behavior; hand-rolling it would add maintenance risk without improving the XQ-specific interface.
+
+## DEC-15194D7B — Use TypeScript and Zod for xq-domain-test-mcp tool authoring
+
+Status: `accepted`
+
+The Node 26 redesign should use TypeScript as the implementation language and Zod for MCP tool inputSchema/outputSchema authoring, matching @modelcontextprotocol/sdk conventions. The published runtime executes compiled JavaScript on Node 26, and checked-in JSON Schema remains the polyglot contract artifact for non-TypeScript consumers.
+
+**Rationale:** The TypeScript MCP SDK has a required peer dependency on Zod and examples register tools with Zod input/output schemas. TypeScript improves local module interfaces, while generated or checked JSON Schema preserves the explicit polyglot contract requirement.
+
+## DEC-8AD3E770 — Type MCP tools through contract modules
+
+Status: `accepted`
+
+Each xq-domain-test-mcp tool should have an authored contract module containing name, category, metadata, Zod input schema, Zod output schema, and Zod error schema. A local defineToolContract helper infers ToolInput, ToolOutput, ToolFailure, and ToolHandler types. Implementations satisfy the inferred handler type and do not import MCP SDK types. The registry adapts contracts to the MCP SDK and emits checked JSON Schema artifacts for polyglot consumers.
+
+**Rationale:** This keeps the external seam small and contract-backed, gives TypeScript handlers strong local types, preserves JSON Schema for non-TypeScript consumers, and prevents tool implementations from coupling directly to MCP protocol details.
+
+## DEC-9B91FF17 — Require each MCP tool class to implement XqMcpTool
+
+Status: `accepted`
+
+The Node 26 TypeScript redesign should define a shared XqMcpTool<TContract> interface for all tools. Each tool class exposes a readonly contract and execute(input, context) method, where ToolInput, ToolOutput, and ToolFailure are inferred from the Zod schemas in the contract. The registry accepts AnyXqMcpTool instances and is the only layer that adapts tool classes to the MCP SDK.
+
+**Rationale:** A shared tool class interface gives every new tool the same local seam, keeps input/output typing tied to the contract, and prevents individual tools from coupling to MCP protocol types. This improves locality and makes tests exercise the same interface the registry uses.
+
+## DEC-800047AB — Simplify MCP tool abstraction to one plain interface
+
+Status: `accepted`
+
+Supersede the previous generic contract-helper direction for xq-domain-test-mcp tools. Each tool should be one class implementing McpTool<Input, Output>. The class owns name, category, title, description, inputSchema, outputSchema, optional annotations, and execute(input). Input and output are explicit TypeScript types exported beside the tool class. The registry adapts McpTool instances to the MCP SDK.
+
+**Rationale:** The user clarified that the desired abstraction is just an interface for any tool class, with each class representing a single tool. A plain interface is deeper and easier to apply than generic contract modules or base classes, while still giving consistent input/output typing and registry integration.
+
+## DEC-42A01614 — Use one JSON Schema contract bundle for xq-domain-test-mcp MVP
+
+Status: `accepted`
+
+The Node 26 xq-domain-test-mcp redesign should publish a single contracts/xq-domain-test-mcp.schema.json file for the MVP, with  for xq-config, tool inputs, tool outputs, and shared error shapes. Contract examples live under contracts/examples. Split into multiple JSON Schema files only when the bundle becomes hard to navigate or consumers need independently versioned contract files.
+
+**Rationale:** The user questioned why the spec needed many JSON files. For the current small tool surface, multiple schema files add navigation and release overhead without meaningful depth. A single bundle keeps the polyglot contract explicit while reducing maintenance cost.
+
+## DEC-D1269ECC — Validate xq-domain-test-mcp through SDK stdio client smoke
+
+Status: `accepted`
+
+After the Node rewrite, bring up the testbed mock API and invoke the built xq-domain-test-mcp stdio server through @modelcontextprotocol/sdk Client and StdioClientTransport. The smoke lists tools, configures the environment, creates exercises through call_rest_api, lists them, reads get_environment, and clears the environment. The smoke is now covered by test/mcp-client-smoke.test.ts.
+
+**Rationale:** Direct tool-class tests missed an MCP SDK structuredContent validation issue for get_environment. Driving the built stdio server through the SDK exercises the actual external interface agents use.
+
+## DEC-9FEB33B4 — Use Yarn 4 for xq-domain-test-mcp TypeScript module
+
+Status: `accepted`
+
+xq-domain-test-mcp is implemented as a Node 26 TypeScript module using Yarn 4.13 for install, build, test, lockfile, and CI module-runner commands. npm remains only where the generated release tarball is installed globally as a consumer CLI package.
+
+**Rationale:** The repo's Node modules use Yarn, and the user clarified that this module should follow Yarn rather than npm/package-lock development workflows.
+
+## DEC-0F225BB2 — Do not ship JSON contract files for xq-domain-test-mcp MVP
+
+Status: `accepted`
+
+Supersede the earlier single JSON Schema bundle direction. xq-domain-test-mcp should not ship separate contracts/*.json artifacts in the MVP. Tool contracts live as TypeScript interfaces plus Zod schemas on each McpTool class and are exposed to consumers through MCP tool discovery. Add JSON artifacts later only if a non-MCP downstream consumer needs stable standalone schemas.
+
+**Rationale:** The user questioned the extra JSON files and preferred the simpler class-interface abstraction. MCP discovery already exposes tool input/output schemas to clients without adding generated files to the package.
+
+## DEC-64E69D82 — Publish xq-domain-test-mcp to GitHub Packages npm registry
+
+Status: `accepted`
+
+xq-domain-test-mcp should publish its Node package to GitHub Packages as @chauhaidang/xq-harness-domain-test-mcp using Yarn npm publish. The global executable remains xq-domain-test-mcp. The tag-driven workflow still creates a GitHub Release for the agent skill bundle and checksums, but the Node package itself is distributed through npm.pkg.github.com rather than as a release tarball.
+
+**Rationale:** The module is now in the Node/Yarn package ecosystem and the user asked to use the GitHub npm registry. This also aligns the package name with the repo's @chauhaidang/xq-harness-* convention.
+
+## DEC-5589D02F — Use npm registry only for xq-domain-test-mcp delivery
+
+Status: `accepted`
+
+xq-domain-test-mcp delivery should exclude GitHub Releases for this module. The tag-driven CD workflow validates the package version, runs module CI, publishes @chauhaidang/xq-harness-domain-test-mcp to GitHub Packages with yarn npm publish, and verifies installation from npm.pkg.github.com. No release tarball, skill bundle tarball, checksum artifact, or gh release step is produced.
+
+**Rationale:** The user asked to focus the Node MCP server delivery on the GitHub npm registry only. npm is the natural distribution channel for a Node stdio MCP server because MCP clients can launch the package bin directly after global install or through npx.
+
+## DEC-CFF58D58 — Ship xq-domain-test-mcp skill through npm package skills directory
+
+Status: `accepted`
+
+xq-domain-test-mcp should follow the existing xq-scripts install-skills convention. The npm package includes skills/xq-domain-test-mcp/SKILL.md via package.json files, and consumers run xq-scripts/scripts/install-skills.js from their project root to copy installed node_modules/@chauhaidang/*/skills/* into .agents/skills/.
+
+**Rationale:** The user pointed out that consumers already use xq-scripts to discover skills from installed npm dependencies. Following that shape keeps the MCP package compatible with existing consumer onboarding instead of introducing a separate skill artifact or manual lookup flow.
+
+## DEC-BB932361 — Distill xq-domain-test-mcp skill for consumer agents
+
+Status: `accepted`
+
+The xq-domain-test-mcp SKILL.md should be a consumer-agent playbook, not internal development or release documentation. It should explain when to use the MCP server, what context to gather, how to resolve xq-config.json, how to discover live MCP tool schemas, how to map business-readable scenarios to tool calls, execution guardrails, MCP client config examples, and final reporting expectations.
+
+**Rationale:** The user clarified that the skill is for LLM/AI agents such as Cursor, Claude, Codex, Gemini, and Copilot to understand how to use the MCP server to satisfy a human goal. Internal package delivery mechanics distract from that purpose and belong in README/catalogue docs instead.

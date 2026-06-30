@@ -113,3 +113,9 @@ xq-domain-test-mcp should support business-specific E2E API scenarios where one 
 Status: `active`
 
 The xq-domain-test-mcp POC is ready for the next phase and should be promoted from modules/poc into its own registered production module. The module should keep the current REST API testing MVP scope, support rapid development through the module runner, and preserve the consumer-facing global MCP command model.
+
+## REQ-EF935A14 — xq-domain-test-mcp redesign targets Node 26 and polyglot contracts
+
+Status: `active`
+
+Redesign xq-domain-test-mcp so the implementation uses pure Node.js standard library as much as possible, targets Node.js 26 including the test runner, cross-checks GitHub Actions support for that Node line, and ensures everything exposed outside the module has explicit contracts such as interfaces, types, and language-neutral schemas.

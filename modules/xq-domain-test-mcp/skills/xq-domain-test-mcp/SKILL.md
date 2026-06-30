@@ -1,35 +1,34 @@
 ---
 name: xq-domain-test-mcp
-description: Use when a consumer agent needs to connect to and use the globally installed xq-domain-test-mcp MCP server for scenario-driven API testing. Trigger for MCP server setup, xq-config.json, discovering xq-domain-test-mcp tools, or mapping business scenario Markdown to MCP tool calls.
+description: Use when a user asks an AI agent to run business-readable API test scenarios through the xq-domain-test-mcp MCP server. Trigger on xq-config.json, scenario Markdown, MCP tool discovery, REST API test execution, or environment setup for this server.
 ---
 
 # xq-domain-test-mcp
 
-Use this skill for the globally installed MCP server:
+Use this skill when the user wants to validate an API workflow from a scenario,
+acceptance criterion, bug report, or business-readable test description.
 
-```bash
-xq-domain-test-mcp
-```
+The MCP server is a guarded execution layer. The AI agent does the reasoning:
+read the user's goal, inspect local test/API context, discover the server's live
+tools, map intent to tool calls, execute the calls, and report evidence.
 
-## Mental Model
+## Required Context
 
-The agent owns scenario interpretation and runtime wiring:
+Before running a scenario, gather:
 
-```text
-xq-config.json + scenario Markdown -> agent maps intent -> MCP tool call(s) -> structured result
-```
+- The user's goal or scenario text.
+- `xq-config.json`, usually at the project root.
+- API knowledge needed to map business intent to concrete calls, such as OpenAPI
+  specs, API catalog files, docs, examples, or existing tests.
+- The live MCP tool list and schemas from the connected `xq-domain-test-mcp`
+  server.
 
-The MCP server exposes callable tools with typed arguments and returns structured
-evidence. It does not parse scenario Markdown or read `xq-config.json` — the
-agent reads both and passes the correct arguments to MCP tools.
+Do not assume fixed tool arguments from memory. Use the MCP-discovered schemas as
+the source of truth.
 
-## xq-config.json
+## Environment Config
 
-Runtime connection details live in a repo-local **`xq-config.json`**. Do not
-repeat `api_base_url`, tokens, or other environment wiring in every scenario
-Markdown file.
-
-Recommended shape:
+`xq-config.json` stores connection details by environment:
 
 ```json
 {
@@ -37,58 +36,24 @@ Recommended shape:
     "testbed": {
       "api_base_url": "http://127.0.0.1:18765",
       "api_token": "testbed-token"
-    },
-    "dev": {
-      "api_base_url": "https://api.example.test",
-      "api_token": null
     }
   }
 }
 ```
 
-Agent rules:
+Rules:
 
-1. **Locate** `xq-config.json` in the consumer project (repo root or an agreed
-   path such as `testbed/xq-config.json`).
-2. **Read** the named environment entry before running scenarios.
-3. **Pass values to session setup tools** — map the entry to the runtime config
-   tool schema (for example `environment`, `api_base_url`, `api_token`).
-4. **Never commit production secrets** — use env-specific files, gitignored
-   overrides, or local-only entries; tokens stay out of scenario Markdown.
+- Treat scenario `environment` values as selector keys into `xq-config.json`.
+- Pass the selected `api_base_url`, `api_token`, and environment name to the
+  server's runtime configuration tool before calling environment-dependent tools.
+- Never write secrets into scenario Markdown or final reports.
+- Do not print token values. It is fine to report whether a token was configured.
 
-Scenario frontmatter uses **`environment`** only as a **selector key** into
-`xq-config.json` (for example `environment: testbed`), not as a place to embed
-URLs or credentials.
+## Scenario Mapping
 
-## Discovering tools
+Scenarios should describe business behavior, not raw HTTP details:
 
-Do not rely on a fixed tool list in this skill. The catalog grows by category
-(runtime config, REST API, and future domain tools).
-
-Before executing a scenario:
-
-1. **Read `xq-config.json`** and resolve the scenario's `environment` key.
-2. **List tools** exposed by the connected `xq-domain-test-mcp` server.
-3. **Read each tool's schema** (name, description, required arguments, types).
-4. **Pick tools by role**, not by memorized names:
-   - **Session setup** — apply the resolved `xq-config.json` entry via the
-     runtime config tool.
-   - **Actions** — perform the API or domain steps implied by the scenario.
-   - **Session teardown** — clear runtime state when switching environments.
-
-Use the tool descriptions and schemas as the source of truth. If a scenario needs
-a capability that no listed tool covers, ask for clarification or missing API
-documentation — do not invent tools or arguments.
-
-## Scenario Mapping Pattern
-
-Write scenarios in business language. The scenario should describe user intent,
-business entities, inputs, and expected outcomes — not HTTP details or runtime
-connection settings.
-
-Use this shape:
-
-````markdown
+```markdown
 ---
 id: create-exercises
 environment: testbed
@@ -99,38 +64,43 @@ capability: exercise-authoring
 # Teacher creates vocabulary exercises
 
 Given lesson "lesson-a" exists
-And the teacher wants beginner vocabulary practice
 When the teacher creates 5 vocabulary exercises for the lesson
 Then the exercises should be available for review
-````
+```
 
-Agent mapping rules:
+Map the scenario like this:
 
-- Resolve **`environment`** from frontmatter against **`xq-config.json`**, then
-  call the session setup tool once per MCP session (or after `clear_environment`).
-- Use **`domain`**, **`capability`**, title, and steps to choose action tools
-  and arguments.
-- Resolve concrete API arguments from **project API knowledge** (OpenAPI,
-  internal docs, or a repo-local API catalog). The MCP server does not ship
-  domain endpoint maps for consumer systems.
-- Use `Then` clauses for expected outcomes — status checks, follow-up reads, or
-  assertions supported by the tools you invoke.
-- If required mapping details are missing, ask for clarification instead of
-  guessing.
+1. Resolve `environment` from frontmatter or user context.
+2. Configure the MCP runtime from `xq-config.json`.
+3. Use domain/API context to translate business steps into tool inputs.
+4. Execute action tools.
+5. Execute verification tools or follow-up reads for each expected outcome.
+6. Clear or reconfigure runtime state when switching environments.
 
-Illustrative flow for the scenario above:
+If the API mapping is ambiguous:
 
-1. Read `xq-config.json` → `environments.testbed`.
-2. Session setup tool → pass `environment: "testbed"`, `api_base_url`, and
-   `api_token` from that entry.
-3. Action tool(s) → create exercises, then verify they are listed for the lesson.
-4. Optional teardown tool → clear session before the next scenario.
+- In an interactive chat, ask for the missing endpoint, schema, fixture, or
+  expected result instead of guessing.
+- In CI or any non-interactive run, record a detailed mapping error for that
+  scenario or step, mark it as blocked/skipped, and continue with the remaining
+  executable scenarios when possible. Do not fail the entire execution just
+  because one scenario is missing API knowledge.
 
-Exact tool names and argument objects must match the live MCP tool schemas.
+## Execution Rules
 
-## Agent MCP Config
+- Prefer the smallest tool sequence that proves the user's requested behavior.
+- Use setup calls once per session unless the environment changes.
+- Validate `Then` outcomes with concrete evidence: status code, response fields,
+  IDs created, counts, or follow-up reads.
+- Preserve useful response details in the final report, but redact secrets.
+- If a tool returns a structured error, report the tool, inputs at a safe level,
+  and the error message. Do not retry blindly with invented arguments.
+- Do not replace MCP tools with shell commands for API execution unless the user
+  explicitly asks and the MCP server cannot express the required action.
 
-Use the globally installed command:
+## MCP Client Config
+
+Global install:
 
 ```json
 {
@@ -143,17 +113,31 @@ Use the globally installed command:
 }
 ```
 
-Verify the command is available before configuring the agent:
+No global install, with pre-authenticated npm:
 
-```bash
-command -v xq-domain-test-mcp
+```json
+{
+  "mcpServers": {
+    "xq-domain-test-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@chauhaidang/xq-harness-domain-test-mcp@<version>"
+      ]
+    }
+  }
+}
 ```
 
-## Usage Guardrails
+For GitHub Packages, npm must already be configured for the `@chauhaidang`
+scope and have a token with package read access.
 
-- Use this MCP server for guarded API test automation only.
-- Do not substitute broad shell execution for MCP tools.
-- Do not expect secrets in environment status responses.
-- Keep runtime config in memory only; configure once from `xq-config.json`, then
-  run scenario actions.
-- Clear or reconfigure runtime state when switching `environment` keys.
+## Final Report
+
+When done, tell the user:
+
+- Which environment was used.
+- Which scenario or user goal was executed.
+- Which MCP tools were called, at a business-readable level.
+- What evidence proves pass/fail.
+- Any missing API knowledge, ambiguous mapping, or follow-up needed.

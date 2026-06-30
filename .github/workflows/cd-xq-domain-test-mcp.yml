@@ -6,24 +6,23 @@ on:
       - "xq-domain-test-mcp-v*"
 
 permissions:
-  contents: write
+  contents: read
+  packages: write
 
 jobs:
-  release:
+  publish:
     runs-on: ubuntu-latest
-    env:
-      SOURCE_DATE_EPOCH: "0"
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-node@v6
         with:
-          python-version: "3.12"
-
-      - uses: astral-sh/setup-uv@v5
+          node-version: "26"
+          registry-url: https://npm.pkg.github.com
+          scope: "@chauhaidang"
 
       - name: Install yq
         run: |
@@ -42,110 +41,34 @@ jobs:
             exit 1
           fi
           TAG_VERSION="${TAG#xq-domain-test-mcp-v}"
-          PYPROJECT_VERSION="$(python -c 'import tomllib; print(tomllib.load(open("pyproject.toml","rb"))["project"]["version"])')"
-          if [[ "${TAG_VERSION}" != "${PYPROJECT_VERSION}" ]]; then
-            echo "tag version ${TAG_VERSION} does not match pyproject version ${PYPROJECT_VERSION}" >&2
+          PACKAGE_VERSION="$(node -p 'require("./package.json").version')"
+          if [[ "${TAG_VERSION}" != "${PACKAGE_VERSION}" ]]; then
+            echo "tag version ${TAG_VERSION} does not match package version ${PACKAGE_VERSION}" >&2
             exit 1
           fi
           echo "version=${TAG_VERSION}" >> "${GITHUB_OUTPUT}"
 
       - name: CI gate
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./scripts/module ci xq-domain-test-mcp
 
-      - name: Build skill bundle and checksums
+      - name: Publish package to GitHub Packages
         working-directory: modules/xq-domain-test-mcp
-        shell: bash
-        run: |
-          set -euo pipefail
-          VERSION="${{ steps.version.outputs.version }}"
-          test -f "skills/xq-domain-test-mcp/SKILL.md"
-          tar -czf "dist/xq-domain-test-mcp-skills-${VERSION}.tar.gz" -C skills .
-          tar -tzf "dist/xq-domain-test-mcp-skills-${VERSION}.tar.gz"
-          (
-            cd dist
-            sha256sum \
-              "xq_domain_test_mcp-${VERSION}-py3-none-any.whl" \
-              "xq_domain_test_mcp-${VERSION}.tar.gz" \
-              "xq-domain-test-mcp-skills-${VERSION}.tar.gz" \
-              > SHA256SUMS
-          )
-          cat dist/SHA256SUMS
-
-      - name: Verify wheel installation
-        working-directory: modules/xq-domain-test-mcp
-        shell: bash
-        run: |
-          set -euo pipefail
-          VERSION="${{ steps.version.outputs.version }}"
-          BIN_DIR="$(uv tool dir --bin)"
-          EXECUTABLE="${BIN_DIR}/xq-domain-test-mcp"
-          uv tool install --force "dist/xq_domain_test_mcp-${VERSION}-py3-none-any.whl"
-          test -x "${EXECUTABLE}"
-          TOOL_PYTHON="$(head -1 "${EXECUTABLE}" | sed 's/^#!//')"
-          test -x "${TOOL_PYTHON}"
-          "${TOOL_PYTHON}" -c "from xq_mcp.server import build_server; build_server()"
-          echo "Installed xq-domain-test-mcp ${VERSION} wheel and entry point verified."
-
-      - name: Smoke test skill bundle
-        working-directory: modules/xq-domain-test-mcp
-        shell: bash
-        run: |
-          set -euo pipefail
-          VERSION="${{ steps.version.outputs.version }}"
-          WORKDIR="$(mktemp -d)"
-          mkdir -p "${WORKDIR}/.agents/skills"
-          tar -xzf "dist/xq-domain-test-mcp-skills-${VERSION}.tar.gz" -C "${WORKDIR}/.agents/skills"
-          test -f "${WORKDIR}/.agents/skills/xq-domain-test-mcp/SKILL.md"
-
-      - name: Create GitHub Release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ steps.version.outputs.version }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn npm publish
+
+      - name: Verify package installation from GitHub Packages
         shell: bash
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          TAG="${GITHUB_REF_NAME}"
-          if gh release view "${TAG}" >/dev/null 2>&1; then
-            echo "Release ${TAG} already exists" >&2
-            exit 1
-          fi
-          cat > release-notes.md <<EOF
-          # xq-domain-test-mcp ${VERSION}
-
-          ## Artifacts
-
-          - \`xq_domain_test_mcp-${VERSION}-py3-none-any.whl\` — install with \`uv tool install\`
-          - \`xq_domain_test_mcp-${VERSION}.tar.gz\` — sdist
-          - \`xq-domain-test-mcp-skills-${VERSION}.tar.gz\` — agent skill bundle
-          - \`SHA256SUMS\`
-
-          ## Install
-
-          \`\`\`bash
-          uv tool install --force \\
-            https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/xq_domain_test_mcp-${VERSION}-py3-none-any.whl
-          \`\`\`
-
-          Extract skills into \`.agents/skills/\`:
-
-          \`\`\`bash
-          curl -L \\
-            https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/xq-domain-test-mcp-skills-${VERSION}.tar.gz \\
-            -o /tmp/xq-domain-test-mcp-skills-${VERSION}.tar.gz
-          mkdir -p .agents/skills
-          tar -xzf /tmp/xq-domain-test-mcp-skills-${VERSION}.tar.gz -C .agents/skills
-          \`\`\`
-
-          ## Validation
-
-          - \`./scripts/module ci xq-domain-test-mcp\`
-          - skill bundle and wheel checksums
-          - \`uv tool install\` wheel and entry-point import check
-          EOF
-          gh release create "${TAG}" \
-            --title "xq-domain-test-mcp ${VERSION}" \
-            --notes-file release-notes.md \
-            modules/xq-domain-test-mcp/dist/xq_domain_test_mcp-${VERSION}-py3-none-any.whl \
-            modules/xq-domain-test-mcp/dist/xq_domain_test_mcp-${VERSION}.tar.gz \
-            modules/xq-domain-test-mcp/dist/xq-domain-test-mcp-skills-${VERSION}.tar.gz \
-            modules/xq-domain-test-mcp/dist/SHA256SUMS
+          WORKDIR="$(mktemp -d)"
+          printf '@chauhaidang:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=%s\n' "${NODE_AUTH_TOKEN}" > "${WORKDIR}/.npmrc"
+          npm install --global --prefix "${WORKDIR}" "@chauhaidang/xq-harness-domain-test-mcp@${VERSION}" --userconfig "${WORKDIR}/.npmrc"
+          test -x "${WORKDIR}/bin/xq-domain-test-mcp"
+          PACKAGE_ROOT="$(npm root --global --prefix "${WORKDIR}")/@chauhaidang/xq-harness-domain-test-mcp"
+          node -e 'import(process.argv[1]).then(({ buildServer }) => buildServer())' "${PACKAGE_ROOT}/dist/src/mcp/stdio-server.js"

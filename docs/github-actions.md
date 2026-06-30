@@ -70,7 +70,7 @@ Runs: `./scripts/module ci <module>` then `yarn npm publish` in `modules/<module
 | `ci-<module>.yml` | Pull request and push to `main` when `paths` match |
 | `cd-<module>.yml` | Push to `main` when `package.json` (or `VERSION`) changes; **never on PR** |
 | `cd-<module>.yml` | `workflow_dispatch` (manual publish) |
-| `cd-<module>.yml` (Python wheels) | Push tag `xq-domain-test-mcp-v*`; **not chained to CI** |
+| `cd-<module>.yml` (Node package) | Push tag `xq-domain-test-mcp-v*`; **not chained to CI** |
 | `harness-state-release.yml` | Push tag `harness-state-v*`; legacy filename |
 
 CD callers include a `version-check` job using:
@@ -105,7 +105,7 @@ Validate caller/callee permission parity locally:
 | `xq-test-harness` | `ci-xq-test-harness.yml` | `cd-xq-test-harness.yml` | `playwright_skip_browser: true` |
 | `xq-test-harness-e2e-consumer` | `ci-xq-test-harness-e2e-consumer.yml` | — | Private; CI only |
 | `harness-state` | — | `harness-state-release.yml` | Tag `harness-state-v*`; wheel + skills tarball |
-| `xq-domain-test-mcp` | `ci-xq-domain-test-mcp.yml` | `cd-xq-domain-test-mcp.yml` | Tag `xq-domain-test-mcp-v*`; wheel + skills tarball |
+| `xq-domain-test-mcp` | `ci-xq-domain-test-mcp.yml` | `cd-xq-domain-test-mcp.yml` | Tag `xq-domain-test-mcp-v*`; GitHub Packages npm publish |
 | `xq-scripts` | — | `cd-xq-scripts.yml` | Tarball release |
 | `xq-ios-ui-test-framework` | `ci-xq-ios-ui-test-framework.yml` | `cd-xq-ios-ui-test-framework.yml` | Swift package; subtree Git release |
 

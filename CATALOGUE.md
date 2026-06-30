@@ -17,6 +17,7 @@ names below for code from this repo.
 | Postgres tests, wait-for-service, Jest config | `@chauhaidang/xq-harness-test-utils` |
 | Docker Compose test environments | `@chauhaidang/xq-harness-test-infra` |
 | Playwright API + Gherkin BDD backend tests | `@chauhaidang/xq-harness-test-harness` |
+| MCP server for scenario-driven REST API testing | `@chauhaidang/xq-harness-domain-test-mcp` |
 | OpenAPI sync / report scripts (tarball) | xq-scripts GitHub Release (not npm) |
 
 ---
@@ -38,6 +39,7 @@ yarn add @chauhaidang/xq-harness-common-kit
 yarn add -D @chauhaidang/xq-harness-test-utils
 yarn add -D @chauhaidang/xq-harness-test-infra
 yarn add -D @chauhaidang/xq-harness-test-harness
+yarn add -D @chauhaidang/xq-harness-domain-test-mcp
 ```
 
 **Playwright harness:** do not add `@playwright/test` or `playwright-bdd`
@@ -160,6 +162,34 @@ dependency.
 
 ---
 
+### `@chauhaidang/xq-harness-domain-test-mcp` (1.0.0)
+
+**Purpose:** Node 26 stdio MCP server for scenario-driven REST API testing.
+
+**Binary:** `xq-domain-test-mcp`
+
+**MCP config after install**
+
+```json
+{
+  "mcpServers": {
+    "xq-domain-test-mcp": {
+      "command": "xq-domain-test-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+**Bundled skill** (for agent tooling): `xq-domain-test-mcp` under
+`node_modules/@chauhaidang/xq-harness-domain-test-mcp/skills/`. Run
+`xq-scripts/scripts/install-skills.js` after installing dependencies to copy it
+into `.agents/skills/`.
+
+**Docs:** [modules/xq-domain-test-mcp/README.md](modules/xq-domain-test-mcp/README.md)
+
+---
+
 ## Dependency graph (published)
 
 ```text
@@ -169,6 +199,8 @@ dependency.
 
 @chauhaidang/xq-harness-test-harness     (no internal xq-harness deps)
   └── Playwright + playwright-bdd (bundled)
+
+@chauhaidang/xq-harness-domain-test-mcp  (no internal xq-harness deps)
 ```
 
 ---
@@ -202,6 +234,7 @@ tarball to copy skills into your project's `.agents/skills/`.
 | --- | --- |
 | `xq-harness-test-harness` | `xq-test-harness-bdd` |
 | `xq-harness-test-utils` | `e2e-app`, `e2e-config`, `e2e-screen` |
+| `xq-harness-domain-test-mcp` | `xq-domain-test-mcp` |
 
 ---
 

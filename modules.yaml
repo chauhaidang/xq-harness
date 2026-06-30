@@ -16,17 +16,16 @@ modules:
 
   xq-domain-test-mcp:
     path: modules/xq-domain-test-mcp
-    language: python
+    language: node
     version: 1.0.0
     test_all: false
     toolchain:
-      python: "3.12"
-      uv: required
-      basedpyright: required
+      node: "26"
+      yarn: "4.13"
     commands:
-      install: uv sync --locked
-      build: SOURCE_DATE_EPOCH=0 uv run basedpyright && uv build
-      test: uv run pytest
+      install: yarn install --immutable
+      build: yarn build
+      test: yarn test
 
   ios-xq-finance-app:
     path: modules/ios-xq-finance-app

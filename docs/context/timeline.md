@@ -108,3 +108,30 @@
 - `0106` 2026-06-28T13:41:53+00:00 **solution.proposed** `SOL-B55DD9B3` Promoted xq-domain-test-mcp production module
 - `0107` 2026-06-28T13:42:02+00:00 **task.status_changed** `TASK-5473382C`
 - `0108` 2026-06-28T13:42:03+00:00 **workspace.observed** `WS-10CCC655`
+- `0109` 2026-06-29T14:12:59+00:00 **solution.proposed** `SOL-6B66F019` xq-domain-test-mcp delivery plan
+- `0110` 2026-06-29T14:12:59+00:00 **workspace.observed** `WS-7861976E`
+- `0111` 2026-06-29T14:53:02+00:00 **requirement.created** `REQ-EF935A14` xq-domain-test-mcp redesign targets Node 26 and polyglot contracts
+- `0112` 2026-06-29T14:53:40+00:00 **decision.recorded** `DEC-63C9E04F` Redesign xq-domain-test-mcp around Node 26 standard-library core
+- `0113` 2026-06-29T14:56:23+00:00 **spec.created** `SPEC-A65A7404` Node 26 polyglot-contract xq-domain-test-mcp contract
+- `0114` 2026-06-29T14:56:49+00:00 **solution.proposed** `SOL-DE603B19` Node 26 standard-library MCP redesign
+- `0115` 2026-06-29T15:03:02+00:00 **task.created** `TASK-C0DECDB7` Document Node 26 MCP redesign and clean Python artifacts
+- `0116` 2026-06-29T15:03:25+00:00 **task.status_changed** `TASK-C0DECDB7`
+- `0117` 2026-06-29T15:03:49+00:00 **workspace.observed** `WS-F37178A7`
+- `0118` 2026-06-29T16:02:47+00:00 **decision.recorded** `DEC-D007DEC3` Use TypeScript MCP SDK at the MCP protocol seam
+- `0119` 2026-06-29T16:15:56+00:00 **decision.recorded** `DEC-15194D7B` Use TypeScript and Zod for xq-domain-test-mcp tool authoring
+- `0120` 2026-06-29T16:49:32+00:00 **decision.recorded** `DEC-8AD3E770` Type MCP tools through contract modules
+- `0121` 2026-06-30T02:28:20+00:00 **decision.recorded** `DEC-9B91FF17` Require each MCP tool class to implement XqMcpTool
+- `0122` 2026-06-30T03:06:31+00:00 **decision.recorded** `DEC-800047AB` Simplify MCP tool abstraction to one plain interface
+- `0123` 2026-06-30T03:59:43+00:00 **decision.recorded** `DEC-42A01614` Use one JSON Schema contract bundle for xq-domain-test-mcp MVP
+- `0124` 2026-06-30T05:58:44+00:00 **task.created** `TASK-EA9FD076` Rewrite xq-domain-test-mcp in Node 26 TypeScript
+- `0125` 2026-06-30T05:58:55+00:00 **solution.proposed** `SOL-6D48F3AD` Node 26 TypeScript xq-domain-test-mcp implementation
+- `0126` 2026-06-30T05:59:05+00:00 **task.status_changed** `TASK-EA9FD076`
+- `0127` 2026-06-30T05:59:13+00:00 **workspace.observed** `WS-33D7CC92`
+- `0128` 2026-06-30T08:42:17+00:00 **decision.recorded** `DEC-D1269ECC` Validate xq-domain-test-mcp through SDK stdio client smoke
+- `0129` 2026-06-30T09:33:52+00:00 **decision.recorded** `DEC-9FEB33B4` Use Yarn 4 for xq-domain-test-mcp TypeScript module
+- `0130` 2026-06-30T09:35:09+00:00 **decision.recorded** `DEC-0F225BB2` Do not ship JSON contract files for xq-domain-test-mcp MVP
+- `0131` 2026-06-30T09:35:15+00:00 **solution.proposed** `SOL-AF4A1306` Node 26 TypeScript xq-domain-test-mcp final PR implementation
+- `0132` 2026-06-30T10:11:01+00:00 **decision.recorded** `DEC-64E69D82` Publish xq-domain-test-mcp to GitHub Packages npm registry
+- `0133` 2026-06-30T10:38:00+00:00 **decision.recorded** `DEC-5589D02F` Use npm registry only for xq-domain-test-mcp delivery
+- `0134` 2026-06-30T11:13:58+00:00 **decision.recorded** `DEC-CFF58D58` Ship xq-domain-test-mcp skill through npm package skills directory
+- `0135` 2026-06-30T11:21:47+00:00 **decision.recorded** `DEC-BB932361` Distill xq-domain-test-mcp skill for consumer agents

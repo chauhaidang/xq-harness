@@ -69,3 +69,11 @@ Status: `draft`
 Requirement: `REQ-DEC6E69D`
 
 xq-domain-test-mcp should live under modules/xq-domain-test-mcp as an independent Python uv module. modules.yaml should register install/build/test commands through uv. The module keeps the package name xq-domain-test-mcp, import package xq_mcp, console script xq-domain-test-mcp, and current REST API testing MVP tools: configure_environment, get_environment, clear_environment, call_rest_api. The module should be testable through ./scripts/module test xq-domain-test-mcp and ready for rapid next-phase development.
+
+## SPEC-A65A7404 — Node 26 polyglot-contract xq-domain-test-mcp contract
+
+Status: `draft`
+
+Requirement: `REQ-EF935A14`
+
+xq-domain-test-mcp should be redesigned as a Node.js 26 module using standard library primitives wherever practical: node:readline or stream primitives for stdio JSON-RPC transport, global fetch/Request/Response or node:http for REST calls, node:fs for file artifacts, node:test and node:assert/strict for tests, and package.json exports/bin for distribution. All externally exposed surfaces must have language-neutral contracts under a contracts/ directory: MCP tool schemas, config schema, scenario mapping schema, result schema, error schema, and JSON-RPC envelope expectations. TypeScript declaration files may mirror those contracts for Node consumers, but JSON Schema is the polyglot source of truth. Runtime implementation must validate inputs and outputs at the process/tool seam and keep internal modules private.
