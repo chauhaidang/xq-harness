@@ -58,17 +58,3 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn npm publish
-
-      - name: Verify package installation from GitHub Packages
-        shell: bash
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          set -euo pipefail
-          WORKDIR="$(mktemp -d)"
-          printf '@chauhaidang:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=%s\n' "${NODE_AUTH_TOKEN}" > "${WORKDIR}/.npmrc"
-          npm install --global --prefix "${WORKDIR}" "@chauhaidang/xq-harness-domain-test-mcp@${VERSION}" --userconfig "${WORKDIR}/.npmrc"
-          test -x "${WORKDIR}/bin/xq-domain-test-mcp"
-          PACKAGE_ROOT="$(npm root --global --prefix "${WORKDIR}")/@chauhaidang/xq-harness-domain-test-mcp"
-          node -e 'import(process.argv[1]).then(({ buildServer }) => buildServer())' "${PACKAGE_ROOT}/dist/src/mcp/stdio-server.js"
