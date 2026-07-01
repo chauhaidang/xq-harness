@@ -1104,7 +1104,7 @@ docker compose -f xq-compose.yml config
 
 ## 📊 Version
 
-Current version: **0.1.0** - Key improvements:
+Current version: **0.1.1** - Key improvements:
 - Intelligent routing with HTTP method and path-based routing
 - Multi-file service configuration support
 - Simplified command interface

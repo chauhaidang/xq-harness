@@ -96,7 +96,7 @@ under `node_modules/@chauhaidang/xq-harness-test-utils/skills/`.
 
 ---
 
-### `@chauhaidang/xq-harness-test-infra` (0.1.0)
+### `@chauhaidang/xq-harness-test-infra` (0.1.1)
 
 **Purpose:** CLI to generate Docker Compose files from an XQ YAML spec and manage
 test environments (up / down / logs / gateway).

@@ -77,3 +77,11 @@ Status: `draft`
 Requirement: `REQ-EF935A14`
 
 xq-domain-test-mcp should be redesigned as a Node.js 26 module using standard library primitives wherever practical: node:readline or stream primitives for stdio JSON-RPC transport, global fetch/Request/Response or node:http for REST calls, node:fs for file artifacts, node:test and node:assert/strict for tests, and package.json exports/bin for distribution. All externally exposed surfaces must have language-neutral contracts under a contracts/ directory: MCP tool schemas, config schema, scenario mapping schema, result schema, error schema, and JSON-RPC envelope expectations. TypeScript declaration files may mirror those contracts for Node consumers, but JSON Schema is the polyglot source of truth. Runtime implementation must validate inputs and outputs at the process/tool seam and keep internal modules private.
+
+## SPEC-3D2903DD — xq-test-infra deep-module redesign contract
+
+Status: `draft`
+
+Requirement: `REQ-33167CEC`
+
+xq-test-infra should expose a small orchestration interface for CLI commands while hiding pipeline details inside deep modules. The external CLI commands remain generate, up, down, and logs. Internally, InfraApplication coordinates registered adapters for SpecSource, SpecParser, SpecValidator, ComposePlanner, ComposeRenderer, GatewayPlanner, GatewayRenderer, RuntimeAdapter, AuthProvider, TestDetector, and Reporter. Plugin registration is explicit and typed by capability; built-in adapters preserve current YAML, Docker Compose, nginx gateway, registry auth, and test-container detection behavior. Tests should target InfraApplication command methods and adapter contracts rather than CLI internals.

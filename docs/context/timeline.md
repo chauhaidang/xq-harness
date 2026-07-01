@@ -136,3 +136,14 @@
 - `0134` 2026-06-30T11:13:58+00:00 **decision.recorded** `DEC-CFF58D58` Ship xq-domain-test-mcp skill through npm package skills directory
 - `0135` 2026-06-30T11:21:47+00:00 **decision.recorded** `DEC-BB932361` Distill xq-domain-test-mcp skill for consumer agents
 - `0136` 2026-06-30T13:48:51+00:00 **decision.recorded** `DEC-635D1F78` Allow install-skills to explicitly scan global npm packages
+- `0137` 2026-06-30T14:21:34+00:00 **requirement.created** `REQ-5E14D688` xq-test-infra needs pluggable extension seams
+- `0138` 2026-06-30T14:21:42+00:00 **solution.proposed** `SOL-B751DD5C` Deep InfraApplication and PluginRegistry for xq-test-infra
+- `0140` 2026-07-01T01:38:52+00:00 **requirement.created** `REQ-33167CEC` xq-test-infra redesign plan for extensibility
+- `0141` 2026-07-01T01:39:00+00:00 **spec.created** `SPEC-3D2903DD` xq-test-infra deep-module redesign contract
+- `0142` 2026-07-01T01:39:08+00:00 **solution.proposed** `SOL-3F08410C` Phased xq-test-infra redesign around InfraApplication
+- `0143` 2026-07-01T02:58:44+00:00 **task.created** `TASK-7108D9E1` Implement xq-test-infra InfraApplication tracer slice
+- `0144` 2026-07-01T02:58:53+00:00 **task.status_changed** `TASK-7108D9E1`
+- `0145` 2026-07-01T02:59:03+00:00 **solution.proposed** `SOL-DD3D877E` xq-test-infra InfraApplication tracer slice
+- `0146` 2026-07-01T10:22:14+00:00 **task.created** `TASK-BC2EBBF0` Prepare xq-test-infra InfraApplication PR
+- `0147` 2026-07-01T10:22:21+00:00 **task.status_changed** `TASK-BC2EBBF0`
+- `0148` 2026-07-01T10:22:33+00:00 **solution.proposed** `SOL-30C707A7` xq-test-infra PR prep and 0.1.1 version bump
