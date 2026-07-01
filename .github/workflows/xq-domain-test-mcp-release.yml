@@ -79,15 +79,17 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           BIN_DIR="$(uv tool dir --bin)"
           uv tool install --force "dist/xq_domain_test_mcp-${VERSION}-py3-none-any.whl"
-          "${BIN_DIR}/xq-domain-test-mcp" &
+          "${BIN_DIR}/xq-domain-test-mcp" > /tmp/xq-domain-test-mcp.log 2>&1 &
           PID=$!
           sleep 2
           if kill -0 "${PID}" 2>/dev/null; then
             kill "${PID}"
             wait "${PID}" || true
           else
-            echo "xq-domain-test-mcp exited immediately; expected stdio MCP server to stay running" >&2
-            exit 1
+            wait "${PID}" || {
+              cat /tmp/xq-domain-test-mcp.log >&2
+              exit 1
+            }
           fi
 
       - name: Smoke test skill bundle
