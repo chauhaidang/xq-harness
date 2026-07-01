@@ -119,7 +119,7 @@ modules:
   xq-test-infra:
     path: modules/xq-test-infra
     language: node
-    version: 0.1.0
+    version: 0.1.1
     test_all: true
     depends_on:
       - xq-common-kit

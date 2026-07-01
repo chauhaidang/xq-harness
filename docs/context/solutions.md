@@ -115,3 +115,27 @@ Implemented xq-domain-test-mcp as a Node 26 TypeScript/Yarn 4 module. The implem
 Status: `proposed`
 
 Implement extensibility in phases: first introduce an InfraApplication module and PluginRegistry with built-in adapters that reproduce current behavior; then move spec loading and compose generation into registered adapters/pipeline transforms; then split gateway route planning/rendering, Docker runtime execution, registry auth, and test detection into explicit adapter seams. Preserve existing xq-infra command behavior during each slice.
+
+## SOL-3F08410C — Phased xq-test-infra redesign around InfraApplication
+
+Status: `proposed`
+
+Spec: `SPEC-3D2903DD`
+
+Phase 0 documents current behavior and golden outputs. Phase 1 introduces InfraApplication with command methods generate, up, down, and logs, moving process exits and console concerns to the CLI adapter. Phase 2 adds PluginRegistry and built-in adapters without third-party plugin loading. Phase 3 moves spec loading, override merging, validation, compose planning, and compose rendering behind internal seams. Phase 4 separates gateway route planning from nginx rendering and makes gateway implementation replaceable. Phase 5 separates Docker Compose runtime execution, registry auth, test detection, and reporting behind adapter interfaces. Phase 6 optionally adds external plugin loading once at least one real non-built-in plugin exists. Each phase preserves current CLI behavior and is verified through ./scripts/module test xq-test-infra.
+
+## SOL-DD3D877E — xq-test-infra InfraApplication tracer slice
+
+Status: `proposed`
+
+Spec: `SPEC-3D2903DD`
+
+Implemented the first redesign slice with TDD. Added src/app/infraApplication.js as a deep application seam with generate, up, down, and logs methods. Added tests/infraApplication.test.js before implementation to cover compose generation, Docker Compose up orchestration, pull fallback warnings, default source path detection, non-fatal test detection failures, down, and logs. Refactored src/cli/index.js to parse CLI options and delegate command behavior to InfraApplication. Verified with ./scripts/module ci xq-test-infra.
+
+## SOL-30C707A7 — xq-test-infra PR prep and 0.1.1 version bump
+
+Status: `proposed`
+
+Spec: `SPEC-3D2903DD`
+
+Reviewed the InfraApplication redesign slice against the recorded xq-test-infra deep-module redesign contract and repo conventions. No blocking implementation findings remained. Bumped xq-test-infra from 0.1.0 to 0.1.1 in modules.yaml, package.json, docs/modules/README.md, CATALOGUE.md, and modules/xq-test-infra/README.md. Verified with ./scripts/module ci xq-test-infra.

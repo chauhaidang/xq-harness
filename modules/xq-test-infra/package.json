@@ -1,6 +1,6 @@
 {
   "name": "@chauhaidang/xq-harness-test-infra",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A test infra cli used to spin up test environment",
   "bin": {
     "xq-infra": "./bin/xq-infra.js"
