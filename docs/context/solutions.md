@@ -139,3 +139,11 @@ Status: `proposed`
 Spec: `SPEC-3D2903DD`
 
 Reviewed the InfraApplication redesign slice against the recorded xq-test-infra deep-module redesign contract and repo conventions. No blocking implementation findings remained. Bumped xq-test-infra from 0.1.0 to 0.1.1 in modules.yaml, package.json, docs/modules/README.md, CATALOGUE.md, and modules/xq-test-infra/README.md. Verified with ./scripts/module ci xq-test-infra.
+
+## SOL-DB6E69A9 — Python 1.0.3 xq-domain-test-mcp revert
+
+Status: `proposed`
+
+Spec: `SPEC-D0C96337`
+
+Restored the Python xq_mcp module, uv project metadata, Python tests, Python testbed, module skill, Python CI workflow, and GitHub Release wheel/skill-bundle workflow from the last Python release lineage. Removed the Node/TypeScript package metadata, Yarn files, TypeScript sources/tests, npm package CD workflow, and Node testbed server. Updated pyproject, uv.lock, modules.yaml, and xq_mcp.__version__ to 1.0.3. Verified ./scripts/module ci xq-domain-test-mcp: BasedPyright 0 errors, wheel/sdist built, 7 pytest tests passed.
