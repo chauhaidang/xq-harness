@@ -311,3 +311,11 @@ Status: `accepted`
 xq-scripts/scripts/install-skills.js now supports --include-global. By default it scans only the consumer project's node_modules/@chauhaidang/*/skills. With --include-global, it also scans /usr/local/lib/node_modules/@chauhaidang/*/skills so globally installed MCP packages can provide skills. Project-local skills are copied after global skills, so local dependencies win on name conflicts.
 
 **Rationale:** xq-domain-test-mcp can be delivered as a global npm package, while the existing skill installer only scanned project-local dependencies. An explicit flag supports global MCP installs without unexpectedly importing unrelated global skills by default.
+
+## DEC-D90389B9 — Revert xq-domain-test-mcp from Node back to Python
+
+Status: `accepted`
+
+xq-domain-test-mcp is being restored to the Python uv/FastMCP implementation from the last full Python release snapshot and versioned as 1.0.3 for a clean new release tag. The npm/GitHub Packages delivery path is removed in favor of the Python wheel, sdist, and skill bundle release workflow.
+
+**Rationale:** The user explicitly requested reverting domain test MCP back to the previous Python variant. Harness history identified the full Python release snapshot before the Node rewrite, and existing tags already occupy 1.0.0 through 1.0.2, so 1.0.3 preserves release monotonicity while restoring the requested implementation.

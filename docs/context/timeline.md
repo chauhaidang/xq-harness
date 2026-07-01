@@ -147,3 +147,9 @@
 - `0146` 2026-07-01T10:22:14+00:00 **task.created** `TASK-BC2EBBF0` Prepare xq-test-infra InfraApplication PR
 - `0147` 2026-07-01T10:22:21+00:00 **task.status_changed** `TASK-BC2EBBF0`
 - `0148` 2026-07-01T10:22:33+00:00 **solution.proposed** `SOL-30C707A7` xq-test-infra PR prep and 0.1.1 version bump
+- `0149` 2026-07-01T13:10:46+00:00 **requirement.created** `REQ-B1175B17` Revert xq-domain-test-mcp to Python
+- `0150` 2026-07-01T13:10:55+00:00 **decision.recorded** `DEC-D90389B9` Revert xq-domain-test-mcp from Node back to Python
+- `0151` 2026-07-01T13:11:02+00:00 **solution.proposed** `SOL-DB6E69A9` Python 1.0.3 xq-domain-test-mcp revert
+- `0152` 2026-07-01T13:11:07+00:00 **task.created** `TASK-BF3B29B3` Revert xq-domain-test-mcp to Python 1.0.3
+- `0153` 2026-07-01T13:11:12+00:00 **task.status_changed** `TASK-BF3B29B3`
+- `0154` 2026-07-01T13:11:12+00:00 **workspace.observed** `WS-66537B57`

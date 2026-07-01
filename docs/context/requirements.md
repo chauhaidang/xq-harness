@@ -131,3 +131,9 @@ xq-test-infra should become extensible and pluggable through explicit module int
 Status: `active`
 
 Plan a redesign of xq-test-infra around extensibility, scalability, and ease of maintenance. The redesign should preserve existing CLI behavior while introducing deeper modules and explicit extension seams for orchestration, plugin registration, spec loading, compose generation, gateway rendering, runtime execution, auth, and test detection.
+
+## REQ-B1175B17 — Revert xq-domain-test-mcp to Python
+
+Status: `active`
+
+Restore xq-domain-test-mcp from the last full Python release lineage instead of the Node/TypeScript rewrite, keeping the MCP CLI and REST/runtime tool behavior available through a Python uv package.

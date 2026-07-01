@@ -9,7 +9,7 @@ business-readable scenarios, and machine-readable tool-call mappings.
 testbed/
   xq-config.json        # runtime environments (agent reads, passes to MCP tools)
   api-catalog.json      # REST endpoints agents map scenarios onto
-  mock-api/             # in-memory learning API server
+  mock_api/             # in-memory learning API server
   scenarios/            # business scenario Markdown (human/agent authored)
   mappings/             # expected MCP tool sequences for automated e2e
 ```
@@ -21,7 +21,7 @@ xq-config.json + scenario Markdown -> agent maps using api-catalog.json -> MCP t
 ```
 
 The MCP server executes tool calls only. It does not read `xq-config.json` or
-scenario Markdown. The agent reads both and passes arguments to MCP tools.
+scenario Markdown — the agent reads both and passes arguments to MCP tools.
 
 ## Run the mock API
 
@@ -29,7 +29,7 @@ From the module root:
 
 ```bash
 cd modules/xq-domain-test-mcp
-node testbed/mock-api/server.mjs --port 18765
+uv run python -m testbed.mock_api.server --port 18765
 ```
 
 Defaults for the `testbed` entry in `xq-config.json`:
@@ -47,26 +47,26 @@ Endpoints:
 
 ## Manual agent run
 
-1. Start the mock API.
-2. Enable the MCP server in your MCP client.
+1. Start the mock API (above).
+2. Enable the MCP server in Cursor — project config is [`.cursor/mcp.json`](../../.cursor/mcp.json).
 3. Install the consumer skill from [`../skills/xq-domain-test-mcp/`](../skills/xq-domain-test-mcp/).
 4. Open `scenarios/create-exercises.md` and ask the agent to execute it using
    `xq-config.json`, `api-catalog.json`, and discovered MCP tool schemas.
 5. Expected flow:
-   - Read `xq-config.json` -> `environments.testbed`
-   - Session setup tool -> pass `environment`, `api_base_url`, `api_token`
-   - Action tools -> create exercises, verify listing
+   - Read `xq-config.json` → `environments.testbed`
+   - Session setup tool → pass `environment`, `api_base_url`, `api_token` from that entry
+   - Action tools → create exercises, verify listing
    - Optional teardown tool when done
 
 ## Automated e2e
 
-`node:test` starts the mock API on an ephemeral port and replays `mappings/*.json`
-through the real tool classes:
+Pytest starts the mock API on an ephemeral port and replays `mappings/*.json`
+through the real MCP tool handlers:
 
 ```bash
 ./scripts/module test xq-domain-test-mcp
 # or
-yarn test
+uv run pytest tests/e2e -v
 ```
 
 Mappings substitute `{{mock_api_base_url}}` with the ephemeral server URL.
