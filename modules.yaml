@@ -36,15 +36,21 @@ modules:
     toolchain:
       xcode: "16"
       xcodegen: required
+      node: ">=18"
     commands:
-      install: "true"
+      install: >
+        npm install &&
+        bundle install &&
+        npm run bundle:ios &&
+        xcodegen generate --spec project.yml &&
+        LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 bundle exec pod install
       build: >
-        xcodebuild -project ios-xq-finance-app.xcodeproj
+        xcodebuild -workspace ios-xq-finance-app.xcworkspace
         -scheme ios-xq-finance-app
         -destination 'platform=iOS Simulator,name=iPhone 16'
         build
       test: >
-        xcodebuild -project ios-xq-finance-app.xcodeproj
+        xcodebuild -workspace ios-xq-finance-app.xcworkspace
         -scheme ios-xq-finance-app
         -destination 'platform=iOS Simulator,name=iPhone 16'
         test

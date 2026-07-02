@@ -4,3 +4,6 @@ DerivedData/
 *.xcuserstate
 xcuserdata/
 exportOptions.plist
+node_modules/
+Pods/
+App/main.jsbundle

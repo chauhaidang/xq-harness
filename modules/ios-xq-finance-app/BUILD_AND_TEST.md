@@ -1,17 +1,51 @@
 # iOS XQ Finance Build And Test Workflow
 
-This module is a SwiftUI iOS app with an XCTest bundle.
+This module is a brownfield React Native iOS app: a thin Swift host mounts the
+`XQFinance` React Native root. Swift domain models and persistence remain in
+`App/App.swift` for now; the spike screen is rendered in JavaScript.
 
 ## Module Basics
 
 - Module: `ios-xq-finance-app`
-- Project: `modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj`
+- Workspace: `modules/ios-xq-finance-app/ios-xq-finance-app.xcworkspace`
 - Scheme: `ios-xq-finance-app`
 - App bundle ID: `com.xq.finance.ios-xq-finance-app`
 - Test bundle ID: `com.xq.finance.ios-xq-finance-appTests`
 - UI-test scheme: `ios-xq-finance-app-ui-tests`
 - UI-test configuration: `modules/ios-xq-finance-app/xq-ui-tests.json`
 - Minimum iOS deployment target: `17.0`
+- React Native: `0.86.0`
+
+## Install And Build
+
+From the repo root:
+
+```bash
+./scripts/module install ios-xq-finance-app
+./scripts/module build ios-xq-finance-app
+./scripts/module test ios-xq-finance-app
+```
+
+The install step runs `npm install`, `bundle exec pod install`, and
+`npm run bundle:ios`. Build and test must use the `.xcworkspace`, not the raw
+`.xcodeproj`.
+
+After JavaScript changes, either:
+
+```bash
+cd modules/ios-xq-finance-app
+npm run bundle:ios
+```
+
+or run Metro for live reload:
+
+```bash
+cd modules/ios-xq-finance-app
+npm start
+```
+
+The native host prefers an embedded `main.jsbundle` when present, then falls
+back to Metro in Debug builds.
 
 ## Preferred Device Workflow
 
@@ -28,7 +62,7 @@ Show destinations known to Xcode:
 
 ```bash
 xcodebuild \
-  -project modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj \
+  -workspace modules/ios-xq-finance-app/ios-xq-finance-app.xcworkspace \
   -scheme ios-xq-finance-app \
   -showdestinations
 ```
@@ -37,7 +71,7 @@ Run tests on the plugged-in iPhone:
 
 ```bash
 xcodebuild \
-  -project modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj \
+  -workspace modules/ios-xq-finance-app/ios-xq-finance-app.xcworkspace \
   -scheme ios-xq-finance-app \
   -destination "platform=iOS,id=<device-id>" \
   test
@@ -121,10 +155,15 @@ All interface orientations must be supported unless the app requires full screen
 
 The warning did not block the physical-device XCTest run.
 
-## Useful commands:
+## Archive, Export, And Install
+
+Archive and export produce a signed IPA under `build/ipa/`. The `-exportPath`
+argument is the **output directory**; the installable artifact is the `.ipa`
+file inside it, not the directory itself.
+
 ```bash
 xcodebuild \
-  -project modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj \
+  -workspace modules/ios-xq-finance-app/ios-xq-finance-app.xcworkspace \
   -scheme ios-xq-finance-app \
   -destination "generic/platform=iOS" \
   -configuration Release \
@@ -141,3 +180,35 @@ xcodebuild \
   -exportOptionsPlist modules/ios-xq-finance-app/exportOptions.plist \
   -allowProvisioningUpdates
 ```
+
+After export, `build/ipa/` also contains Xcode metadata (`ExportOptions.plist`,
+`DistributionSummary.plist`, `Packaging.log`). Those files are not installable.
+
+Install the IPA on a plugged-in iPhone with `devicectl` (preferred):
+
+```bash
+IPA="$PWD/modules/ios-xq-finance-app/build/ipa/ios-xq-finance-app.ipa"
+
+xcrun devicectl device install app \
+  --device <device-id> \
+  "$IPA"
+```
+
+Or with `ios-deploy` — pass the **`.ipa` file**, not the export directory:
+
+```bash
+IPA="$PWD/modules/ios-xq-finance-app/build/ipa/ios-xq-finance-app.ipa"
+
+ios-deploy -b "$IPA" -d <device-id>
+```
+
+Pointing `ios-deploy -b` at `build/ipa/` copies export metadata instead of the
+app bundle and fails with:
+
+```text
+Error 0xe8000067: There was an internal API error. AMDeviceSecureInstallApplication(...)
+```
+
+If `ios-deploy` warns about a missing `DeveloperDiskImage` for your iOS version,
+installation can still succeed; only debug attach and console logging are
+affected. Update Xcode so device support is available for that OS version.

@@ -15,7 +15,7 @@ struct XQFinanceApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(summary: FinanceAppSummary.default)
+            ReactNativeHostView()
         }
     }
 }
