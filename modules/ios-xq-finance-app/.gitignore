@@ -7,3 +7,4 @@ exportOptions.plist
 node_modules/
 Pods/
 App/main.jsbundle
+.xcode.env.local
