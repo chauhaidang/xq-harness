@@ -319,3 +319,83 @@ Status: `accepted`
 xq-domain-test-mcp is being restored to the Python uv/FastMCP implementation from the last full Python release snapshot and versioned as 1.0.3 for a clean new release tag. The npm/GitHub Packages delivery path is removed in favor of the Python wheel, sdist, and skill bundle release workflow.
 
 **Rationale:** The user explicitly requested reverting domain test MCP back to the previous Python variant. Harness history identified the full Python release snapshot before the Node rewrite, and existing tags already occupy 1.0.0 through 1.0.2, so 1.0.3 preserves release monotonicity while restoring the requested implementation.
+
+## DEC-6F0325CE — xq-octopus is a new CLI module, not an MCP extension
+
+Status: `accepted`
+
+Implement xq-octopus as an independent Python CLI module with a deep REST-testing core and thin argparse command adapter. Keep scenario interpretation agent-side and do not extend xq-domain-test-mcp for this work.
+
+**Rationale:** The user explicitly chose a new module named xq-octopus, then clarified that scenario API mapping is agent reasoning work and the CLI should stay simple: call REST, validate, and auto-load test configuration from xq.json.
+
+## DEC-10F3D42D — xq-octopus commands own execute logic
+
+Status: `accepted`
+
+The xq-octopus Command interface must require execute(context). RestCommand and future commands implement that shared contract. ExecutionEngine.execute(command) prepares ExecutionContext, delegates to command.execute(context), and normalizes uncaught errors into CommandResult; it should not dispatch normal execution by command kind.
+
+**Rationale:** The CLI is intended to be simple and extensible for agent tool use. Putting command-specific behavior behind Command.execute keeps the engine stable while allowing new command types to plug in without new engine entrypoints.
+
+## DEC-0342D5B6 — xq-octopus ExecutionContext exposes tool factory
+
+Status: `accepted`
+
+ExecutionContext for xq-octopus should carry RuntimeConfig and ToolFactory, not a raw HttpClient. RestCommand.execute(context) should request context.tools.rest() and delegate REST calls and REST validation to RestTool. HttpClient remains an internal implementation detail behind the tools layer.
+
+**Rationale:** Keeping transport clients out of ExecutionContext prevents the core command contract from becoming REST-specific. A ToolFactory gives future command types the same extension point while preserving a stable ExecutionEngine.execute(command) interface.
+
+## DEC-655CB849 — xq-octopus guide targets fresher Python implementers
+
+Status: `accepted`
+
+modules/xq-octopus/xq-octopus-dev-guide.md was rewritten as a beginner-oriented development guide. It now explains modern Python CLI basics, dataclasses, Protocol contracts, Typer boundaries, ExecutionContext with ToolFactory, RestTool ownership, testing order, and module-local validation commands.
+
+**Rationale:** The implementer may be new to Python. A step-by-step guide with boundaries, code-shape examples, and common mistakes reduces ambiguity without implementing the module for them.
+
+## DEC-3B0BB622 — xq-octopus RestTool exposes method-specific calls
+
+Status: `accepted`
+
+RestCommand.execute(context) should obtain context.tools.rest() and call method-specific RestTool operations: call_get(), call_post(), call_put(), call_patch(), or call_delete(). RestTool should not expose a generic execute(command, config) dispatcher as its public interface.
+
+**Rationale:** The intended REST tool interface should make available operations explicit to command authors and agents. Method selection belongs inside RestCommand.execute(), while ExecutionEngine remains generic and only delegates to Command.execute(context).
+
+## DEC-2DF6395F — xq-octopus uses app package source layout
+
+Status: `accepted`
+
+modules/xq-octopus keeps the app/ package layout described in xq-octopus-dev-guide.md. pyproject.toml now points the console script, pytest path, BasedPyright include path, and Hatch wheel package selection at app instead of the old src/xq_octopus layout.
+
+**Rationale:** The user confirmed the current app package layout is the desired source layout, so metadata and tests should align with it rather than renaming the package back to xq_octopus.
+
+## DEC-B13DEF5F — xq-octopus Day 1 keeps REST transport inside RestTool
+
+Status: `accepted`
+
+The Day 1 implementation does not keep a separate app/tools/http_client.py module. RestTool owns the low-level urllib transport internally while the engine and commands still depend only on ToolFactory and RestTool capabilities.
+
+**Rationale:** The user questioned the extra http_client split. For Day 1 the separate module adds surface area without enough complexity to justify it; keeping transport private inside RestTool preserves the boundary while simplifying the layout.
+
+## DEC-04A2460E — xq-octopus switches to Node TypeScript stack
+
+Status: `accepted`
+
+xq-octopus should be built with the harness repo's Node.js stack instead of Python: Node >=18, Yarn 4.13, TypeScript, Commander, Jest, ESLint, and built-in fetch/AbortController. The existing architecture remains: Command.execute(context), ExecutionEngine, ExecutionContext with ToolFactory, and RestTool method-specific calls callGet/callPost/callPut/callPatch/callDelete.
+
+**Rationale:** The user wants xq-octopus to use the same stack as the harness repo. Keeping the architecture while switching language reduces ecosystem mismatch and makes future module work align with existing Node/Yarn/TypeScript modules.
+
+## DEC-18A5CFC1 — xq-octopus removes explain subcommand and expands setup guide
+
+Status: `accepted`
+
+xq-octopus scope now excludes an explain subcommand to stay closer to Vibium. The CLI-as-skill surface is limited to --help, per-command --help, and commands --json. The dev guide was expanded with junior-friendly Node/TypeScript setup steps including prerequisites, folder/file creation commands, package.json, tsconfig.json, jest.config.cjs, ESLint config, starter Commander entrypoint, xq.json.example, README template, and module-local Yarn validation commands.
+
+**Rationale:** The user clarified Vibium does not include explain, so xq-octopus should not add it. The implementation guide also needed enough setup detail for a fresher developer to progress without guessing toolchain configuration.
+
+## DEC-A444172E — xq-octopus guide adds explicit project setup checkpoint
+
+Status: `accepted`
+
+The xq-octopus dev guide now includes a dedicated project setup flow before feature implementation: start from a docs-only module, create app/test folders, create package/config/source/test files, fill package.json/tsconfig/jest/eslint/starter CLI templates, run yarn install to create the lockfile, build the starter CLI, add a starter Jest test, and verify yarn install --immutable, yarn build, yarn test, and node dist/cli/main.js --help.
+
+**Rationale:** The user clarified that the guide was missing project setup. A junior developer needs an explicit empty-folder-to-compiling-project checkpoint before implementing config loading, RestTool, or the engine.

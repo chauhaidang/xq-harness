@@ -137,3 +137,15 @@ Plan a redesign of xq-test-infra around extensibility, scalability, and ease of 
 Status: `active`
 
 Restore xq-domain-test-mcp from the last full Python release lineage instead of the Node/TypeScript rewrite, keeping the MCP CLI and REST/runtime tool behavior available through a Python uv package.
+
+## REQ-460AD03F — xq-octopus provides a simple REST testing CLI
+
+Status: `active`
+
+Build a new Python module named xq-octopus. It loads xq.json, requires --env, exposes simple REST verb commands, validates responses, and emits JSON evidence by default. Scenario parsing, MCP tools, OpenAPI loading, and agent reasoning are explicitly out of scope.
+
+## REQ-7658F9E0 — xq-octopus provides direct REST API CLI testing
+
+Status: `active`
+
+Build modules/xq-octopus as a Python CLI for direct backend REST API testing. The CLI loads xq.json, requires --env, executes REST requests, validates status and JSON pointer expectations, emits JSON evidence by default, and keeps scenario parsing, MCP tools, OpenAPI/catalog loading, domain inference, and generated clients out of v1.

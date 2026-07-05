@@ -153,3 +153,37 @@
 - `0152` 2026-07-01T13:11:07+00:00 **task.created** `TASK-BF3B29B3` Revert xq-domain-test-mcp to Python 1.0.3
 - `0153` 2026-07-01T13:11:12+00:00 **task.status_changed** `TASK-BF3B29B3`
 - `0154` 2026-07-01T13:11:12+00:00 **workspace.observed** `WS-66537B57`
+- `0178` 2026-07-04T14:03:45+00:00 **requirement.created** `REQ-460AD03F` xq-octopus provides a simple REST testing CLI
+- `0179` 2026-07-04T14:03:58+00:00 **decision.recorded** `DEC-6F0325CE` xq-octopus is a new CLI module, not an MCP extension
+- `0180` 2026-07-04T14:04:05+00:00 **spec.created** `SPEC-EDAEE431` xq-octopus minimal REST CLI contract
+- `0181` 2026-07-04T14:04:11+00:00 **task.created** `TASK-BD932623` Implement xq-octopus minimal REST CLI
+- `0182` 2026-07-04T14:11:13+00:00 **task.status_changed** `TASK-BD932623`
+- `0183` 2026-07-04T14:11:18+00:00 **workspace.observed** `WS-79897B77`
+- `0184` 2026-07-04T14:11:54+00:00 **solution.proposed** `SOL-3D7DA6DC` xq-octopus standard-library REST CLI implementation
+- `0185` 2026-07-04T16:49:38+00:00 **requirement.created** `REQ-7658F9E0` xq-octopus provides direct REST API CLI testing
+- `0186` 2026-07-04T16:49:53+00:00 **spec.created** `SPEC-0E8A98BE` xq-octopus v1 CLI contract
+- `0187` 2026-07-04T16:49:57+00:00 **task.created** `TASK-338D40A3` Implement xq-octopus v1 CLI module
+- `0188` 2026-07-04T16:50:09+00:00 **task.status_changed** `TASK-338D40A3`
+- `0189` 2026-07-04T16:50:10+00:00 **solution.proposed** `SOL-30F8CB43` xq-octopus Python REST CLI implementation
+- `0190` 2026-07-04T16:50:20+00:00 **workspace.observed** `WS-BD60E866`
+- `0191` 2026-07-05T01:18:39+00:00 **task.created** `TASK-4A3F2AD9` Add xq-octopus config contract tests
+- `0192` 2026-07-05T01:18:54+00:00 **task.status_changed** `TASK-4A3F2AD9`
+- `0193` 2026-07-05T01:22:23+00:00 **task.created** `TASK-C4943BA0` Clear xq-octopus source implementation
+- `0194` 2026-07-05T01:22:33+00:00 **task.status_changed** `TASK-C4943BA0`
+- `0195` 2026-07-05T04:33:42+00:00 **decision.recorded** `DEC-10F3D42D` xq-octopus commands own execute logic
+- `0196` 2026-07-05T05:09:23+00:00 **decision.recorded** `DEC-0342D5B6` xq-octopus ExecutionContext exposes tool factory
+- `0197` 2026-07-05T05:12:12+00:00 **decision.recorded** `DEC-655CB849` xq-octopus guide targets fresher Python implementers
+- `0198` 2026-07-05T05:48:36+00:00 **decision.recorded** `DEC-3B0BB622` xq-octopus RestTool exposes method-specific calls
+- `0199` 2026-07-05T08:16:12+00:00 **decision.recorded** `DEC-2DF6395F` xq-octopus uses app package source layout
+- `0200` 2026-07-05T08:34:46+00:00 **task.created** `TASK-AE6D2566` Align xq-octopus test package with guide
+- `0201` 2026-07-05T08:35:04+00:00 **task.status_changed** `TASK-AE6D2566`
+- `0202` 2026-07-05T08:38:22+00:00 **task.created** `TASK-69910D93` Refine xq-octopus tests for app layout
+- `0203` 2026-07-05T08:38:31+00:00 **task.status_changed** `TASK-69910D93`
+- `0204` 2026-07-05T09:40:16+00:00 **task.created** `TASK-D829D8E7` Implement xq-octopus Day 1
+- `0205` 2026-07-05T09:40:17+00:00 **decision.recorded** `DEC-B13DEF5F` xq-octopus Day 1 keeps REST transport inside RestTool
+- `0206` 2026-07-05T09:40:29+00:00 **task.status_changed** `TASK-D829D8E7`
+- `0207` 2026-07-05T09:41:17+00:00 **solution.proposed** `SOL-86266C67` xq-octopus Day 1 app implementation
+- `0208` 2026-07-05T09:41:18+00:00 **workspace.observed** `WS-A3B0AB10`
+- `0209` 2026-07-05T14:22:12+00:00 **decision.recorded** `DEC-04A2460E` xq-octopus switches to Node TypeScript stack
+- `0210` 2026-07-05T15:01:22+00:00 **decision.recorded** `DEC-18A5CFC1` xq-octopus removes explain subcommand and expands setup guide
+- `0211` 2026-07-05T15:13:26+00:00 **decision.recorded** `DEC-A444172E` xq-octopus guide adds explicit project setup checkpoint

@@ -147,3 +147,27 @@ Status: `proposed`
 Spec: `SPEC-D0C96337`
 
 Restored the Python xq_mcp module, uv project metadata, Python tests, Python testbed, module skill, Python CI workflow, and GitHub Release wheel/skill-bundle workflow from the last Python release lineage. Removed the Node/TypeScript package metadata, Yarn files, TypeScript sources/tests, npm package CD workflow, and Node testbed server. Updated pyproject, uv.lock, modules.yaml, and xq_mcp.__version__ to 1.0.3. Verified ./scripts/module ci xq-domain-test-mcp: BasedPyright 0 errors, wheel/sdist built, 7 pytest tests passed.
+
+## SOL-3D7DA6DC — xq-octopus standard-library REST CLI implementation
+
+Status: `proposed`
+
+Spec: `SPEC-EDAEE431`
+
+Implemented modules/xq-octopus as a Python 3.12 uv module. The CLI command xq-octopus supports config plus get/post/put/patch/delete, loads xq.json with required --env, sends JSON REST calls via urllib, validates --expect-status and --expect-json JSON-pointer checks, emits JSON by default, supports --pretty, and is covered by config, REST, validation, and CLI tests.
+
+## SOL-30F8CB43 — xq-octopus Python REST CLI implementation
+
+Status: `proposed`
+
+Spec: `SPEC-0E8A98BE`
+
+Implemented modules/xq-octopus as a uv-managed Python package using a src/xq_octopus layout. Added RuntimeConfig redaction, xq.json loading and validation, urllib-based REST execution with structured evidence and HTTP error evidence, status and JSON pointer validation, argparse CLI commands, README usage docs, and behavior-focused pytest coverage for config, validation, REST, and CLI. Verified uv sync --locked, SOURCE_DATE_EPOCH=0 uv run basedpyright, SOURCE_DATE_EPOCH=0 uv build, and uv run pytest.
+
+## SOL-86266C67 — xq-octopus Day 1 app implementation
+
+Status: `proposed`
+
+Spec: `SPEC-0E8A98BE`
+
+Implemented the Day 1 app layout with RuntimeConfig, command/result models, config loading, validation, RestTool with private urllib transport, ToolFactory, ExecutionEngine, output rendering, command catalog, CLI commands, and xq.json.example. Verified uv sync --locked, SOURCE_DATE_EPOCH=0 uv run basedpyright, SOURCE_DATE_EPOCH=0 uv build, uv run pytest, uv run xq-octopus --help, and uv run xq-octopus commands --json.

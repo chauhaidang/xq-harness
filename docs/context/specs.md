@@ -85,3 +85,19 @@ Status: `draft`
 Requirement: `REQ-33167CEC`
 
 xq-test-infra should expose a small orchestration interface for CLI commands while hiding pipeline details inside deep modules. The external CLI commands remain generate, up, down, and logs. Internally, InfraApplication coordinates registered adapters for SpecSource, SpecParser, SpecValidator, ComposePlanner, ComposeRenderer, GatewayPlanner, GatewayRenderer, RuntimeAdapter, AuthProvider, TestDetector, and Reporter. Plugin registration is explicit and typed by capability; built-in adapters preserve current YAML, Docker Compose, nginx gateway, registry auth, and test-container detection behavior. Tests should target InfraApplication command methods and adapter contracts rather than CLI internals.
+
+## SPEC-EDAEE431 — xq-octopus minimal REST CLI contract
+
+Status: `draft`
+
+Requirement: `REQ-460AD03F`
+
+xq-octopus provides command verbs config, get, post, put, patch, and delete. It loads xq.json from the current working directory unless --config is supplied, requires --env, resolves environments.<env>.api_base_url plus optional api_token and headers, sends REST requests with JSON bodies from --body or --body-file, validates --expect-status and --expect-json JSON-pointer checks, emits JSON by default, supports --pretty, and uses exit codes 0 success, 1 validation failure, 2 config/input error, 3 transport error.
+
+## SPEC-0E8A98BE — xq-octopus v1 CLI contract
+
+Status: `draft`
+
+Requirement: `REQ-7658F9E0`
+
+modules/xq-octopus exposes a Python package xq-octopus with console script xq-octopus = xq_octopus.cli:main. It supports config, get, post, put, patch, and delete commands. Config comes from xq.json or --config and selected environment via required --env. REST commands support --expect-status, repeated --expect-json /pointer=value, --timeout, --body, --body-file, and --pretty. Exit codes are 0 for success, 1 for validation failure, 2 for config/input error, and 3 for transport error.
