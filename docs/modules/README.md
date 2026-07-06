@@ -48,26 +48,26 @@ while keeping scenario Markdown business-readable.
 
 ## XQ packages (Level C — independent)
 
-Each `modules/xq-*` package has its own `yarn.lock` and `.yarnrc.yml` for
-GitHub Packages. **Harness-lineage** npm names use the `xq-harness-*` prefix
-(ADR 0010). Monorepo sibling deps use Yarn `portal:`; external consumers use
+Node packages share the root `pnpm-lock.yaml`; modules that publish to GitHub
+Packages keep `publishConfig` in `package.json`. **Harness-lineage** npm names use the `xq-harness-*` prefix
+(ADR 0010). Monorepo sibling deps use pnpm `workspace:*`; external consumers use
 semver after publish.
 
 | Module | Version | npm package / dep |
 | --- | --- | --- |
 | `xq-common-kit` | 0.1.0 | `@chauhaidang/xq-harness-common-kit` |
-| `xq-test-utils` | 0.1.0 | `portal:../xq-common-kit` |
-| `xq-test-infra` | 0.1.1 | `portal:../xq-common-kit` |
+| `xq-test-utils` | 0.1.0 | `workspace:*` to `xq-common-kit` |
+| `xq-test-infra` | 0.1.1 | `workspace:*` to `xq-common-kit` |
 | `xq-test-harness` | 0.1.0 | `@chauhaidang/xq-harness-test-harness` |
-| `xq-test-harness-e2e-consumer` | 0.0.0 | `portal:../xq-test-harness` |
+| `xq-test-harness-e2e-consumer` | 0.0.0 | `workspace:*` to `xq-test-harness` |
 | `xq-scripts` | VERSION file | tarball release only |
 
 **Prerequisites:** Node ≥ 18, Corepack. `NODE_AUTH_TOKEN` only needed when
 installing published `@chauhaidang/xq-harness-*` from GitHub Packages (not for
-`portal:` monorepo CI).
+`workspace:*` monorepo CI).
 
-Shared TS config: `modules/tsconfig.base.json`. Shared registry template:
-`modules/yarnrc.github-packages.yml`.
+Shared TS config: `modules/tsconfig.base.json`. pnpm workspace packages use
+the root `pnpm-workspace.yaml` and `pnpm-lock.yaml`.
 
 ```bash
 export NODE_AUTH_TOKEN=...
@@ -82,7 +82,7 @@ Packages, then bump semver in downstream `package.json` files.
 
 ```bash
 cd modules/xq-harness-common-kit
-yarn install --immutable && yarn test
+pnpm install --frozen-lockfile && pnpm test
 ```
 
 Or from the repo root:

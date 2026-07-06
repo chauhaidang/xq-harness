@@ -138,14 +138,26 @@ Status: `active`
 
 Restore xq-domain-test-mcp from the last full Python release lineage instead of the Node/TypeScript rewrite, keeping the MCP CLI and REST/runtime tool behavior available through a Python uv package.
 
-## REQ-460AD03F — xq-octopus provides a simple REST testing CLI
-
-Status: `active`
-
-Build a new Python module named xq-octopus. It loads xq.json, requires --env, exposes simple REST verb commands, validates responses, and emits JSON evidence by default. Scenario parsing, MCP tools, OpenAPI loading, and agent reasoning are explicitly out of scope.
-
 ## REQ-7658F9E0 — xq-octopus provides direct REST API CLI testing
 
 Status: `active`
 
 Build modules/xq-octopus as a Python CLI for direct backend REST API testing. The CLI loads xq.json, requires --env, executes REST requests, validates status and JSON pointer expectations, emits JSON evidence by default, and keeps scenario parsing, MCP tools, OpenAPI/catalog loading, domain inference, and generated clients out of v1.
+
+## REQ-90E4AF71 — Replace Yarn with pnpm for Node modules
+
+Status: `active`
+
+The repo's Node package workflow should use pnpm instead of Yarn for install, build, test, lockfile, local sibling dependencies, CI, and publish commands.
+
+## REQ-7A4C48E0 — Try Bun only for xq-octopus
+
+Status: `active`
+
+Evaluate Bun as the package/runtime tool for modules/xq-octopus only, without applying Bun to the rest of the Node packages.
+
+## REQ-E176E230 — Document Go implementation path for xq-octopus
+
+Status: `active`
+
+Create a Go developer guide for xq-octopus similar to the Node/TypeScript guide, explaining how to build the same REST testing CLI as a single-binary Go module.

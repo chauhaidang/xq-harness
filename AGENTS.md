@@ -113,7 +113,7 @@ Requires [yq](https://github.com/mikefarah/yq). Each module has its own
 lockfile and toolchain (Node 18+, Python/uv, Xcode, etc.) — see `modules.yaml`.
 
 **XQ npm packages** (`xq-common-kit`, `xq-test-utils`, `xq-test-infra`,
-`xq-test-harness`): Yarn 4 with `portal:` sibling deps inside the monorepo;
+`xq-test-harness`): pnpm 10 with `workspace:*` sibling deps inside the monorepo;
 consumers install `@chauhaidang/xq-harness-*` from GitHub Packages.
 
 ---

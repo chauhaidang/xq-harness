@@ -1,7 +1,7 @@
 ---
 name: xq-test-harness-bdd
 description: >-
-  End-to-end setup for @chauhaidang/xq-harness-test-harness: GitHub Packages auth, Yarn deps,
+  End-to-end setup for @chauhaidang/xq-harness-test-harness: GitHub Packages auth, pnpm deps,
   VS Code/Cucumber step globs, bdd-world, defineApiHarnessConfig, bddgen/playwright scripts,
   gitignore, CI env, and advanced fixture patterns.
 ---
@@ -21,7 +21,7 @@ Use this skill when you are **greenfielding or migrating** a repo to **Playwrigh
 ## 1. Prerequisites
 
 - **Node.js** ≥ 18 (match harness `engines` if you add them later).
-- **Yarn** 4+ (Corepack). Commands below use `yarn`; npm is not the default for this stack.
+- **pnpm** 10+ (Corepack). Commands below use `pnpm`; npm is not the default for this stack.
 - **GitHub Packages** access for the `@chauhaidang` scope (token with `read:packages` for install; publish is separate).
 
 ---
@@ -38,7 +38,7 @@ Use this skill when you are **greenfielding or migrating** a repo to **Playwrigh
 **Install** (harness only for the stack; keep authoring tools explicit):
 
 ```bash
-yarn add -D @chauhaidang/xq-harness-test-harness typescript @types/node
+pnpm add -D @chauhaidang/xq-harness-test-harness typescript @types/node
 ```
 
 Do **not** add `@playwright/test` or `playwright-bdd` as direct dependencies unless you accept duplicate installs and version skew.
@@ -209,19 +209,19 @@ Imports must come from **`@chauhaidang/xq-harness-test-harness`** for normal flo
 ```json
 {
   "scripts": {
-    "test:bdd": "yarn exec bddgen -c playwright.config.ts && yarn exec playwright test -c playwright.config.ts"
+    "test:bdd": "pnpm exec bddgen -c playwright.config.ts && pnpm exec playwright test -c playwright.config.ts"
   }
 }
 ```
 
-- **`bddgen`** and **`playwright`** come from transitive dependencies of the harness; **`yarn exec`** resolves them reliably in Yarn 4.
+- **`bddgen`** and **`playwright`** come from transitive dependencies of the harness; **`pnpm exec`** resolves them reliably in pnpm 10.
 - If binaries are not found, fall back to **`node_modules/.bin/bddgen`** and **`node_modules/.bin/playwright`**, or run **`node node_modules/playwright-bdd/dist/cli/index.js`** for bddgen (last resort).
 
 ---
 
 ## 9. CI
 
-- Set **`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1`** on **`yarn install`** (and optionally on test) when you only use **`request`** (API-only) to avoid downloading browsers in CI.
+- Set **`PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1`** on **`pnpm install`** (and optionally on test) when you only use **`request`** (API-only) to avoid downloading browsers in CI.
 - Ensure **`NODE_AUTH_TOKEN`** (or `GITHUB_TOKEN` with `read:packages`) is available so `.npmrc` can authenticate to GitHub Packages.
 
 ---
@@ -229,8 +229,8 @@ Imports must come from **`@chauhaidang/xq-harness-test-harness`** for normal flo
 ## 10. Verify
 
 ```bash
-yarn install
-yarn test:bdd
+pnpm install
+pnpm test:bdd
 ```
 
 Expect **`bddgen`** to create **`.features-gen/`** and Playwright to run the **bdd** project. Fix **`features`** and **`steps`** globs first if generation or collection fails.

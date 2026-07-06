@@ -18,7 +18,7 @@
     "start": "node ./bin/xq-infra.js",
     "test": "jest ./tests --reporters=default --runInBand --coverage --testPathIgnorePatterns=integration.test.js",
     "test:all": "jest ./tests --reporters=default --runInBand --coverage",
-    "build": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 node --check && yarn test",
+    "build": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 node --check && pnpm test",
     "lint": "eslint . --ext .js",
     "lint:fix": "eslint . --ext .js --fix"
   },
@@ -27,7 +27,7 @@
     "url": "git+https://github.com/chauhaidang/xq-harness.git",
     "directory": "modules/xq-harness-test-infra"
   },
-  "packageManager": "yarn@4.13.0",
+  "packageManager": "pnpm@10.14.0",
   "engines": {
     "node": ">=18.0.0"
   },
@@ -41,7 +41,7 @@
   },
   "homepage": "https://github.com/chauhaidang/xq-harness#readme",
   "dependencies": {
-    "@chauhaidang/xq-harness-common-kit": "portal:../xq-common-kit",
+    "@chauhaidang/xq-harness-common-kit": "workspace:*",
     "commander": "^11.0.0",
     "cross-spawn": "7.0.6",
     "fs-extra": "^11.1.1",

@@ -26,6 +26,13 @@ That guide is the implementation brief for a junior developer. It defines the
 goal, project setup flow, module skeleton, `xq.json` contract, CLI commands,
 validation behavior, tests, and out-of-scope boundaries.
 
+Alternative implementation track:
+
+- [`xq-octopus-dev-guide-go.md`](xq-octopus-dev-guide-go.md)
+
+Use the Go guide if `xq-octopus` should follow Vibium's Cobra-based,
+single-binary delivery model instead of the Node/TypeScript package workflow.
+
 ## Target Product
 
 Build a CLI named `xq-octopus` that lets an agent or developer run commands
@@ -52,7 +59,7 @@ The CLI should:
 Use the same general stack as the existing Node modules in this harness repo:
 
 - Node.js `>=18`
-- Yarn `4.13`
+- pnpm `10`
 - TypeScript
 - Commander for CLI command routing
 - Jest for tests
@@ -258,16 +265,16 @@ network access.
 Run these commands while standing inside `modules/xq-octopus`:
 
 ```bash
-yarn install
-yarn install --immutable
-yarn build
-yarn test
+pnpm install
+pnpm install --frozen-lockfile
+pnpm run build
+pnpm test
 node dist/cli/main.js --help
 ```
 
-Use `yarn install` for first-time setup so the module lockfile can be created.
-After the lockfile exists, use `yarn install --immutable` for normal validation.
-The module should keep its own Yarn lockfile and package metadata.
+Use `pnpm install` for first-time setup so the root workspace lockfile can be updated.
+After the lockfile exists, use `pnpm install --frozen-lockfile` for normal validation.
+The module should keep its package metadata aligned with the root pnpm workspace.
 
 ## Current Workspace Notes
 

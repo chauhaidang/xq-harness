@@ -87,7 +87,7 @@ modules:
 
   # ── XQ packages (Level C: published semver, independent modules) ──────────────
   # Harness-lineage packages: @chauhaidang/xq-harness-* (see ADR 0010).
-  # Monorepo uses Yarn portal: for sibling deps; external consumers use semver.
+  # Monorepo uses pnpm workspace links for sibling deps; external consumers use semver.
 
   xq-common-kit:
     path: modules/xq-common-kit
@@ -96,11 +96,11 @@ modules:
     test_all: true
     toolchain:
       node: ">=18"
-      yarn: "4.13"
+      pnpm: "10"
     commands:
-      install: yarn install --immutable
-      build: yarn build
-      test: yarn test
+      install: pnpm install --frozen-lockfile
+      build: pnpm run build
+      test: pnpm test
 
   xq-test-utils:
     path: modules/xq-test-utils
@@ -111,11 +111,11 @@ modules:
       - xq-common-kit
     toolchain:
       node: ">=18"
-      yarn: "4.13"
+      pnpm: "10"
     commands:
-      install: yarn install --immutable
-      build: yarn build
-      test: yarn test
+      install: pnpm install --frozen-lockfile
+      build: pnpm run build
+      test: pnpm test
 
   xq-test-infra:
     path: modules/xq-test-infra
@@ -126,12 +126,12 @@ modules:
       - xq-common-kit
     toolchain:
       node: ">=18"
-      yarn: "4.13"
+      pnpm: "10"
       docker: optional
     commands:
-      install: yarn install --immutable
-      build: yarn build
-      test: yarn test
+      install: pnpm install --frozen-lockfile
+      build: pnpm run build
+      test: pnpm test
 
   xq-test-harness:
     path: modules/xq-test-harness
@@ -140,12 +140,12 @@ modules:
     test_all: true
     toolchain:
       node: ">=18"
-      yarn: "4.13"
+      pnpm: "10"
       playwright: required
     commands:
-      install: yarn install --immutable
-      build: yarn build
-      test: yarn test
+      install: pnpm install --frozen-lockfile
+      build: pnpm run build
+      test: pnpm test
 
   xq-test-harness-e2e-consumer:
     path: modules/xq-test-harness-e2e-consumer
@@ -156,12 +156,12 @@ modules:
       - xq-test-harness
     toolchain:
       node: ">=18"
-      yarn: "4.13"
+      pnpm: "10"
       playwright: required
     commands:
-      install: yarn install --immutable
-      build: yarn build
-      test: yarn test
+      install: pnpm install --frozen-lockfile
+      build: pnpm run build
+      test: pnpm test
 
   xq-scripts:
     path: modules/xq-scripts

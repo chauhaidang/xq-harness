@@ -86,14 +86,6 @@ Requirement: `REQ-33167CEC`
 
 xq-test-infra should expose a small orchestration interface for CLI commands while hiding pipeline details inside deep modules. The external CLI commands remain generate, up, down, and logs. Internally, InfraApplication coordinates registered adapters for SpecSource, SpecParser, SpecValidator, ComposePlanner, ComposeRenderer, GatewayPlanner, GatewayRenderer, RuntimeAdapter, AuthProvider, TestDetector, and Reporter. Plugin registration is explicit and typed by capability; built-in adapters preserve current YAML, Docker Compose, nginx gateway, registry auth, and test-container detection behavior. Tests should target InfraApplication command methods and adapter contracts rather than CLI internals.
 
-## SPEC-EDAEE431 — xq-octopus minimal REST CLI contract
-
-Status: `draft`
-
-Requirement: `REQ-460AD03F`
-
-xq-octopus provides command verbs config, get, post, put, patch, and delete. It loads xq.json from the current working directory unless --config is supplied, requires --env, resolves environments.<env>.api_base_url plus optional api_token and headers, sends REST requests with JSON bodies from --body or --body-file, validates --expect-status and --expect-json JSON-pointer checks, emits JSON by default, supports --pretty, and uses exit codes 0 success, 1 validation failure, 2 config/input error, 3 transport error.
-
 ## SPEC-0E8A98BE — xq-octopus v1 CLI contract
 
 Status: `draft`
@@ -101,3 +93,27 @@ Status: `draft`
 Requirement: `REQ-7658F9E0`
 
 modules/xq-octopus exposes a Python package xq-octopus with console script xq-octopus = xq_octopus.cli:main. It supports config, get, post, put, patch, and delete commands. Config comes from xq.json or --config and selected environment via required --env. REST commands support --expect-status, repeated --expect-json /pointer=value, --timeout, --body, --body-file, and --pretty. Exit codes are 0 for success, 1 for validation failure, 2 for config/input error, and 3 for transport error.
+
+## SPEC-D6F080A6 — pnpm Node module tooling contract
+
+Status: `draft`
+
+Requirement: `REQ-90E4AF71`
+
+Node modules use pnpm 10, a root pnpm-workspace.yaml, root pnpm-lock.yaml, workspace:* sibling dependencies, non-interactive pnpm install --frozen-lockfile commands in modules.yaml, pnpm run build/test commands, and pnpm publish --no-git-checks for GitHub Packages publishing.
+
+## SPEC-3FD8ED54 — xq-octopus Bun experiment contract
+
+Status: `draft`
+
+Requirement: `REQ-7A4C48E0`
+
+xq-octopus can be validated with Bun 1.3.14 using bun install --frozen-lockfile, bun run build, and bun test. It should not be included in the pnpm workspace while this experiment is active.
+
+## SPEC-CE35DBD0 — xq-octopus Go developer guide contract
+
+Status: `draft`
+
+Requirement: `REQ-E176E230`
+
+The Go guide should mirror the Node guide's junior-developer step-by-step style, preserve the xq-octopus REST CLI product contract, use Go standard library first, define module shape, config/model/rest/engine/output/catalog responsibilities, testing order, validation commands, and single-binary release guidance.

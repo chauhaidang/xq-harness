@@ -8,7 +8,8 @@ on:
       - scripts/module
       - scripts/check-xq-version-changes.js
       - modules/tsconfig.base.json
-      - modules/yarnrc.github-packages.yml
+      - pnpm-workspace.yaml
+      - pnpm-lock.yaml
       - .github/workflows/ci-xq-test-harness.yml
       - .github/workflows/module-*.yml
   push:

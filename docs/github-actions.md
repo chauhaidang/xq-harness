@@ -8,7 +8,7 @@ reusable templates.
 
 ```text
 .github/workflows/
-  module-ci-node.yml              # CI template (Node / yarn modules)
+  module-ci-node.yml              # CI template (Node / pnpm modules)
   module-ci-python.yml            # CI template (Python / uv modules)
   module-cd-github-packages.yml   # CD template (npm publish)
   module-cd-tarball.yml           # CD template (GitHub Release tarball)
@@ -20,6 +20,10 @@ Commands always run through [`scripts/module`](../scripts/module) and
 [`modules.yaml`](../modules.yaml) — do not duplicate install/build/test in
 workflow YAML.
 
+Node templates install pnpm explicitly with `pnpm/action-setup@v6` at
+`10.14.0`, then verify `pnpm --version` before invoking the module runner. Do
+not rely on the hosted runner or Corepack alone to provide pnpm.
+
 ## Reusable templates
 
 ### `module-ci-node.yml`
@@ -30,7 +34,8 @@ workflow YAML.
 | `node_version` | `22` | Node.js version |
 | `playwright_skip_browser` | `false` | Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` |
 
-Runs: `./scripts/module ci <module>`
+Installs pnpm `10.14.0`, verifies `pnpm --version`, then runs:
+`./scripts/module ci <module>`.
 
 ### `module-ci-python.yml`
 
@@ -52,7 +57,9 @@ and let the module's `build` command run `uv run basedpyright`.
 | `node_version` | `22` | Node.js version |
 | `playwright_skip_browser` | `false` | Skip browser download during CI gate |
 
-Runs: `./scripts/module ci <module>` then `yarn npm publish` in `modules/<module>/`.
+Installs pnpm `10.14.0`, verifies `pnpm --version`, runs
+`./scripts/module ci <module>`, then `pnpm publish --no-git-checks` in
+`modules/<module>/`.
 
 ### `module-cd-tarball.yml`
 

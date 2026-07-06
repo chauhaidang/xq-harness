@@ -1,6 +1,6 @@
 # Consumer guide: `@chauhaidang/xq-harness-test-harness`
 
-**Four things to remember:** one Yarn package; **`bdd-world.ts`** (types + client instances); config with **`importTestFrom`**; step files import keywords from the harness.
+**Four things to remember:** one pnpm package; **`bdd-world.ts`** (types + client instances); config with **`importTestFrom`**; step files import keywords from the harness.
 
 Full agent checklist (VS Code, CI): [skills/xq-harness-test-harness-bdd/SKILL.md](../skills/xq-harness-test-harness-bdd/SKILL.md).  
 Package architecture: [README.md](../README.md).
@@ -17,7 +17,7 @@ Package architecture: [README.md](../README.md).
 ```
 
 ```bash
-yarn add -D @chauhaidang/xq-harness-test-harness typescript @types/node
+pnpm add -D @chauhaidang/xq-harness-test-harness typescript @types/node
 ```
 
 Do not add `@playwright/test` or `playwright-bdd` separately. Add your generated or hand-rolled API client packages as needed (for example `@chauhaidang/read-service-api`).
@@ -111,9 +111,9 @@ When('I call ping', async ({ request }) => {
 ```json
 {
   "scripts": {
-    "test:bdd": "yarn exec bddgen -c playwright.config.ts && yarn exec playwright test -c playwright.config.ts"
+    "test:bdd": "pnpm exec bddgen -c playwright.config.ts && pnpm exec playwright test -c playwright.config.ts"
   }
 }
 ```
 
-CI (API-only): set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` on `yarn install`.
+CI (API-only): set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` on `pnpm install`.

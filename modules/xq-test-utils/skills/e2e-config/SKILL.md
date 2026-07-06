@@ -101,7 +101,7 @@ my-rn-app/
 **Install**
 
 ```bash
-yarn add --dev @chauhaidang/xq-harness-test-utils detox jest-circus ts-jest
+pnpm add --dev @chauhaidang/xq-harness-test-utils detox jest-circus ts-jest
 ```
 
 **Run**

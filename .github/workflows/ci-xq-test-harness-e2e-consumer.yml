@@ -8,7 +8,8 @@ on:
       - modules.yaml
       - scripts/module
       - modules/tsconfig.base.json
-      - modules/yarnrc.github-packages.yml
+      - pnpm-workspace.yaml
+      - pnpm-lock.yaml
       - .github/workflows/ci-xq-test-harness-e2e-consumer.yml
       - .github/workflows/module-*.yml
   push:

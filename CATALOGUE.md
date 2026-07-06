@@ -35,11 +35,11 @@ names below for code from this repo.
 
 ```bash
 # examples
-yarn add @chauhaidang/xq-harness-common-kit
-yarn add -D @chauhaidang/xq-harness-test-utils
-yarn add -D @chauhaidang/xq-harness-test-infra
-yarn add -D @chauhaidang/xq-harness-test-harness
-yarn add -D @chauhaidang/xq-harness-domain-test-mcp
+pnpm add @chauhaidang/xq-harness-common-kit
+pnpm add -D @chauhaidang/xq-harness-test-utils
+pnpm add -D @chauhaidang/xq-harness-test-infra
+pnpm add -D @chauhaidang/xq-harness-test-harness
+pnpm add -D @chauhaidang/xq-harness-domain-test-mcp
 ```
 
 **Playwright harness:** do not add `@playwright/test` or `playwright-bdd`
@@ -150,7 +150,7 @@ your-repo/
 }
 ```
 
-Use `./node_modules/.bin/*` paths with Yarn 4 when `bddgen` is only a transitive
+Use `./node_modules/.bin/*` paths with pnpm 10 when `bddgen` is only a transitive
 dependency.
 
 **Bundled docs & skills**

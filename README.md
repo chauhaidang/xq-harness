@@ -20,7 +20,7 @@ Registry scope: `@chauhaidang`. Requires a GitHub token with `read:packages`
 ```
 
 ```bash
-yarn add @chauhaidang/xq-harness-test-harness
+pnpm add @chauhaidang/xq-harness-test-harness
 ```
 
 Legacy xq-toolbox packages (`@chauhaidang/xq-common-kit`, `@chauhaidang/xq-test-*`

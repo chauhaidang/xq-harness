@@ -180,8 +180,8 @@ Usage:
   ./scripts/module test-all
 
 Modules with depends_on run dependency modules first (build/test/ci).
-Workspace members (e.g. xq-toolbox packages) share a Yarn root install and
-are not independent; use ./scripts/module ci xq-toolbox for the full graph.
+Workspace members may share package-manager state, but each registered module
+still runs through the command declared in modules.yaml.
 EOF
 }
 

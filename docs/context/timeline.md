@@ -153,13 +153,6 @@
 - `0152` 2026-07-01T13:11:07+00:00 **task.created** `TASK-BF3B29B3` Revert xq-domain-test-mcp to Python 1.0.3
 - `0153` 2026-07-01T13:11:12+00:00 **task.status_changed** `TASK-BF3B29B3`
 - `0154` 2026-07-01T13:11:12+00:00 **workspace.observed** `WS-66537B57`
-- `0178` 2026-07-04T14:03:45+00:00 **requirement.created** `REQ-460AD03F` xq-octopus provides a simple REST testing CLI
-- `0179` 2026-07-04T14:03:58+00:00 **decision.recorded** `DEC-6F0325CE` xq-octopus is a new CLI module, not an MCP extension
-- `0180` 2026-07-04T14:04:05+00:00 **spec.created** `SPEC-EDAEE431` xq-octopus minimal REST CLI contract
-- `0181` 2026-07-04T14:04:11+00:00 **task.created** `TASK-BD932623` Implement xq-octopus minimal REST CLI
-- `0182` 2026-07-04T14:11:13+00:00 **task.status_changed** `TASK-BD932623`
-- `0183` 2026-07-04T14:11:18+00:00 **workspace.observed** `WS-79897B77`
-- `0184` 2026-07-04T14:11:54+00:00 **solution.proposed** `SOL-3D7DA6DC` xq-octopus standard-library REST CLI implementation
 - `0185` 2026-07-04T16:49:38+00:00 **requirement.created** `REQ-7658F9E0` xq-octopus provides direct REST API CLI testing
 - `0186` 2026-07-04T16:49:53+00:00 **spec.created** `SPEC-0E8A98BE` xq-octopus v1 CLI contract
 - `0187` 2026-07-04T16:49:57+00:00 **task.created** `TASK-338D40A3` Implement xq-octopus v1 CLI module
@@ -187,3 +180,31 @@
 - `0209` 2026-07-05T14:22:12+00:00 **decision.recorded** `DEC-04A2460E` xq-octopus switches to Node TypeScript stack
 - `0210` 2026-07-05T15:01:22+00:00 **decision.recorded** `DEC-18A5CFC1` xq-octopus removes explain subcommand and expands setup guide
 - `0211` 2026-07-05T15:13:26+00:00 **decision.recorded** `DEC-A444172E` xq-octopus guide adds explicit project setup checkpoint
+- `0212` 2026-07-05T15:36:55+00:00 **requirement.created** `REQ-90E4AF71` Replace Yarn with pnpm for Node modules
+- `0213` 2026-07-05T15:52:28+00:00 **decision.recorded** `DEC-BE693B97` Use pnpm workspace for Node package tooling
+- `0214` 2026-07-05T15:52:34+00:00 **solution.proposed** `SOL-7AF875BB` pnpm workspace migration
+- `0215` 2026-07-05T15:52:40+00:00 **task.created** `TASK-9410D913` Migrate Node modules from Yarn to pnpm
+- `0216` 2026-07-05T15:52:40+00:00 **workspace.observed** `WS-CCF489FC`
+- `0217` 2026-07-05T15:52:45+00:00 **task.status_changed** `TASK-9410D913`
+- `0218` 2026-07-05T15:52:56+00:00 **spec.created** `SPEC-D6F080A6` pnpm Node module tooling contract
+- `0219` 2026-07-05T15:53:05+00:00 **solution.proposed** `SOL-0BF100A3` pnpm workspace migration implementation
+- `0220` 2026-07-05T16:27:49+00:00 **requirement.created** `REQ-7A4C48E0` Try Bun only for xq-octopus
+- `0221` 2026-07-05T16:27:55+00:00 **decision.recorded** `DEC-D3066EEE` Scope Bun experiment to xq-octopus
+- `0222` 2026-07-05T16:28:01+00:00 **spec.created** `SPEC-3FD8ED54` xq-octopus Bun experiment contract
+- `0223` 2026-07-05T16:28:01+00:00 **workspace.observed** `WS-4DE5D87D`
+- `0224` 2026-07-05T16:28:07+00:00 **solution.proposed** `SOL-1A261409` xq-octopus Bun-only package experiment
+- `0225` 2026-07-05T16:48:31+00:00 **decision.recorded** `DEC-02C252F9` xq-octopus aligns dev guide to Bun
+- `0226` 2026-07-06T02:46:14+00:00 **decision.recorded** `DEC-DC98BF51` xq-octopus keeps dependency set minimal
+- `0227` 2026-07-06T10:59:34+00:00 **decision.recorded** `DEC-9DB86912` Fold xq-octopus back into pnpm workspace
+- `0228` 2026-07-06T11:10:35+00:00 **requirement.created** `REQ-E176E230` Document Go implementation path for xq-octopus
+- `0229` 2026-07-06T11:10:36+00:00 **decision.recorded** `DEC-BBFB105D` Keep Go xq-octopus guide as an alternative track
+- `0230` 2026-07-06T11:10:42+00:00 **spec.created** `SPEC-CE35DBD0` xq-octopus Go developer guide contract
+- `0231` 2026-07-06T11:10:42+00:00 **workspace.observed** `WS-6DDF5385`
+- `0232` 2026-07-06T11:10:49+00:00 **solution.proposed** `SOL-139CEFF2` Go xq-octopus developer guide
+- `0233` 2026-07-06T13:31:19+00:00 **decision.recorded** `DEC-5E537E5E` xq-octopus Go guide follows Vibium Cobra pattern
+- `0234` 2026-07-06T13:31:24+00:00 **solution.proposed** `SOL-BA488A29` Cobra replanning for xq-octopus Go guide
+- `0235` 2026-07-06T15:37:25+00:00 **task.created** `TASK-F9EA1176` Validate pnpm migration
+- `0236` 2026-07-06T15:37:36+00:00 **task.status_changed** `TASK-F9EA1176`
+- `0237` 2026-07-06T15:37:44+00:00 **workspace.observed** `WS-FCFB2BCB`
+- `0238` 2026-07-06T15:47:22+00:00 **decision.recorded** `DEC-182C23F9` CI explicitly installs pnpm
+- `0239` 2026-07-06T15:47:34+00:00 **solution.proposed** `SOL-51853A8C` Explicit pnpm setup in reusable workflows

@@ -1,6 +1,6 @@
 # `@chauhaidang/xq-harness-test-harness`
 
-Project overview and architecture for the XQ **Playwright API + Gherkin BDD** harness. The package wraps [`playwright-bdd`](https://github.com/vitalets/playwright-bdd) and [`@playwright/test`](https://playwright.dev) so backend black-box tests can use a single Yarn dependency, pre-bound step keywords, and a shared Playwright config helper.
+Project overview and architecture for the XQ **Playwright API + Gherkin BDD** harness. The package wraps [`playwright-bdd`](https://github.com/vitalets/playwright-bdd) and [`@playwright/test`](https://playwright.dev) so backend black-box tests can use a single pnpm dependency, pre-bound step keywords, and a shared Playwright config helper.
 
 **Using the harness in another repo?** See [docs/CONSUMER-GUIDE.md](docs/CONSUMER-GUIDE.md) and the agent skill [skills/xq-harness-test-harness-bdd/SKILL.md](skills/xq-harness-test-harness-bdd/SKILL.md) (install, VS Code, CI, scripts).
 
@@ -151,7 +151,7 @@ Monorepo sibling: **`packages/xq-harness-test-harness-e2e-consumer/`** (private)
 | `@chauhaidang/xq-harness-test-harness/config` | `defineApiHarnessConfig`, `mergeApiHarnessPlaywrightConfig`, `defineBddProject` |
 | `@chauhaidang/xq-harness-test-harness/advanced` | `mergeTests`, `createHarnessBdd` |
 
-Build: **`yarn build`** (`tsc` → `dist/`). Published **`files`**: `dist`, `README.md`, `CHANGELOG.md`, `LICENSE`, `docs`, `skills`.
+Build: **`pnpm run build`** (`tsc` → `dist/`). Published **`files`**: `dist`, `README.md`, `CHANGELOG.md`, `LICENSE`, `docs`, `skills`.
 
 ---
 

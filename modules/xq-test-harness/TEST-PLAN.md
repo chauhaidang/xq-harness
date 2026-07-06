@@ -4,8 +4,8 @@
 
 | ID | Case | Expect |
 |----|------|--------|
-| T1 | `yarn build` in package | `dist/` contains `index.js`, `config.js`, `advanced.js` |
-| T2 | `yarn test` in package | bddgen + Playwright: contract specs + dogfood scenario pass |
+| T1 | `pnpm run build` in package | `dist/` contains `index.js`, `config.js`, `advanced.js` |
+| T2 | `pnpm test` in package | bddgen + Playwright: contract specs + dogfood scenario pass |
 | T3 | `mergeApiHarnessPlaywrightConfig` contract tests | bdd + contract project order; no default `use.channel`; `overrides.use` merge |
 
 ## Tier B — monorepo integration
@@ -19,5 +19,5 @@
 
 | ID | Case | Expect |
 |----|------|--------|
-| C1 | Version bump on `main` | `check-version-changes` lists `xq-test-harness`; publish job can `yarn npm publish` |
+| C1 | Version bump on `main` | `check-version-changes` lists `xq-test-harness`; publish job can `pnpm publish --no-git-checks` |
 | C2 | Consumer install doc | Single `@chauhaidang/xq-harness-test-harness` devDependency documented |

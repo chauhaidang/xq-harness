@@ -1,0 +1,8 @@
+{
+  "name": "xq-harness",
+  "private": true,
+  "packageManager": "pnpm@10.14.0",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -148,14 +148,6 @@ Spec: `SPEC-D0C96337`
 
 Restored the Python xq_mcp module, uv project metadata, Python tests, Python testbed, module skill, Python CI workflow, and GitHub Release wheel/skill-bundle workflow from the last Python release lineage. Removed the Node/TypeScript package metadata, Yarn files, TypeScript sources/tests, npm package CD workflow, and Node testbed server. Updated pyproject, uv.lock, modules.yaml, and xq_mcp.__version__ to 1.0.3. Verified ./scripts/module ci xq-domain-test-mcp: BasedPyright 0 errors, wheel/sdist built, 7 pytest tests passed.
 
-## SOL-3D7DA6DC — xq-octopus standard-library REST CLI implementation
-
-Status: `proposed`
-
-Spec: `SPEC-EDAEE431`
-
-Implemented modules/xq-octopus as a Python 3.12 uv module. The CLI command xq-octopus supports config plus get/post/put/patch/delete, loads xq.json with required --env, sends JSON REST calls via urllib, validates --expect-status and --expect-json JSON-pointer checks, emits JSON by default, supports --pretty, and is covered by config, REST, validation, and CLI tests.
-
 ## SOL-30F8CB43 — xq-octopus Python REST CLI implementation
 
 Status: `proposed`
@@ -171,3 +163,51 @@ Status: `proposed`
 Spec: `SPEC-0E8A98BE`
 
 Implemented the Day 1 app layout with RuntimeConfig, command/result models, config loading, validation, RestTool with private urllib transport, ToolFactory, ExecutionEngine, output rendering, command catalog, CLI commands, and xq.json.example. Verified uv sync --locked, SOURCE_DATE_EPOCH=0 uv run basedpyright, SOURCE_DATE_EPOCH=0 uv build, uv run pytest, uv run xq-octopus --help, and uv run xq-octopus commands --json.
+
+## SOL-7AF875BB — pnpm workspace migration
+
+Status: `proposed`
+
+Spec: `REQ-90E4AF71`
+
+Implemented pnpm onboarding by adding root package.json and pnpm-workspace.yaml, generating pnpm-lock.yaml, switching modules.yaml Node commands to pnpm, changing packageManager fields to pnpm@10.14.0, replacing portal: deps with workspace:*, pinning Playwright to 1.60.0 for playwright-bdd compatibility, disabling pnpm optional peer auto-installing, updating CI publish to pnpm publish --no-git-checks, removing Yarn config/binaries/locks, and updating active docs and skills.
+
+## SOL-0BF100A3 — pnpm workspace migration implementation
+
+Status: `proposed`
+
+Spec: `SPEC-D6F080A6`
+
+Implemented pnpm onboarding by adding root package.json and pnpm-workspace.yaml, generating pnpm-lock.yaml, switching modules.yaml Node commands to pnpm, changing packageManager fields to pnpm@10.14.0, replacing portal: deps with workspace:*, pinning Playwright to 1.60.0 for playwright-bdd compatibility, disabling pnpm optional peer auto-installing, updating CI publish to pnpm publish --no-git-checks, removing Yarn config/binaries/locks, and updating active docs and skills.
+
+## SOL-1A261409 — xq-octopus Bun-only package experiment
+
+Status: `proposed`
+
+Spec: `SPEC-3FD8ED54`
+
+Removed xq-octopus from pnpm-workspace.yaml, switched modules/xq-octopus/package.json to bun@1.3.14, replaced ts-node/tsc dependencies with Bun scripts, added a Bun build script, refactored index.ts into an exported greeting function, added index.test.ts using bun:test, and updated xq-octopus handoff/dev-guide package-manager references.
+
+## SOL-139CEFF2 — Go xq-octopus developer guide
+
+Status: `proposed`
+
+Spec: `SPEC-CE35DBD0`
+
+Added modules/xq-octopus/xq-octopus-dev-guide-go.md with a full Go implementation path for the same REST testing CLI: goals, stack, mental model, package layout, go.mod setup, xq.json contract, shared models, config loader, validation, REST client, engine, CLI adapter, output rendering, command catalog, tests, validation commands, release binary builds, mistakes, and out-of-scope boundaries. Linked it from HANDOFF.md as the Vibium-style single-binary alternative.
+
+## SOL-BA488A29 — Cobra replanning for xq-octopus Go guide
+
+Status: `proposed`
+
+Spec: `SPEC-CE35DBD0`
+
+Replanned modules/xq-octopus/xq-octopus-dev-guide-go.md around Vibium's Cobra CLI pattern: updated stack choice, setup commands, starter main.go, command constructor files, module skeleton, go.mod dependency, Step 10 CLI adapter guidance, repeated flag handling, and common-mistake guidance. Updated HANDOFF.md to describe the Go track as Cobra-based single-binary delivery.
+
+## SOL-51853A8C — Explicit pnpm setup in reusable workflows
+
+Status: `proposed`
+
+Spec: `SPEC-D6F080A6`
+
+Updated .github/workflows/module-ci-node.yml and module-cd-github-packages.yml to use pnpm/action-setup@v6 with version 10.14.0 and run pnpm --version before module CI or publish. Updated docs/github-actions.md to document that CI does not rely on hosted-runner pnpm or Corepack alone.

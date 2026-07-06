@@ -320,14 +320,6 @@ xq-domain-test-mcp is being restored to the Python uv/FastMCP implementation fro
 
 **Rationale:** The user explicitly requested reverting domain test MCP back to the previous Python variant. Harness history identified the full Python release snapshot before the Node rewrite, and existing tags already occupy 1.0.0 through 1.0.2, so 1.0.3 preserves release monotonicity while restoring the requested implementation.
 
-## DEC-6F0325CE — xq-octopus is a new CLI module, not an MCP extension
-
-Status: `accepted`
-
-Implement xq-octopus as an independent Python CLI module with a deep REST-testing core and thin argparse command adapter. Keep scenario interpretation agent-side and do not extend xq-domain-test-mcp for this work.
-
-**Rationale:** The user explicitly chose a new module named xq-octopus, then clarified that scenario API mapping is agent reasoning work and the CLI should stay simple: call REST, validate, and auto-load test configuration from xq.json.
-
 ## DEC-10F3D42D — xq-octopus commands own execute logic
 
 Status: `accepted`
@@ -399,3 +391,67 @@ Status: `accepted`
 The xq-octopus dev guide now includes a dedicated project setup flow before feature implementation: start from a docs-only module, create app/test folders, create package/config/source/test files, fill package.json/tsconfig/jest/eslint/starter CLI templates, run yarn install to create the lockfile, build the starter CLI, add a starter Jest test, and verify yarn install --immutable, yarn build, yarn test, and node dist/cli/main.js --help.
 
 **Rationale:** The user clarified that the guide was missing project setup. A junior developer needs an explicit empty-folder-to-compiling-project checkpoint before implementing config loading, RestTool, or the engine.
+
+## DEC-BE693B97 — Use pnpm workspace for Node package tooling
+
+Status: `accepted`
+
+Node modules now use pnpm 10 package metadata, a root pnpm-workspace.yaml, workspace:* sibling dependencies, a root pnpm-lock.yaml, pnpm module runner commands, and pnpm publish for GitHub Packages. Yarn releases, .yarnrc.yml files, module yarn.lock files, and the shared Yarn config template were removed.
+
+**Rationale:** pnpm workspace links replace Yarn portal links while preserving local sibling development. pnpm pack rewrites workspace:* dependencies to package versions for publish, and pnpm 10 supports the repo's Node >=18 line whereas pnpm 11 requires newer Node.
+
+## DEC-D3066EEE — Scope Bun experiment to xq-octopus
+
+Status: `accepted`
+
+modules/xq-octopus now uses packageManager bun@1.3.14, Bun scripts, and is removed from the root pnpm workspace. The rest of the active Node modules remain pnpm-managed.
+
+**Rationale:** Bun is worth evaluating on a small standalone module first. Keeping it out of the pnpm workspace avoids mixing package-manager ownership for one module while preserving the lower-risk pnpm migration for the published harness packages.
+
+## DEC-02C252F9 — xq-octopus aligns dev guide to Bun
+
+Status: `accepted`
+
+xq-octopus documentation now treats Bun 1.3.14 as the runtime, package manager, build runner, and test runner. The dev guide and handoff remove Jest/Yarn/Node-runner setup, use Bun test, Bun build with --outfile=dist/cli/main.js, Bun lockfile/install commands, @types/bun, a Bun shebang, and bun dist/cli/main.js --help for smoke testing.
+
+**Rationale:** The user clarified that xq-octopus has moved to Bun. The implementation guide must avoid mixed Node/Yarn/Jest instructions so a junior developer can follow one coherent setup path.
+
+## DEC-DC98BF51 — xq-octopus keeps dependency set minimal
+
+Status: `accepted`
+
+xq-octopus v1 dependency policy is now documented. Runtime dependencies are limited to commander for CLI parsing/help. Development dependencies are limited to typescript, @types/bun, eslint, @typescript-eslint/parser, and @typescript-eslint/eslint-plugin. Bun/Web APIs should cover fetch, AbortController, file reads, JSON, URL joining, process IO, and tests via bun:test. The guide explicitly excludes axios/got/node-fetch, zod/ajv, chalk/kleur/ora, yargs/clipanion/cac/oclif, jest/vitest/mocha, and dotenv for v1.
+
+**Rationale:** The CLI scope is intentionally small. A narrow dependency set keeps the architecture easy for a junior developer to reason about and avoids adding packages for behavior Bun already provides.
+
+## DEC-9DB86912 — Fold xq-octopus back into pnpm workspace
+
+Status: `accepted`
+
+Supersede the short Bun-only experiment for xq-octopus. xq-octopus is again listed in pnpm-workspace.yaml, uses packageManager pnpm@10.14.0, and its docs describe the Node/TypeScript/pnpm stack.
+
+**Rationale:** The user asked to onboard pnpm to the whole project. Keeping xq-octopus on Bun would make package-manager ownership inconsistent with that goal.
+
+## DEC-BBFB105D — Keep Go xq-octopus guide as an alternative track
+
+Status: `accepted`
+
+Add xq-octopus-dev-guide-go.md beside the existing Node/TypeScript guide and link it from HANDOFF.md as an alternative implementation track, not as a replacement.
+
+**Rationale:** The user asked to create a Go version similar to the Node guide while the repo still contains pnpm/Node onboarding work. Keeping both guides preserves the current path and documents the Vibium-style single-binary option for comparison.
+
+## DEC-5E537E5E — xq-octopus Go guide follows Vibium Cobra pattern
+
+Status: `accepted`
+
+The Go implementation guide for modules/xq-octopus should use Cobra for CLI command routing, with main.go explicitly registering command-per-file constructors such as newGetCmd and newCommandsCmd. The guide should not teach standard-library flag parsing as the primary path.
+
+**Rationale:** Vibium's CLI source uses github.com/spf13/cobra and explicit rootCmd.AddCommand(newXCmd()) wiring. Matching that pattern makes the Go track a closer learning bridge to Vibium and gives xq-octopus a scalable many-command CLI shape without adding a runtime dependency for end users.
+
+## DEC-182C23F9 — CI explicitly installs pnpm
+
+Status: `accepted`
+
+Node CI and GitHub Packages CD templates should install pnpm with pnpm/action-setup@v6 at version 10.14.0 and verify pnpm --version before invoking ./scripts/module or pnpm publish.
+
+**Rationale:** setup-node documents pnpm support primarily around caching and notes the package manager should be pre-installed. Relying only on Corepack leaves CI vulnerable to runner/Corepack availability differences. Installing pnpm explicitly makes the migration deterministic.

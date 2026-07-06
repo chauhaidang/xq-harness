@@ -35,7 +35,7 @@ and parse the result without reading source code.
 Use the same general stack as the existing Node modules in this harness repo:
 
 - Node.js `>=18`
-- Yarn `4.13`
+- pnpm `10`
 - TypeScript
 - Commander for CLI command routing
 - Jest for tests
@@ -118,28 +118,28 @@ Check the required tools:
 
 ```bash
 node --version
-yarn --version
+pnpm --version
 ```
 
 Expected:
 
 - Node.js is `18` or newer.
-- Yarn is `4.13.x` or close to the repo's Yarn 4 line.
+- pnpm is `10.x` or close to the repo pin.
 
-If `yarn --version` is missing but Node is installed, enable Corepack:
+If `pnpm --version` is missing but Node is installed, enable Corepack:
 
 ```bash
 corepack enable
 ```
 
-Then check Yarn again:
+Then check pnpm again:
 
 ```bash
-yarn --version
+pnpm --version
 ```
 
 Do not install global npm packages for this module. Keep dependencies in
-`package.json` and install them with Yarn inside `modules/xq-octopus`.
+`package.json` and install them with pnpm inside `modules/xq-octopus`.
 
 Use this implementation order:
 
@@ -216,20 +216,20 @@ Now fill in these files from the templates in this guide:
 Then install dependencies:
 
 ```bash
-yarn install
+pnpm install
 ```
 
-This creates the module lockfile. After the lockfile exists, use immutable
-install in normal validation:
+This updates the root workspace lockfile. After the lockfile exists, use
+immutable install in normal validation:
 
 ```bash
-yarn install --immutable
+pnpm install --frozen-lockfile
 ```
 
 Build the starter CLI:
 
 ```bash
-yarn build
+pnpm run build
 ```
 
 Run the compiled starter CLI:
@@ -260,16 +260,16 @@ Put that test in `test/setup.test.ts` or one of the existing test files. Then
 run:
 
 ```bash
-yarn test
+pnpm test
 ```
 
 Project setup is done only when these commands work from inside
 `modules/xq-octopus`:
 
 ```bash
-yarn install --immutable
-yarn build
-yarn test
+pnpm install --frozen-lockfile
+pnpm run build
+pnpm test
 node dist/cli/main.js --help
 ```
 
@@ -340,7 +340,7 @@ They should build a command model and call the engine.
 
 ## Step 3: Configure the Node Package
 
-Create `package.json` first. This file tells Node/Yarn how to install,
+Create `package.json` first. This file tells Node/npm how to install,
 build, test, and expose the CLI command.
 
 Use this as the starting shape:
@@ -365,7 +365,7 @@ Use this as the starting shape:
     "lint": "eslint . --ext .ts",
     "clean": "rm -rf dist"
   },
-  "packageManager": "yarn@4.13.0",
+  "packageManager": "pnpm@10.14.0",
   "engines": {
     "node": ">=18.0.0"
   },
@@ -491,20 +491,20 @@ void main();
 After the files exist, run these module-local setup commands:
 
 ```bash
-yarn install
-yarn build
-yarn test
+pnpm install
+pnpm run build
+pnpm test
 ```
 
-Use `yarn install` the first time so Yarn can create the lockfile. After the
+Use `pnpm install` the first time so pnpm can update the root lockfile. After the
 lockfile exists, use the stricter command:
 
 ```bash
-yarn install --immutable
+pnpm install --frozen-lockfile
 ```
 
-Do not move on until `yarn build` can compile the starter CLI. It is fine if
-`yarn test` initially reports no tests before Step 14, but once tests are added
+Do not move on until `pnpm run build` can compile the starter CLI. It is fine if
+`pnpm test` initially reports no tests before Step 14, but once tests are added
 it must pass.
 
 ## Step 4: Define `xq.json`
@@ -566,9 +566,9 @@ Agent-friendly REST API testing CLI.
 ## Local commands
 
 ```bash
-yarn install --immutable
-yarn build
-yarn test
+pnpm install --frozen-lockfile
+pnpm run build
+pnpm test
 node dist/cli/main.js --help
 ```
 
@@ -1103,9 +1103,9 @@ Testing tips for TypeScript beginners:
 Run these commands while standing inside `modules/xq-octopus`:
 
 ```bash
-yarn install --immutable
-yarn build
-yarn test
+pnpm install --frozen-lockfile
+pnpm run build
+pnpm test
 ```
 
 Done means:

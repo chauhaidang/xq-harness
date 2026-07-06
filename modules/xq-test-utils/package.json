@@ -32,7 +32,7 @@
     "url": "git+https://github.com/chauhaidang/xq-harness.git",
     "directory": "modules/xq-harness-test-utils"
   },
-  "packageManager": "yarn@4.13.0",
+  "packageManager": "pnpm@10.14.0",
   "engines": {
     "node": ">=18.0.0"
   },
@@ -54,7 +54,7 @@
   },
   "homepage": "https://github.com/chauhaidang/xq-harness#readme",
   "dependencies": {
-    "@chauhaidang/xq-harness-common-kit": "portal:../xq-common-kit",
+    "@chauhaidang/xq-harness-common-kit": "workspace:*",
     "pg": "^8.16.3",
     "wait-on": "^8.0.1"
   },
