@@ -211,3 +211,11 @@ Status: `proposed`
 Spec: `SPEC-D6F080A6`
 
 Updated .github/workflows/module-ci-node.yml and module-cd-github-packages.yml to use pnpm/action-setup@v6 with version 10.14.0 and run pnpm --version before module CI or publish. Updated docs/github-actions.md to document that CI does not rely on hosted-runner pnpm or Corepack alone.
+
+## SOL-64953201 — Remove xq-octopus Go guide artifact
+
+Status: `proposed`
+
+Spec: `SPEC-CE35DBD0`
+
+Deleted modules/xq-octopus/xq-octopus-dev-guide-go.md and removed the alternative Go implementation track from modules/xq-octopus/HANDOFF.md.

@@ -208,3 +208,5 @@
 - `0237` 2026-07-06T15:37:44+00:00 **workspace.observed** `WS-FCFB2BCB`
 - `0238` 2026-07-06T15:47:22+00:00 **decision.recorded** `DEC-182C23F9` CI explicitly installs pnpm
 - `0239` 2026-07-06T15:47:34+00:00 **solution.proposed** `SOL-51853A8C` Explicit pnpm setup in reusable workflows
+- `0240` 2026-07-06T16:03:30+00:00 **decision.recorded** `DEC-20D0DF9E` Remove xq-octopus Go guide
+- `0241` 2026-07-06T16:03:37+00:00 **solution.proposed** `SOL-64953201` Remove xq-octopus Go guide artifact

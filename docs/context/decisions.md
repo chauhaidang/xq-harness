@@ -455,3 +455,11 @@ Status: `accepted`
 Node CI and GitHub Packages CD templates should install pnpm with pnpm/action-setup@v6 at version 10.14.0 and verify pnpm --version before invoking ./scripts/module or pnpm publish.
 
 **Rationale:** setup-node documents pnpm support primarily around caching and notes the package manager should be pre-installed. Relying only on Corepack leaves CI vulnerable to runner/Corepack availability differences. Installing pnpm explicitly makes the migration deterministic.
+
+## DEC-20D0DF9E — Remove xq-octopus Go guide
+
+Status: `accepted`
+
+Remove modules/xq-octopus/xq-octopus-dev-guide-go.md and stop advertising a Go alternative track from HANDOFF.md. xq-octopus documentation should focus on the Node/TypeScript/pnpm guide unless a Go track is requested again later.
+
+**Rationale:** The user explicitly asked to remove the Go dev guide after the pnpm migration was pushed. Keeping the Go guide would add competing implementation guidance and distract from the current Node/TypeScript/pnpm direction.

@@ -26,13 +26,6 @@ That guide is the implementation brief for a junior developer. It defines the
 goal, project setup flow, module skeleton, `xq.json` contract, CLI commands,
 validation behavior, tests, and out-of-scope boundaries.
 
-Alternative implementation track:
-
-- [`xq-octopus-dev-guide-go.md`](xq-octopus-dev-guide-go.md)
-
-Use the Go guide if `xq-octopus` should follow Vibium's Cobra-based,
-single-binary delivery model instead of the Node/TypeScript package workflow.
-
 ## Target Product
 
 Build a CLI named `xq-octopus` that lets an agent or developer run commands
