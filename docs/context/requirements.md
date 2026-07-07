@@ -161,3 +161,9 @@ Evaluate Bun as the package/runtime tool for modules/xq-octopus only, without ap
 Status: `active`
 
 Create a Go developer guide for xq-octopus similar to the Node/TypeScript guide, explaining how to build the same REST testing CLI as a single-binary Go module.
+
+## REQ-369D9FB4 — Package skills in a dedicated xq-skills module
+
+Status: `active`
+
+Create a registered xq-skills module that holds distributable agent skill Markdown and can be consumed by the existing install-skills.js flow.

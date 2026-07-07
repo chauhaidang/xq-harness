@@ -503,3 +503,19 @@ Status: `accepted`
 The xq-octopus package keeps the unscoped name xq-octopus and publishes through .github/workflows/cd-xq-octopus.yml to https://registry.npmjs.org using NPM_TOKEN. Existing scoped @chauhaidang packages continue to publish through GitHub Packages workflows.
 
 **Rationale:** GitHub Packages npm registry only supports scoped package names such as @NAMESPACE/PACKAGE-NAME. The user explicitly requested the release package name be only xq-octopus, so npmjs is the compatible registry for this CLI.
+
+## DEC-504E620E — xq-skills is a packaging module
+
+Status: `accepted`
+
+Add modules/xq-skills as a lightweight npm package that ships a skills/ directory and has no build-time code. Existing module-local skill copies remain in place for repo agent discovery.
+
+**Rationale:** The installer already understands npm package skills directories, so a package-only module centralizes delivery without disrupting current module-level skill routing or adding runtime complexity.
+
+## DEC-45464FE6 — xq-skills package omits harness prefix
+
+Status: `accepted`
+
+The central skills package is named @chauhaidang/xq-skills and publishes through the GitHub Packages npm registry. The module remains registered as xq-skills.
+
+**Rationale:** The user explicitly rejected adding harness to this package name. GitHub Packages requires scoped npm package names, so @chauhaidang/xq-skills keeps the package scoped without using the xq-harness prefix.

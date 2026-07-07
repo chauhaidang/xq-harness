@@ -113,6 +113,7 @@ Validate caller/callee permission parity locally:
 | `xq-test-harness-e2e-consumer` | `ci-xq-test-harness-e2e-consumer.yml` | — | Private; CI only |
 | `harness-state` | — | `harness-state-release.yml` | Tag `harness-state-v*`; wheel + skills tarball |
 | `xq-domain-test-mcp` | `ci-xq-domain-test-mcp.yml` | `cd-xq-domain-test-mcp.yml` | Tag `xq-domain-test-mcp-v*`; GitHub Packages npm publish |
+| `xq-skills` | `ci-xq-skills.yml` | `cd-xq-skills.yml` | npm publish; central agent skills bundle |
 | `xq-scripts` | — | `cd-xq-scripts.yml` | Tarball release |
 | `xq-ios-ui-test-framework` | `ci-xq-ios-ui-test-framework.yml` | `cd-xq-ios-ui-test-framework.yml` | Swift package; subtree Git release |
 

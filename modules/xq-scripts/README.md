@@ -7,7 +7,7 @@ Consumer-facing shell scripts for the xq-toolbox monorepo. All scripts are porta
 | Script                      | Purpose                                                                     |
 | --------------------------- | --------------------------------------------------------------------------- |
 | `scripts/sync-openapi.sh`   | Download OpenAPI schemas from xq-apis and/or generate API client code       |
-| `scripts/install-skills.js` | Copy bundled agent skills from installed XQ packages into `.agents/skills/` |
+| `scripts/install-skills.js` | Copy bundled agent skills from installed XQ packages, including `@chauhaidang/xq-skills`, into `.agents/skills/` |
 
 ---
 
@@ -67,6 +67,9 @@ See `./scripts/sync-openapi.sh -h` for full help.
 Copy agent skills from installed XQ npm packages into the current
 consumer project's `.agents/skills/` or `.agent/skills/` directory.
 
+For the central skills bundle, install `@chauhaidang/xq-skills` in the
+consumer project and then run this script.
+
 By default, the script scans project dependencies only:
 
 ```bash
@@ -84,9 +87,13 @@ The script scans these package layouts:
 
 ```text
 node_modules/@chauhaidang/*/skills/<skill-name>/
+node_modules/@chauhaidang/xq-skills/skills/<skill-name>/
 node_modules/xq-octopus/skills/<skill-name>/
+node_modules/xq-skills/skills/<skill-name>/
 $(npm root --global)/@chauhaidang/*/skills/<skill-name>/   # with --include-global
+$(npm root --global)/@chauhaidang/xq-skills/skills/<skill-name>/   # with --include-global
 $(npm root --global)/xq-octopus/skills/<skill-name>/        # with --include-global
+$(npm root --global)/xq-skills/skills/<skill-name>/         # with --include-global
 ```
 
 Project-local skills win over global skills with the same name.
