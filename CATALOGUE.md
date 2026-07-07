@@ -11,14 +11,15 @@ names below for code from this repo.
 
 ## Quick pick
 
-| I need… | Package |
-| --- | --- |
-| Logger, config, YAML, JUnit→Markdown | `@chauhaidang/xq-harness-common-kit` |
-| Postgres tests, wait-for-service, Jest config | `@chauhaidang/xq-harness-test-utils` |
-| Docker Compose test environments | `@chauhaidang/xq-harness-test-infra` |
-| Playwright API + Gherkin BDD backend tests | `@chauhaidang/xq-harness-test-harness` |
+| I need…                                         | Package                                   |
+| ----------------------------------------------- | ----------------------------------------- |
+| Logger, config, YAML, JUnit→Markdown            | `@chauhaidang/xq-harness-common-kit`      |
+| Postgres tests, wait-for-service, Jest config   | `@chauhaidang/xq-harness-test-utils`      |
+| Docker Compose test environments                | `@chauhaidang/xq-harness-test-infra`      |
+| Playwright API + Gherkin BDD backend tests      | `@chauhaidang/xq-harness-test-harness`    |
 | MCP server for scenario-driven REST API testing | `@chauhaidang/xq-harness-domain-test-mcp` |
-| OpenAPI sync / report scripts (tarball) | xq-scripts GitHub Release (not npm) |
+| Direct REST CLI checks                          | `xq-octopus`                              |
+| OpenAPI sync / report scripts (tarball)         | xq-scripts GitHub Release (not npm)       |
 
 ---
 
@@ -55,13 +56,13 @@ separately — they ship inside `@chauhaidang/xq-harness-test-harness`.
 
 **Entry:** `@chauhaidang/xq-harness-common-kit`
 
-| Export | Description |
-| --- | --- |
-| `logger`, `LOG_LEVELS`, `Logger` | Structured logging |
-| `getConfig()` | Read and cache `xq.json` from cwd |
-| `readYAML(path)` | Parse a YAML file |
-| `generateRandomString(len?)` | Random string helper |
-| `generateMarkdownFromJunit(xml)` | JUnit XML → Markdown report body |
+| Export                           | Description                       |
+| -------------------------------- | --------------------------------- |
+| `logger`, `LOG_LEVELS`, `Logger` | Structured logging                |
+| `getConfig()`                    | Read and cache `xq.json` from cwd |
+| `readYAML(path)`                 | Parse a YAML file                 |
+| `generateRandomString(len?)`     | Random string helper              |
+| `generateMarkdownFromJunit(xml)` | JUnit XML → Markdown report body  |
 
 **Docs:** [modules/xq-common-kit/README.md](modules/xq-common-kit/README.md)
 
@@ -76,15 +77,15 @@ Detox/mobile E2E helpers when `detox` peer is installed.
 
 **Entry:** `@chauhaidang/xq-harness-test-utils`
 
-| Area | Exports | Use when |
-| --- | --- | --- |
-| **Database** | `createDatabaseHelper`, `PostgresDatabaseHelper`, `DatabaseHelper`, types | Postgres integration tests |
-| **Service readiness** | `waitForService`, `WaitForServiceOptions` | Poll HTTP/TCP before tests |
-| **Reporting** | `generateTestReport`, `JunitMarkdownReporter`, types | JUnit XML → Markdown in CI |
-| **Jest config** | `getComponentTestConfig` | Shared component-test Jest preset |
-| **Detox config** | `createDetoxConfig`, `createE2eJestConfig` | Mobile E2E (requires `detox` peer) |
-| **Detox app** | `App`, `LaunchOptions` | App launch / lifecycle wrapper |
-| **Detox screen** | `screen`, `Matcher`, `WebMatcher` | Element actions and expectations |
+| Area                  | Exports                                                                   | Use when                           |
+| --------------------- | ------------------------------------------------------------------------- | ---------------------------------- |
+| **Database**          | `createDatabaseHelper`, `PostgresDatabaseHelper`, `DatabaseHelper`, types | Postgres integration tests         |
+| **Service readiness** | `waitForService`, `WaitForServiceOptions`                                 | Poll HTTP/TCP before tests         |
+| **Reporting**         | `generateTestReport`, `JunitMarkdownReporter`, types                      | JUnit XML → Markdown in CI         |
+| **Jest config**       | `getComponentTestConfig`                                                  | Shared component-test Jest preset  |
+| **Detox config**      | `createDetoxConfig`, `createE2eJestConfig`                                | Mobile E2E (requires `detox` peer) |
+| **Detox app**         | `App`, `LaunchOptions`                                                    | App launch / lifecycle wrapper     |
+| **Detox screen**      | `screen`, `Matcher`, `WebMatcher`                                         | Element actions and expectations   |
 
 **Subpath:** `@chauhaidang/xq-harness-test-utils/jest.component.config` — Jest
 preset module (see package README).
@@ -105,12 +106,12 @@ test environments (up / down / logs / gateway).
 
 **Binary:** `xq-infra` (after install)
 
-| Command | Description |
-| --- | --- |
+| Command                            | Description                        |
+| ---------------------------------- | ---------------------------------- |
 | `xq-infra generate -f <spec.yaml>` | Emit `xq-compose.yml` from XQ spec |
-| `xq-infra up` | Start services (detached) |
-| `xq-infra down` | Stop and remove environment |
-| `xq-infra logs [-f] [service]` | View or follow container logs |
+| `xq-infra up`                      | Start services (detached)          |
+| `xq-infra down`                    | Stop and remove environment        |
+| `xq-infra logs [-f] [service]`     | View or follow container logs      |
 
 **Runtime needs:** Docker Engine with Compose plugin.
 
@@ -123,11 +124,11 @@ test environments (up / down / logs / gateway).
 **Purpose:** Single-dependency Playwright API + Gherkin (playwright-bdd) harness
 for backend black-box tests. Bundles `@playwright/test` and `playwright-bdd`.
 
-| Subpath | Exports | Audience |
-| --- | --- | --- |
-| `.` | `test`, `expect`, `Given`, `When`, `Then`, `Step`, `XQFixture`, `XQApiClients` | **Default** — step files and bdd-world |
-| `./config` | `defineApiHarnessConfig`, `mergeApiHarnessPlaywrightConfig`, `defineBddProject` | `playwright.config.ts` |
-| `./advanced` | `mergeTests`, `createHarnessBdd` | Custom fixture merges |
+| Subpath      | Exports                                                                         | Audience                               |
+| ------------ | ------------------------------------------------------------------------------- | -------------------------------------- |
+| `.`          | `test`, `expect`, `Given`, `When`, `Then`, `Step`, `XQFixture`, `XQApiClients`  | **Default** — step files and bdd-world |
+| `./config`   | `defineApiHarnessConfig`, `mergeApiHarnessPlaywrightConfig`, `defineBddProject` | `playwright.config.ts`                 |
+| `./advanced` | `mergeTests`, `createHarnessBdd`                                                | Custom fixture merges                  |
 
 **Typical consumer layout**
 
@@ -207,18 +208,18 @@ into `.agents/skills/`.
 
 ## Not published to npm
 
-| Artifact | How to get it | Notes |
-| --- | --- | --- |
-| **xq-scripts** | GitHub Release tarball (`xq-scripts/v*`) | `sync-openapi.sh`, `generate-report.js`, `install-skills.js` |
-| **xq-test-harness-e2e-consumer** | Monorepo only (`private`) | Dogfood example; not for external use |
+| Artifact                         | How to get it                            | Notes                                                        |
+| -------------------------------- | ---------------------------------------- | ------------------------------------------------------------ |
+| **xq-scripts**                   | GitHub Release tarball (`xq-scripts/v*`) | `sync-openapi.sh`, `generate-report.js`, `install-skills.js` |
+| **xq-test-harness-e2e-consumer** | Monorepo only (`private`)                | Dogfood example; not for external use                        |
 
 ### xq-scripts (tarball)
 
-| Script | Purpose |
-| --- | --- |
-| `scripts/sync-openapi.sh` | Download/generate OpenAPI clients from xq-apis |
-| `scripts/generate-report.js` | HTML test report from JUnit |
-| `scripts/install-skills.js` | Copy `skills/` from installed `@chauhaidang/*` into `.agents/skills/`; use `--include-global` to also scan global npm packages |
+| Script                       | Purpose                                                                                                                   |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `scripts/sync-openapi.sh`    | Download/generate OpenAPI clients from xq-apis                                                                            |
+| `scripts/generate-report.js` | HTML test report from JUnit                                                                                               |
+| `scripts/install-skills.js`  | Copy `skills/` from installed XQ packages into `.agents/skills/`; use `--include-global` to also scan global npm packages |
 
 See [modules/xq-scripts/README.md](modules/xq-scripts/README.md).
 
@@ -231,13 +232,14 @@ installing npm packages, optionally run `install-skills.js` from the xq-scripts
 tarball to copy skills into your project's `.agents/skills/`.
 
 For globally installed tools, run it with `--include-global` so global
-`@chauhaidang/*/skills/` directories are scanned too.
+`@chauhaidang/*/skills/` and `xq-octopus/skills/` directories are scanned too.
 
-| Package | Skills |
-| --- | --- |
-| `xq-harness-test-harness` | `xq-test-harness-bdd` |
-| `xq-harness-test-utils` | `e2e-app`, `e2e-config`, `e2e-screen` |
-| `xq-harness-domain-test-mcp` | `xq-domain-test-mcp` |
+| Package                      | Skills                                |
+| ---------------------------- | ------------------------------------- |
+| `xq-harness-test-harness`    | `xq-test-harness-bdd`                 |
+| `xq-octopus`                 | `xq-octopus`                          |
+| `xq-harness-test-utils`      | `e2e-app`, `e2e-config`, `e2e-screen` |
+| `xq-harness-domain-test-mcp` | `xq-domain-test-mcp`                  |
 
 ---
 

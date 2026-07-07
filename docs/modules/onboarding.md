@@ -262,7 +262,7 @@ Example registry entry (Node):
     version: 0.1.0
     test_all: true          # false = skip in `make test-all`
     toolchain:
-      node: ">=18"
+      node: ">=22"
       pnpm: "10"
     commands:
       install: pnpm install --frozen-lockfile

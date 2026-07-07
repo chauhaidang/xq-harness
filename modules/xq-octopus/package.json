@@ -1,18 +1,58 @@
 {
   "name": "xq-octopus",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Agent-friendly REST API testing CLI",
+  "main": "dist/cli/main.js",
+  "types": "dist/cli/main.d.ts",
+  "bin": {
+    "xq-octopus": "./dist/cli/main.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "skills"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test test/**/*.test.ts",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "rm -rf dist"
+  },
   "packageManager": "pnpm@10.14.0",
   "engines": {
     "node": ">=22.0.0"
   },
-  "scripts": {
-    "start": "ts-node index.ts"
+  "keywords": [
+    "xq",
+    "cli",
+    "api-testing",
+    "rest"
+  ],
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chauhaidang/xq-harness.git",
+    "directory": "modules/xq-octopus"
+  },
+  "bugs": {
+    "url": "https://github.com/chauhaidang/xq-harness/issues"
+  },
+  "homepage": "https://github.com/chauhaidang/xq-harness/tree/main/modules/xq-octopus#readme",
+  "dependencies": {
+    "commander": "14.0.0"
   },
   "devDependencies": {
-    "ts-node": "^10.9.2",
-    "tsc": "^2.0.4",
-    "typescript": "^6.0.3"
+    "@types/node": "^24.13.2",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^8.50.0",
+    "prettier": "^3.9.4",
+    "typescript": "^5.9.3"
   }
 }

@@ -4,10 +4,10 @@ Consumer-facing shell scripts for the xq-toolbox monorepo. All scripts are porta
 
 ## Scripts
 
-| Script | Purpose |
-|-------|---------|
-| `scripts/sync-openapi.sh` | Download OpenAPI schemas from xq-apis and/or generate API client code |
-| `scripts/install-skills.js` | Copy bundled agent skills from installed `@chauhaidang/*` packages into `.agents/skills/` |
+| Script                      | Purpose                                                                     |
+| --------------------------- | --------------------------------------------------------------------------- |
+| `scripts/sync-openapi.sh`   | Download OpenAPI schemas from xq-apis and/or generate API client code       |
+| `scripts/install-skills.js` | Copy bundled agent skills from installed XQ packages into `.agents/skills/` |
 
 ---
 
@@ -33,30 +33,30 @@ Download OpenAPI schemas from [xq-apis](https://github.com/chauhaidang/xq-apis) 
 
 ### Options
 
-| Option | Description |
-|--------|-------------|
-| `-m, --mode` | `download` \| `generate` \| `both` (default: both) |
-| `-s, --service` | Service name (folder under api/). Required for download/both |
-| `-p, --schema-path` | Path to schema file. For generate-only when not using -s |
-| `-o, --output-dir` | Output directory for generated client (default: ./generated/SERVICE) |
-| `-d, --schema-dir` | Directory for downloaded schemas (default: ./schemas/SERVICE) |
-| `-g, --generator` | `swagger-typescript-api` \| `openapi-generator` |
-| `--repo` | GitHub repo owner/name (default: chauhaidang/xq-apis) |
-| `--branch` | Branch (default: main) |
-| `--list-services` | List available services from the repo |
-| `--dry-run` | Print actions without executing |
-| `-h, --help` | Show help |
+| Option              | Description                                                          |
+| ------------------- | -------------------------------------------------------------------- |
+| `-m, --mode`        | `download` \| `generate` \| `both` (default: both)                   |
+| `-s, --service`     | Service name (folder under api/). Required for download/both         |
+| `-p, --schema-path` | Path to schema file. For generate-only when not using -s             |
+| `-o, --output-dir`  | Output directory for generated client (default: ./generated/SERVICE) |
+| `-d, --schema-dir`  | Directory for downloaded schemas (default: ./schemas/SERVICE)        |
+| `-g, --generator`   | `swagger-typescript-api` \| `openapi-generator`                      |
+| `--repo`            | GitHub repo owner/name (default: chauhaidang/xq-apis)                |
+| `--branch`          | Branch (default: main)                                               |
+| `--list-services`   | List available services from the repo                                |
+| `--dry-run`         | Print actions without executing                                      |
+| `-h, --help`        | Show help                                                            |
 
 ### Env vars
 
-| Var | Description |
-|-----|-------------|
-| `REPO` | GitHub repo (owner/name) |
-| `BRANCH` | Branch name |
+| Var            | Description                      |
+| -------------- | -------------------------------- |
+| `REPO`         | GitHub repo (owner/name)         |
+| `BRANCH`       | Branch name                      |
 | `GITHUB_TOKEN` | Optional; for higher rate limits |
-| `OUTPUT_DIR` | Override default output dir |
-| `SCHEMA_DIR` | Override default schema dir |
-| `GENERATOR` | Override default generator |
+| `OUTPUT_DIR`   | Override default output dir      |
+| `SCHEMA_DIR`   | Override default schema dir      |
+| `GENERATOR`    | Override default generator       |
 
 See `./scripts/sync-openapi.sh -h` for full help.
 
@@ -64,7 +64,7 @@ See `./scripts/sync-openapi.sh -h` for full help.
 
 ## install-skills.js
 
-Copy agent skills from installed `@chauhaidang/*` npm packages into the current
+Copy agent skills from installed XQ npm packages into the current
 consumer project's `.agents/skills/` or `.agent/skills/` directory.
 
 By default, the script scans project dependencies only:
@@ -84,7 +84,9 @@ The script scans these package layouts:
 
 ```text
 node_modules/@chauhaidang/*/skills/<skill-name>/
+node_modules/xq-octopus/skills/<skill-name>/
 $(npm root --global)/@chauhaidang/*/skills/<skill-name>/   # with --include-global
+$(npm root --global)/xq-octopus/skills/<skill-name>/        # with --include-global
 ```
 
 Project-local skills win over global skills with the same name.

@@ -1,0 +1,11 @@
+{
+  "environments": {
+    "dev": {
+      "apiBaseUrl": "https://api.example.test",
+      "apiToken": null,
+      "headers": {
+        "X-App": "local"
+      }
+    }
+  }
+}

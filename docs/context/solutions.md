@@ -219,3 +219,87 @@ Status: `proposed`
 Spec: `SPEC-CE35DBD0`
 
 Deleted modules/xq-octopus/xq-octopus-dev-guide-go.md and removed the alternative Go implementation track from modules/xq-octopus/HANDOFF.md.
+
+## SOL-55B6D36C — xq-octopus TypeScript build input fix
+
+Status: `proposed`
+
+Spec: `SPEC-D6F080A6`
+
+Added the starter app/cli/main.ts entrypoint expected by tsconfig include app/**/*.ts, enabled declaration output, aligned package main/types/bin paths with dist/cli/main.*, registered xq-octopus in modules.yaml, and added a starter Jest test. Verified ./scripts/module build xq-octopus, pnpm run build, node dist/cli/main.js --help, and ./scripts/module test xq-octopus.
+
+## SOL-04F4D19C — xq-octopus Prettier setup
+
+Status: `proposed`
+
+Spec: `SPEC-D6F080A6`
+
+Configured modules/xq-octopus with Prettier 3.9.4, module-local .prettierrc.json and .prettierignore, package scripts format and format:check, and formatted existing octopus files. Verified format:check, lint, ./scripts/module build xq-octopus, and ./scripts/module test xq-octopus.
+
+## SOL-31F1DDD4 — Correct xq-octopus test runner and Node baseline
+
+Status: `proposed`
+
+Spec: `SPEC-D6F080A6`
+
+Replaced the xq-octopus Jest starter with direct TypeScript node:test execution on Node >=22, removed jest.config.cjs and Jest dependencies from the octopus importer, simplified app/cli/main.ts to a synchronous parse(), updated octopus docs, and aligned active repo Node engine/toolchain metadata to Node 22. Verified format:check, lint, ./scripts/module build xq-octopus, ./scripts/module test xq-octopus, and node dist/cli/main.js --help.
+
+## SOL-CF0FC0EB — xq-octopus dev guide current Node setup
+
+Status: `proposed`
+
+Spec: `SPEC-D6F080A6`
+
+Updated modules/xq-octopus/xq-octopus-dev-guide.md so its setup templates and validation commands match the current direction: Node >=22, pnpm 10, TypeScript nodenext, Commander, direct .ts tests through node:test, Prettier format scripts/config, ESLint, synchronous starter main(), and no Jest/ts-jest dependency for v1.
+
+## SOL-DEA325D2 — xq-octopus Step 4 config scaffold
+
+Status: `proposed`
+
+Spec: `SPEC-D6F080A6`
+
+Completed Step 4 by adding a safe xq.json.example with environments.dev.api_base_url, api_token, and headers, plus README config instructions and local command examples. Verified Prettier check for README.md and xq.json.example, ./scripts/module build xq-octopus, and ./scripts/module test xq-octopus.
+
+## SOL-F62EBBF4 — xq-octopus Step 5 shared model types
+
+Status: `proposed`
+
+Spec: `SPEC-D6F080A6`
+
+Completed Step 5 by adding app/model/config.ts for RuntimeConfig, app/model/result.ts for JSON values, response evidence, validation, command result, and error result types, and app/model/command.ts for Command, ExecutionContext, RestCommand, and the tool interfaces RestCommand delegates to. Verified Prettier on model files, ESLint on app/model, ./scripts/module build xq-octopus, and ./scripts/module test xq-octopus.
+
+## SOL-6F2224EB — xq-octopus Day 1 REST CLI implementation
+
+Status: `proposed`
+
+Spec: `SPEC-D6F080A6`
+
+Implemented the Day 1 Node/TypeScript xq-octopus slice: RuntimeConfig redaction, config loader with typed ConfigError, JSON/status validation, method-specific RestTool using built-in fetch/AbortController, lazy ToolFactory, generic ExecutionEngine delegating to Command.execute(context), JSON/pretty output rendering, command catalog, and Commander commands for commands, config, get, post, put, patch, and delete. Added node:test coverage for config, validation, RestTool, factory, engine, catalog, output, and CLI handlers. Verified ./node_modules/.bin/prettier --check ., ./node_modules/.bin/eslint . --ext .ts, ./scripts/module build xq-octopus, node --test test/**/*.test.ts, node dist/cli/main.js commands --json, node dist/cli/main.js config --env dev --config xq.json.example, and ./scripts/module test xq-octopus.
+
+## SOL-07AE3AF5 — xq-octopus model review simplification
+
+Status: `proposed`
+
+Spec: `SPEC-D6F080A6`
+
+Addressed review comments by using api_base_url/api_token consistently in RuntimeConfig and output, removing the separate JsonPrimitive alias, flattening ValidationResult so type/expected/path live directly on the result, and retaining a local JsonValue type to avoid adding a dependency for a small JSON-serializable union. Verified focused tests, lint, format check, build, and ./scripts/module test xq-octopus.
+
+## SOL-F420A4D6 — Restore xq-octopus internal camelCase config
+
+Status: `proposed`
+
+Spec: `SPEC-D6F080A6`
+
+Changed RuntimeConfig and runtime code back to camelCase apiBaseUrl/apiToken while preserving snake_case xq.json parsing and redacted CLI output. Updated config, REST, engine tests accordingly. Verified ./scripts/module build xq-octopus, focused node:test files, ESLint, Prettier check, and ./scripts/module test xq-octopus.
+
+## SOL-19AE6B49 — xq-octopus subprocess E2E tests
+
+Status: `proposed`
+
+xq-octopus now has test/e2e-cli.test.ts. The test starts a local Node HTTP API exposing /health, /echo, and /openapi.json, writes a real xq.json with camelCase config, spawns node dist/cli/main.js, and asserts real process exit codes plus stdout JSON.
+
+## SOL-4B14F4DB — xq-octopus module skill
+
+Status: `proposed`
+
+Added modules/xq-octopus/skills/xq-octopus/SKILL.md with practical CLI usage instructions: when to use the CLI, setup/build commands, xq.json contract, command discovery, REST call examples, JSON-pointer validation, exit code handling, OpenAPI smoke workflow, and safety guardrails. AGENTS.md now lists xq-octopus as a module-level skill.

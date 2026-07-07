@@ -9,17 +9,23 @@
  *   node scripts/check-xq-version-changes.js --module xq-common-kit
  */
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+const fs = require("fs");
+const path = require("path");
+const { execSync } = require("child_process");
 
-const modulesDir = path.join(__dirname, '..', 'modules');
-const publishPrefixes = ['xq-common-kit', 'xq-test-utils', 'xq-test-infra', 'xq-test-harness'];
+const modulesDir = path.join(__dirname, "..", "modules");
+const publishPrefixes = [
+  "xq-common-kit",
+  "xq-test-utils",
+  "xq-test-infra",
+  "xq-test-harness",
+  "xq-octopus",
+];
 
 function parseArgs(argv) {
   const args = { module: null };
   for (let i = 2; i < argv.length; i += 1) {
-    if (argv[i] === '--module' && argv[i + 1]) {
+    if (argv[i] === "--module" && argv[i + 1]) {
       args.module = argv[i + 1];
       i += 1;
     }
@@ -28,33 +34,36 @@ function parseArgs(argv) {
 }
 
 function checkPackage(pkgName) {
-  const pkgJsonPath = path.join(modulesDir, pkgName, 'package.json');
+  const pkgJsonPath = path.join(modulesDir, pkgName, "package.json");
 
   if (!fs.existsSync(pkgJsonPath)) {
     return null;
   }
 
-  const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, 'utf8'));
+  const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, "utf8"));
   const versionNow = pkgJson.version;
 
   if (!versionNow) {
     return null;
   }
 
-  let versionPrev = '';
+  let versionPrev = "";
   try {
     const gitPath = `modules/${pkgName}/package.json`;
     const prevCommit = execSync('git rev-parse HEAD^1 2>/dev/null || echo ""', {
-      encoding: 'utf8',
+      encoding: "utf8",
     }).trim();
 
     if (prevCommit) {
       try {
-        const prevPkgJson = execSync(`git show ${prevCommit}:${gitPath} 2>/dev/null`, {
-          encoding: 'utf8',
-        });
+        const prevPkgJson = execSync(
+          `git show ${prevCommit}:${gitPath} 2>/dev/null`,
+          {
+            encoding: "utf8",
+          },
+        );
         const prevPkg = JSON.parse(prevPkgJson);
-        versionPrev = prevPkg.version || '';
+        versionPrev = prevPkg.version || "";
       } catch {
         // new file in previous commit
       }
@@ -68,7 +77,7 @@ function checkPackage(pkgName) {
   }
 
   console.error(
-    `Package ${pkgName} version changed: ${versionPrev || '(new)'} -> ${versionNow}`,
+    `Package ${pkgName} version changed: ${versionPrev || "(new)"} -> ${versionNow}`,
   );
   return pkgName;
 }
@@ -99,5 +108,8 @@ console.log(JSON.stringify(result));
 const githubOutput = process.env.GITHUB_OUTPUT;
 if (githubOutput) {
   fs.appendFileSync(githubOutput, `version_changed=${versionChanged}\n`);
-  fs.appendFileSync(githubOutput, `changed_packages=${JSON.stringify(changedPackages)}\n`);
+  fs.appendFileSync(
+    githubOutput,
+    `changed_packages=${JSON.stringify(changedPackages)}\n`,
+  );
 }
