@@ -51,11 +51,11 @@ The CLI should:
 
 Use the same general stack as the existing Node modules in this harness repo:
 
-- Node.js `>=18`
+- Node.js `>=22`
 - pnpm `10`
 - TypeScript
 - Commander for CLI command routing
-- Jest for tests
+- Built-in `node:test` for tests
 - ESLint for linting
 - Built-in Node `fetch` and `AbortController` for HTTP
 
@@ -103,7 +103,6 @@ modules/xq-octopus/
   README.md
   package.json
   tsconfig.json
-  jest.config.cjs
   xq.json.example
   app/
     config/
@@ -136,8 +135,8 @@ modules/xq-octopus/
 Primary interface:
 
 ```ts
-const engine = new ExecutionEngine(config, { tools: toolFactory });
-const result = await engine.execute(command);
+const engine = new ExecutionEngine(config, { tools: toolFactory })
+const result = await engine.execute(command)
 ```
 
 `command` must implement the shared `Command` contract, including a required
@@ -177,8 +176,8 @@ Supported config shape:
 {
   "environments": {
     "dev": {
-      "api_base_url": "https://api.example.test",
-      "api_token": null,
+      "apiBaseUrl": "https://api.example.test",
+      "apiToken": null,
       "headers": {
         "X-App": "local"
       }
@@ -189,8 +188,8 @@ Supported config shape:
 
 Rules:
 
-- `api_base_url` is required.
-- `api_token` is optional.
+- `apiBaseUrl` is required.
+- `apiToken` is optional.
 - `headers` is optional.
 - Never print token values in output, errors, tests, or logs.
 

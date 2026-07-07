@@ -57,7 +57,7 @@ modules:
     toolchain:
       xcode: "16"
       xcodegen: required
-      node: ">=18"
+      node: ">=22"
     commands:
       install: "true"
       build: >
@@ -95,7 +95,7 @@ modules:
     version: 0.1.0
     test_all: true
     toolchain:
-      node: ">=18"
+      node: ">=22"
       pnpm: "10"
     commands:
       install: pnpm install --frozen-lockfile
@@ -110,7 +110,7 @@ modules:
     depends_on:
       - xq-common-kit
     toolchain:
-      node: ">=18"
+      node: ">=22"
       pnpm: "10"
     commands:
       install: pnpm install --frozen-lockfile
@@ -125,7 +125,7 @@ modules:
     depends_on:
       - xq-common-kit
     toolchain:
-      node: ">=18"
+      node: ">=22"
       pnpm: "10"
       docker: optional
     commands:
@@ -139,7 +139,7 @@ modules:
     version: 0.1.0
     test_all: true
     toolchain:
-      node: ">=18"
+      node: ">=22"
       pnpm: "10"
       playwright: required
     commands:
@@ -155,9 +155,22 @@ modules:
     depends_on:
       - xq-test-harness
     toolchain:
-      node: ">=18"
+      node: ">=22"
       pnpm: "10"
       playwright: required
+    commands:
+      install: pnpm install --frozen-lockfile
+      build: pnpm run build
+      test: pnpm test
+
+  xq-octopus:
+    path: modules/xq-octopus
+    language: node
+    version: 0.1.0
+    test_all: false
+    toolchain:
+      node: ">=22"
+      pnpm: "10"
     commands:
       install: pnpm install --frozen-lockfile
       build: pnpm run build

@@ -34,11 +34,11 @@ and parse the result without reading source code.
 
 Use the same general stack as the existing Node modules in this harness repo:
 
-- Node.js `>=18`
+- Node.js `>=22`
 - pnpm `10`
 - TypeScript
 - Commander for CLI command routing
-- Jest for tests
+- Built-in `node:test` for tests
 - ESLint for linting
 - Built-in Node `fetch` and `AbortController` for HTTP
 
@@ -89,7 +89,7 @@ Follow these rules throughout the module:
 - Do not read files from deep modules except the config loader.
 - Do not catch broad errors except when converting them into a structured
   `CommandResult` at the engine boundary.
-- Never print `api_token`.
+- Never print `apiToken`.
 - Return plain JSON-serializable objects from internals, then stringify at the
   CLI edge.
 
@@ -123,7 +123,7 @@ pnpm --version
 
 Expected:
 
-- Node.js is `18` or newer.
+- Node.js is `22` or newer.
 - pnpm is `10.x` or close to the repo pin.
 
 If `pnpm --version` is missing but Node is installed, enable Corepack:
@@ -183,7 +183,7 @@ mkdir -p app/config app/cli app/core app/model app/tools test
 Create the project metadata files:
 
 ```bash
-touch README.md package.json tsconfig.json jest.config.cjs .eslintrc.cjs xq.json.example
+touch README.md package.json tsconfig.json .eslintrc.cjs .prettierrc.json .prettierignore xq.json.example
 ```
 
 Create the source files:
@@ -207,11 +207,12 @@ Now fill in these files from the templates in this guide:
 
 1. `package.json`
 2. `tsconfig.json`
-3. `jest.config.cjs`
-4. `.eslintrc.cjs`
-5. `app/cli/main.ts`
-6. `xq.json.example`
-7. `README.md`
+3. `.eslintrc.cjs`
+4. `.prettierrc.json`
+5. `.prettierignore`
+6. `app/cli/main.ts`
+7. `xq.json.example`
+8. `README.md`
 
 Then install dependencies:
 
@@ -245,15 +246,16 @@ Expected result:
 - The `dist/` folder exists.
 - No REST/API behavior is implemented yet.
 
-Before running Jest, create at least one starter test so Jest proves it is wired
-correctly:
+Before running tests, create at least one starter test so `node:test` proves it
+is wired correctly:
 
 ```ts
-describe("project setup", () => {
-  it("runs tests", () => {
-    expect(true).toBe(true);
-  });
-});
+import assert from "node:assert/strict"
+import test from "node:test"
+
+test("project setup runs tests", () => {
+  assert.equal(true, true)
+})
 ```
 
 Put that test in `test/setup.test.ts` or one of the existing test files. Then
@@ -285,8 +287,9 @@ modules/xq-octopus/
   README.md
   package.json
   tsconfig.json
-  jest.config.cjs
   .eslintrc.cjs
+  .prettierrc.json
+  .prettierignore
   xq.json.example
   app/
     config/
@@ -349,44 +352,37 @@ Use this as the starting shape:
 {
   "name": "xq-octopus",
   "version": "0.1.0",
+  "type": "module",
   "description": "Agent-friendly REST API testing CLI",
   "main": "dist/cli/main.js",
   "types": "dist/cli/main.d.ts",
   "bin": {
     "xq-octopus": "./dist/cli/main.js"
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md", "skills"],
   "scripts": {
     "build": "tsc",
-    "test": "jest --runInBand",
+    "test": "node --test test/**/*.test.ts",
     "lint": "eslint . --ext .ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "clean": "rm -rf dist"
   },
   "packageManager": "pnpm@10.14.0",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
-  "keywords": [
-    "xq",
-    "cli",
-    "api-testing",
-    "rest"
-  ],
+  "keywords": ["xq", "cli", "api-testing", "rest"],
   "license": "Apache-2.0",
   "dependencies": {
-    "commander": "^11.0.0"
+    "commander": "14.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "@types/node": "^24.10.1",
+    "@types/node": "^24.13.2",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^8.50.0",
-    "jest": "^30.1.1",
-    "ts-jest": "^29.2.0",
+    "prettier": "^3.9.4",
     "typescript": "^5.9.3"
   }
 }
@@ -396,11 +392,14 @@ What the important fields mean:
 
 - `bin.xq-octopus` is what makes the `xq-octopus` command available after the
   package is linked or installed.
+- `files` includes `skills` so the agent skill ships with the `xq-octopus`
+  release package.
 - `main` points to the compiled JavaScript entry file.
 - `types` points to generated TypeScript declaration output.
 - `scripts.build` runs the TypeScript compiler.
-- `scripts.test` runs Jest in one process, which is easier for CLI and local
-  HTTP-server tests.
+- `scripts.test` runs Node's built-in test runner against TypeScript test files.
+- `scripts.format` and `scripts.format:check` run Prettier for module-local
+  formatting.
 - `packageManager` and `engines` keep the module aligned with the harness repo.
 
 Create `tsconfig.json` next:
@@ -409,24 +408,19 @@ Create `tsconfig.json` next:
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "Node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "rootDir": "app",
     "outDir": "dist",
     "declaration": true,
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node"]
   },
-  "include": [
-    "app/**/*.ts"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules",
-    "test"
-  ]
+  "include": ["app/**/*.ts"],
+  "exclude": ["dist", "node_modules", "test"]
 }
 ```
 
@@ -435,18 +429,9 @@ Why this setup:
 - `rootDir: "app"` means source files live under `app/`.
 - `outDir: "dist"` means compiled files go to `dist/`.
 - `declaration: true` generates `.d.ts` files.
+- `module: "nodenext"` matches the package's ESM setup and Node's module
+  resolution behavior.
 - `strict: true` makes TypeScript catch beginner mistakes early.
-
-Create `jest.config.cjs`:
-
-```js
-module.exports = {
-  preset: "ts-jest",
-  testEnvironment: "node",
-  testMatch: ["**/test/**/*.test.ts"],
-  clearMocks: true
-};
-```
 
 Optional but recommended: create `.eslintrc.cjs`:
 
@@ -457,10 +442,28 @@ module.exports = {
   extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   env: {
     node: true,
-    es2022: true,
-    jest: true
+    es2022: true
   }
-};
+}
+```
+
+Create `.prettierrc.json`:
+
+```json
+{
+  "printWidth": 100,
+  "semi": false,
+  "singleQuote": false,
+  "trailingComma": "none"
+}
+```
+
+Create `.prettierignore`:
+
+```text
+dist
+node_modules
+coverage
 ```
 
 Create the CLI entry file early, even if it only shows help at first:
@@ -468,24 +471,24 @@ Create the CLI entry file early, even if it only shows help at first:
 ```ts
 #!/usr/bin/env node
 
-import { Command } from "commander";
+import { Command } from "commander"
 
 export function buildCli(): Command {
-  const program = new Command();
+  const program = new Command()
 
   program
     .name("xq-octopus")
     .description("Agent-friendly REST API testing CLI")
-    .version("0.1.0");
+    .version("0.1.0")
 
-  return program;
+  return program
 }
 
-export async function main(argv: string[] = process.argv): Promise<void> {
-  await buildCli().parseAsync(argv);
+export function main(argv: string[] = process.argv): void {
+  buildCli().parse(argv)
 }
 
-void main();
+main()
 ```
 
 After the files exist, run these module-local setup commands:
@@ -494,6 +497,8 @@ After the files exist, run these module-local setup commands:
 pnpm install
 pnpm run build
 pnpm test
+pnpm run format:check
+pnpm run lint
 ```
 
 Use `pnpm install` the first time so pnpm can update the root lockfile. After the
@@ -503,9 +508,9 @@ lockfile exists, use the stricter command:
 pnpm install --frozen-lockfile
 ```
 
-Do not move on until `pnpm run build` can compile the starter CLI. It is fine if
-`pnpm test` initially reports no tests before Step 14, but once tests are added
-it must pass.
+Do not move on until `pnpm run build` can compile the starter CLI. Once the
+starter test exists, `pnpm test`, `pnpm run format:check`, and `pnpm run lint`
+must also pass.
 
 ## Step 4: Define `xq.json`
 
@@ -515,8 +520,8 @@ Support this config shape:
 {
   "environments": {
     "dev": {
-      "api_base_url": "https://api.example.test",
-      "api_token": null,
+      "apiBaseUrl": "https://api.example.test",
+      "apiToken": null,
       "headers": {
         "X-App": "local"
       }
@@ -531,11 +536,11 @@ Rules:
 - `--config path/to/xq.json` overrides the default path.
 - `--env` is required.
 - The selected environment must exist.
-- `api_base_url` is required and cannot be blank.
-- `api_token` is optional.
+- `apiBaseUrl` is required and cannot be blank.
+- `apiToken` is optional.
 - `headers` is optional.
 - Header keys and values must be strings.
-- Never print `api_token`.
+- Never print `apiToken`.
 
 Create `xq.json.example` with safe fake values only.
 
@@ -545,8 +550,8 @@ Use this initial `xq.json.example`:
 {
   "environments": {
     "dev": {
-      "api_base_url": "https://api.example.test",
-      "api_token": null,
+      "apiBaseUrl": "https://api.example.test",
+      "apiToken": null,
       "headers": {
         "X-App": "local"
       }
@@ -569,6 +574,8 @@ Agent-friendly REST API testing CLI.
 pnpm install --frozen-lockfile
 pnpm run build
 pnpm test
+pnpm run format:check
+pnpm run lint
 node dist/cli/main.js --help
 ```
 
@@ -600,10 +607,10 @@ Use TypeScript interfaces for contracts:
 
 ```ts
 export interface RuntimeConfig {
-  readonly environment: string;
-  readonly apiBaseUrl: string;
-  readonly apiToken: string | null;
-  readonly headers: Readonly<Record<string, string>>;
+  readonly environment: string
+  readonly apiBaseUrl: string
+  readonly apiToken: string | null
+  readonly headers: Readonly<Record<string, string>>
 }
 ```
 
@@ -611,17 +618,17 @@ Use an interface for the shared `Command` contract:
 
 ```ts
 export interface Command {
-  readonly kind: string;
-  readonly timeoutMs: number;
-  execute(context: ExecutionContext): Promise<CommandResult>;
+  readonly kind: string
+  readonly timeoutMs: number
+  execute(context: ExecutionContext): Promise<CommandResult>
 }
 ```
 
 The primary internal interface is:
 
 ```ts
-const engine = new ExecutionEngine(config, { tools: toolFactory });
-const result = await engine.execute(command);
+const engine = new ExecutionEngine(config, { tools: toolFactory })
+const result = await engine.execute(command)
 ```
 
 `Command` is the shared contract all future executable commands must satisfy.
@@ -633,10 +640,10 @@ command runs.
 `RestCommand` is the first concrete command:
 
 ```ts
-export type RestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+export type RestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
 
 export class RestCommand implements Command {
-  readonly kind = "rest";
+  readonly kind = "rest"
 
   constructor(
     readonly method: RestMethod,
@@ -644,23 +651,23 @@ export class RestCommand implements Command {
     readonly body: unknown,
     readonly expectedStatus: number | null,
     readonly expectedJson: readonly string[],
-    readonly timeoutMs: number,
+    readonly timeoutMs: number
   ) {}
 
   async execute(context: ExecutionContext): Promise<CommandResult> {
-    const restTool = context.tools.rest();
+    const restTool = context.tools.rest()
 
     switch (this.method) {
       case "GET":
-        return restTool.callGet(this, context.config);
+        return restTool.callGet(this, context.config)
       case "POST":
-        return restTool.callPost(this, context.config);
+        return restTool.callPost(this, context.config)
       case "PUT":
-        return restTool.callPut(this, context.config);
+        return restTool.callPut(this, context.config)
       case "PATCH":
-        return restTool.callPatch(this, context.config);
+        return restTool.callPatch(this, context.config)
       case "DELETE":
-        return restTool.callDelete(this, context.config);
+        return restTool.callDelete(this, context.config)
     }
   }
 }
@@ -675,8 +682,8 @@ Future commands should satisfy the same `Command` contract.
 
 ```ts
 export interface ExecutionContext {
-  readonly config: RuntimeConfig;
-  readonly tools: ToolFactory;
+  readonly config: RuntimeConfig
+  readonly tools: ToolFactory
 }
 ```
 
@@ -700,8 +707,8 @@ Redacted output shape:
 ```json
 {
   "environment": "dev",
-  "api_base_url": "https://api.example.test",
-  "has_api_token": true,
+  "apiBaseUrl": "https://api.example.test",
+  "hasApiToken": true,
   "headers": {
     "X-App": "local"
   }
@@ -710,9 +717,8 @@ Redacted output shape:
 
 Implementation notes:
 
-- Use camelCase internally: `apiBaseUrl`, `apiToken`.
-- Use the documented snake_case JSON keys at the CLI output edge.
-- Include `has_api_token`, not the actual token.
+- Use camelCase for config input, internal runtime config, and CLI output: `apiBaseUrl`, `apiToken`.
+- Include `hasApiToken`, not the actual token.
 - Keep token redaction close to the config model.
 
 ## Step 7: Implement Config Loading
@@ -730,7 +736,7 @@ Suggested function shape:
 ```ts
 export async function loadRuntimeConfig(
   configPath: string,
-  env: string,
+  env: string
 ): Promise<RuntimeConfig> {
   // ...
 }
@@ -744,7 +750,7 @@ Return or throw clear typed errors for:
 - Invalid JSON.
 - Missing `environments`.
 - Unknown `--env`.
-- Missing or blank `api_base_url`.
+- Missing or blank `apiBaseUrl`.
 - Non-string header keys or values.
 
 For a junior implementer: prefer throwing a small custom `ConfigError`, then let
@@ -810,23 +816,38 @@ Suggested class shape:
 
 ```ts
 export class RestTool {
-  async callGet(command: RestCommand, config: RuntimeConfig): Promise<CommandResult> {
+  async callGet(
+    command: RestCommand,
+    config: RuntimeConfig
+  ): Promise<CommandResult> {
     // ...
   }
 
-  async callPost(command: RestCommand, config: RuntimeConfig): Promise<CommandResult> {
+  async callPost(
+    command: RestCommand,
+    config: RuntimeConfig
+  ): Promise<CommandResult> {
     // ...
   }
 
-  async callPut(command: RestCommand, config: RuntimeConfig): Promise<CommandResult> {
+  async callPut(
+    command: RestCommand,
+    config: RuntimeConfig
+  ): Promise<CommandResult> {
     // ...
   }
 
-  async callPatch(command: RestCommand, config: RuntimeConfig): Promise<CommandResult> {
+  async callPatch(
+    command: RestCommand,
+    config: RuntimeConfig
+  ): Promise<CommandResult> {
     // ...
   }
 
-  async callDelete(command: RestCommand, config: RuntimeConfig): Promise<CommandResult> {
+  async callDelete(
+    command: RestCommand,
+    config: RuntimeConfig
+  ): Promise<CommandResult> {
     // ...
   }
 }
@@ -883,11 +904,11 @@ In `app/tools/factory.ts`, create a small factory that owns tool construction:
 
 ```ts
 export class ToolFactory {
-  private restTool?: RestTool;
+  private restTool?: RestTool
 
   rest(): RestTool {
-    this.restTool ??= new RestTool();
-    return this.restTool;
+    this.restTool ??= new RestTool()
+    return this.restTool
   }
 }
 ```
@@ -921,7 +942,7 @@ Recommended interface:
 export class ExecutionEngine {
   constructor(
     private readonly config: RuntimeConfig,
-    private readonly options: { tools?: ToolFactory } = {},
+    private readonly options: { tools?: ToolFactory } = {}
   ) {}
 
   async execute(command: Command): Promise<CommandResult> {
@@ -1094,7 +1115,7 @@ Testing tips for TypeScript beginners:
 
 - Put shared test helpers in `test/` files or a small helper module.
 - Use temporary directories from Node's `fs.mkdtemp` when tests need files.
-- Use `await expect(promise).rejects.toThrow(...)` for expected async failures.
+- Use `await assert.rejects(promise, /message/)` for expected async failures.
 - Keep each test focused on one behavior.
 - Test public functions and classes, not private helper details.
 
@@ -1106,12 +1127,15 @@ Run these commands while standing inside `modules/xq-octopus`:
 pnpm install --frozen-lockfile
 pnpm run build
 pnpm test
+pnpm run format:check
+pnpm run lint
 ```
 
 Done means:
 
 - TypeScript compilation passes.
 - Tests pass.
+- Prettier and ESLint checks pass.
 - `node dist/cli/main.js --help` shows the public commands.
 - The CLI can call a local test API and return JSON output.
 
@@ -1121,8 +1145,9 @@ Done means:
 - Do not make `ExecutionEngine` branch on `command.kind`.
 - Do not attach low-level HTTP transport to `ExecutionContext`.
 - Do not print from `app/model`, `app/core`, `app/config`, or `app/tools`.
-- Do not leak `api_token` in normal output, errors, logs, or tests.
+- Do not leak `apiToken` in normal output, errors, logs, or tests.
 - Do not use live external APIs in tests.
+- Do not add Jest, ts-jest, or another test framework for v1; use `node:test`.
 - Do not add scenario reasoning to this CLI.
 - Do not reintroduce Python project files such as `pyproject.toml` or `uv.lock`.
 

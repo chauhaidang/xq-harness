@@ -210,3 +210,40 @@
 - `0239` 2026-07-06T15:47:34+00:00 **solution.proposed** `SOL-51853A8C` Explicit pnpm setup in reusable workflows
 - `0240` 2026-07-06T16:03:30+00:00 **decision.recorded** `DEC-20D0DF9E` Remove xq-octopus Go guide
 - `0241` 2026-07-06T16:03:37+00:00 **solution.proposed** `SOL-64953201` Remove xq-octopus Go guide artifact
+- `0242` 2026-07-06T16:18:40+00:00 **task.created** `TASK-603D183F` Fix xq-octopus TypeScript build inputs
+- `0243` 2026-07-06T16:18:53+00:00 **task.status_changed** `TASK-603D183F`
+- `0244` 2026-07-06T16:18:53+00:00 **workspace.observed** `WS-CF9BA3A9`
+- `0245` 2026-07-06T16:19:22+00:00 **solution.proposed** `SOL-55B6D36C` xq-octopus TypeScript build input fix
+- `0246` 2026-07-06T16:26:58+00:00 **task.created** `TASK-3B7FA451` Set up Prettier for xq-octopus
+- `0247` 2026-07-06T16:27:04+00:00 **task.status_changed** `TASK-3B7FA451`
+- `0248` 2026-07-06T16:27:15+00:00 **solution.proposed** `SOL-04F4D19C` xq-octopus Prettier setup
+- `0249` 2026-07-06T16:36:49+00:00 **decision.recorded** `DEC-78F7F2A0` xq-octopus uses Node 22 node:test without Jest
+- `0250` 2026-07-06T16:36:56+00:00 **solution.proposed** `SOL-31F1DDD4` Correct xq-octopus test runner and Node baseline
+- `0251` 2026-07-06T16:40:16+00:00 **task.created** `TASK-CD3A8687` Update xq-octopus dev guide for Node 22 node:test
+- `0252` 2026-07-06T16:40:23+00:00 **task.status_changed** `TASK-CD3A8687`
+- `0253` 2026-07-06T16:40:32+00:00 **solution.proposed** `SOL-CF0FC0EB` xq-octopus dev guide current Node setup
+- `0254` 2026-07-06T16:49:37+00:00 **task.created** `TASK-C495713E` Complete xq-octopus Step 4 config scaffold
+- `0255` 2026-07-06T16:49:43+00:00 **task.status_changed** `TASK-C495713E`
+- `0256` 2026-07-06T16:49:52+00:00 **solution.proposed** `SOL-DEA325D2` xq-octopus Step 4 config scaffold
+- `0257` 2026-07-06T16:54:23+00:00 **task.created** `TASK-F95B01CE` Complete xq-octopus Step 5 shared models
+- `0258` 2026-07-06T16:54:27+00:00 **task.status_changed** `TASK-F95B01CE`
+- `0259` 2026-07-06T16:54:34+00:00 **solution.proposed** `SOL-F62EBBF4` xq-octopus Step 5 shared model types
+- `0260` 2026-07-06T17:22:36+00:00 **task.created** `TASK-B5A8DDE4` Implement xq-octopus Day 1 REST CLI
+- `0261` 2026-07-06T17:22:41+00:00 **task.status_changed** `TASK-B5A8DDE4`
+- `0262` 2026-07-06T17:22:49+00:00 **solution.proposed** `SOL-6F2224EB` xq-octopus Day 1 REST CLI implementation
+- `0263` 2026-07-07T03:49:40+00:00 **task.created** `TASK-53DB79D0` Address xq-octopus model review comments
+- `0264` 2026-07-07T03:49:45+00:00 **task.status_changed** `TASK-53DB79D0`
+- `0265` 2026-07-07T03:49:54+00:00 **solution.proposed** `SOL-07AE3AF5` xq-octopus model review simplification
+- `0266` 2026-07-07T05:13:30+00:00 **decision.recorded** `DEC-618E436C` xq-octopus keeps internal config camelCase
+- `0267` 2026-07-07T05:13:37+00:00 **solution.proposed** `SOL-F420A4D6` Restore xq-octopus internal camelCase config
+- `0268` 2026-07-07T05:41:11+00:00 **decision.recorded** `DEC-EDE57644` xq-octopus uses camelCase config contract
+- `0269` 2026-07-07T09:16:40+00:00 **task.created** `TASK-3691FB42` Add xq-octopus CLI E2E test server
+- `0270` 2026-07-07T09:16:50+00:00 **task.status_changed** `TASK-3691FB42`
+- `0271` 2026-07-07T09:17:00+00:00 **solution.proposed** `SOL-19AE6B49` xq-octopus subprocess E2E tests
+- `0272` 2026-07-07T12:29:43+00:00 **task.created** `TASK-24E1AEC1` Add xq-octopus usage skill
+- `0273` 2026-07-07T12:29:47+00:00 **task.status_changed** `TASK-24E1AEC1`
+- `0274` 2026-07-07T12:29:51+00:00 **solution.proposed** `SOL-4B14F4DB` xq-octopus module skill
+- `0275` 2026-07-07T13:41:32+00:00 **decision.recorded** `DEC-6F70ED09` xq-octopus releases as unscoped package
+- `0276` 2026-07-07T13:41:39+00:00 **task.created** `TASK-93BA4F68` Release xq-octopus skill with unscoped package
+- `0277` 2026-07-07T13:41:43+00:00 **task.status_changed** `TASK-93BA4F68`
+- `0278` 2026-07-07T13:58:37+00:00 **decision.recorded** `DEC-D456CC11` xq-octopus publishes to npmjs

@@ -463,3 +463,43 @@ Status: `accepted`
 Remove modules/xq-octopus/xq-octopus-dev-guide-go.md and stop advertising a Go alternative track from HANDOFF.md. xq-octopus documentation should focus on the Node/TypeScript/pnpm guide unless a Go track is requested again later.
 
 **Rationale:** The user explicitly asked to remove the Go dev guide after the pnpm migration was pushed. Keeping the Go guide would add competing implementation guidance and distract from the current Node/TypeScript/pnpm direction.
+
+## DEC-78F7F2A0 — xq-octopus uses Node 22 node:test without Jest
+
+Status: `accepted`
+
+modules/xq-octopus targets the harness Node 22 minimum, runs TypeScript tests directly with Node's built-in node:test runner, and does not include Jest, ts-jest, or @types/jest. The starter CLI main() remains synchronous until async command actions are introduced.
+
+**Rationale:** Node 22 can execute erasable TypeScript test files directly, so adding Jest or a TypeScript test runner is unnecessary for the module's current scope. Keeping main() synchronous avoids async ceremony before the CLI has async handlers.
+
+## DEC-618E436C — xq-octopus keeps internal config camelCase
+
+Status: `accepted`
+
+RuntimeConfig uses camelCase fields apiBaseUrl and apiToken internally. The xq.json file contract and redacted CLI JSON output continue using snake_case keys api_base_url and has_api_token at the boundary.
+
+**Rationale:** The user prefers idiomatic TypeScript camelCase internally. Keeping snake_case only at external JSON boundaries preserves the documented config/output contract while avoiding snake_case throughout implementation code.
+
+## DEC-EDE57644 — xq-octopus uses camelCase config contract
+
+Status: `accepted`
+
+xq-octopus now keeps config naming aligned across xq.json input, internal RuntimeConfig, redacted CLI JSON output, examples, and tests. The public keys are apiBaseUrl, apiToken, and hasApiToken.
+
+**Rationale:** The user asked why input and output should not stay aligned and explicitly preferred camelCase. Using one camelCase shape removes confusing mapping keys and matches TypeScript naming throughout the module.
+
+## DEC-6F70ED09 — xq-octopus releases as unscoped package
+
+Status: `accepted`
+
+The xq-octopus CLI release package name remains xq-octopus. Its package files include dist, README.md, and skills so skills/xq-octopus/SKILL.md ships in the tarball. install-skills.js now scans both scoped @chauhaidang packages and the explicit unscoped xq-octopus package.
+
+**Rationale:** The user explicitly requested the release module name be only xq-octopus. Because the existing skill installer previously scanned only @chauhaidang/* packages, it needed a targeted unscoped package allowlist so consumers can still install the xq-octopus skill from node_modules.
+
+## DEC-D456CC11 — xq-octopus publishes to npmjs
+
+Status: `accepted`
+
+The xq-octopus package keeps the unscoped name xq-octopus and publishes through .github/workflows/cd-xq-octopus.yml to https://registry.npmjs.org using NPM_TOKEN. Existing scoped @chauhaidang packages continue to publish through GitHub Packages workflows.
+
+**Rationale:** GitHub Packages npm registry only supports scoped package names such as @NAMESPACE/PACKAGE-NAME. The user explicitly requested the release package name be only xq-octopus, so npmjs is the compatible registry for this CLI.
