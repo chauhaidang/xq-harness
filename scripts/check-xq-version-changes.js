@@ -20,6 +20,7 @@ const publishPrefixes = [
   "xq-test-infra",
   "xq-test-harness",
   "xq-octopus",
+  "xq-skills",
 ];
 
 function parseArgs(argv) {

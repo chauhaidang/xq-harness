@@ -19,6 +19,7 @@ names below for code from this repo.
 | Playwright API + Gherkin BDD backend tests      | `@chauhaidang/xq-harness-test-harness`    |
 | MCP server for scenario-driven REST API testing | `@chauhaidang/xq-harness-domain-test-mcp` |
 | Direct REST CLI checks                          | `xq-octopus`                              |
+| All bundled agent skills in one install         | `@chauhaidang/xq-skills`                  |
 | OpenAPI sync / report scripts (tarball)         | xq-scripts GitHub Release (not npm)       |
 
 ---
@@ -41,6 +42,7 @@ pnpm add -D @chauhaidang/xq-harness-test-utils
 pnpm add -D @chauhaidang/xq-harness-test-infra
 pnpm add -D @chauhaidang/xq-harness-test-harness
 pnpm add -D @chauhaidang/xq-harness-domain-test-mcp
+pnpm add -D @chauhaidang/xq-skills
 ```
 
 **Playwright harness:** do not add `@playwright/test` or `playwright-bdd`
@@ -191,6 +193,25 @@ into `.agents/skills/`.
 
 ---
 
+### `@chauhaidang/xq-skills` (0.1.0)
+
+**Purpose:** Single install that ships all XQ agent skill Markdown for consumer
+projects. No runtime code — only `skills/<name>/SKILL.md` files.
+
+**Install and copy into your agent directory:**
+
+```bash
+pnpm add -D @chauhaidang/xq-skills
+node path/to/xq-scripts/scripts/install-skills.js
+```
+
+**Bundled skills:** `e2e-app`, `e2e-config`, `e2e-screen`, `harness-state`,
+`xq-domain-test-mcp`, `xq-octopus`, `xq-test-harness-bdd`
+
+**Docs:** [modules/xq-skills/README.md](modules/xq-skills/README.md)
+
+---
+
 ## Dependency graph (published)
 
 ```text
@@ -202,6 +223,9 @@ into `.agents/skills/`.
   └── Playwright + playwright-bdd (bundled)
 
 @chauhaidang/xq-harness-domain-test-mcp  (no internal xq-harness deps)
+
+@chauhaidang/xq-skills                     (no internal xq-harness deps)
+  └── skills only — central agent skill bundle
 ```
 
 ---
@@ -234,8 +258,11 @@ tarball to copy skills into your project's `.agents/skills/`.
 For globally installed tools, run it with `--include-global` so global
 `@chauhaidang/*/skills/` and `xq-octopus/skills/` directories are scanned too.
 
+Install `@chauhaidang/xq-skills` to get every skill below in one package.
+
 | Package                      | Skills                                |
 | ---------------------------- | ------------------------------------- |
+| `@chauhaidang/xq-skills`     | all skills in this table              |
 | `xq-harness-test-harness`    | `xq-test-harness-bdd`                 |
 | `xq-octopus`                 | `xq-octopus`                          |
 | `xq-harness-test-utils`      | `e2e-app`, `e2e-config`, `e2e-screen` |

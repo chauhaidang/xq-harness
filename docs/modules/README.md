@@ -60,6 +60,7 @@ semver after publish.
 | `xq-test-infra` | 0.1.1 | `workspace:*` to `xq-common-kit` |
 | `xq-test-harness` | 0.1.0 | `@chauhaidang/xq-harness-test-harness` |
 | `xq-test-harness-e2e-consumer` | 0.0.0 | `workspace:*` to `xq-test-harness` |
+| `xq-skills` | 0.1.0 | `@chauhaidang/xq-skills` |
 | `xq-scripts` | VERSION file | tarball release only |
 
 **Prerequisites:** Node ≥ 18, Corepack. `NODE_AUTH_TOKEN` only needed when

@@ -1,0 +1,26 @@
+name: CI xq-skills
+
+on:
+  pull_request:
+    paths: &paths
+      - modules/xq-skills/**
+      - modules.yaml
+      - scripts/module
+      - scripts/check-xq-version-changes.js
+      - pnpm-workspace.yaml
+      - pnpm-lock.yaml
+      - .github/workflows/ci-xq-skills.yml
+      - .github/workflows/module-*.yml
+  push:
+    branches: [main]
+    paths: *paths
+
+concurrency:
+  group: ci-xq-skills-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: ./.github/workflows/module-ci-node.yml
+    with:
+      module: xq-skills

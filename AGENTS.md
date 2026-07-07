@@ -57,6 +57,10 @@ Use these when work is scoped to a specific module:
 | `xq-test-utils`      | `e2e-app`, `e2e-config`, `e2e-screen` | Detox / mobile E2E helpers                     |
 | `ios-xq-finance-app` | `ios-xq-finance-app`                  | SwiftUI app, portfolio model, XCTest           |
 
+**Consumer install:** `@chauhaidang/xq-skills` bundles all distributable module
+skills. Run `xq-scripts/scripts/install-skills.js` after installing it in a
+consumer project.
+
 If no skill matches, proceed with normal engineering judgment — keep changes
 minimal and aligned with surrounding code.
 

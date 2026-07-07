@@ -176,6 +176,19 @@ modules:
       build: pnpm run build
       test: pnpm test
 
+  xq-skills:
+    path: modules/xq-skills
+    language: node
+    version: 0.1.0
+    test_all: false
+    toolchain:
+      node: ">=22"
+      pnpm: "10"
+    commands:
+      install: pnpm install --frozen-lockfile
+      build: pnpm run build
+      test: pnpm test
+
   xq-scripts:
     path: modules/xq-scripts
     language: shell

@@ -2,7 +2,8 @@
 /**
  * install-skills.js
  *
- * Scans installed XQ packages for a skills/ directory and copies
+ * Scans installed XQ packages, including @chauhaidang/xq-skills, for
+ * a skills/ directory and copies
  * the skill files into the consumer project's .agents/skills/ directory so that
  * agent tooling (e.g. Cursor `.agents/skills/`) can discover and use them.
  *
@@ -82,7 +83,8 @@ function copyDir(src, dest) {
 
 // ─── Discover skills from installed XQ packages ──────────────────────────────
 
-const UNSCOPED_XQ_PACKAGES = ["xq-octopus"];
+const SCOPED_XQ_SKILL_PACKAGES = ["@chauhaidang/xq-skills"];
+const UNSCOPED_XQ_PACKAGES = ["xq-octopus", "xq-skills"];
 
 function getGlobalNodeModules() {
   try {
@@ -132,16 +134,26 @@ function installSkillPackages(label, packageDirs) {
 
 function discoverScopedPackages(nodeModulesDir) {
   const scopeDir = path.join(nodeModulesDir, "@chauhaidang");
-  if (!fs.existsSync(scopeDir)) return [];
-
   const packageDirs = [];
 
-  for (const pkg of fs.readdirSync(scopeDir, { withFileTypes: true })) {
-    if (!pkg.isDirectory()) continue;
-    packageDirs.push({
-      packageName: `@chauhaidang/${pkg.name}`,
-      packageDir: path.join(scopeDir, pkg.name),
-    });
+  if (fs.existsSync(scopeDir)) {
+    for (const pkg of fs.readdirSync(scopeDir, { withFileTypes: true })) {
+      if (!pkg.isDirectory()) continue;
+      packageDirs.push({
+        packageName: `@chauhaidang/${pkg.name}`,
+        packageDir: path.join(scopeDir, pkg.name),
+      });
+    }
+  }
+
+  for (const packageName of SCOPED_XQ_SKILL_PACKAGES) {
+    const packageDir = path.join(nodeModulesDir, ...packageName.split("/"));
+    if (
+      fs.existsSync(packageDir) &&
+      !packageDirs.some((pkg) => pkg.packageDir === packageDir)
+    ) {
+      packageDirs.push({ packageName, packageDir });
+    }
   }
 
   return packageDirs;

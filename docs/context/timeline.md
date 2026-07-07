@@ -247,3 +247,12 @@
 - `0276` 2026-07-07T13:41:39+00:00 **task.created** `TASK-93BA4F68` Release xq-octopus skill with unscoped package
 - `0277` 2026-07-07T13:41:43+00:00 **task.status_changed** `TASK-93BA4F68`
 - `0278` 2026-07-07T13:58:37+00:00 **decision.recorded** `DEC-D456CC11` xq-octopus publishes to npmjs
+- `0279` 2026-07-07T14:27:54+00:00 **requirement.created** `REQ-369D9FB4` Package skills in a dedicated xq-skills module
+- `0280` 2026-07-07T14:28:03+00:00 **decision.recorded** `DEC-504E620E` xq-skills is a packaging module
+- `0281` 2026-07-07T14:30:09+00:00 **task.created** `TASK-C0143E0D` Add xq-skills module and installer support
+- `0282` 2026-07-07T14:30:12+00:00 **task.status_changed** `TASK-C0143E0D`
+- `0283` 2026-07-07T14:30:16+00:00 **workspace.observed** `WS-BCAB65D5`
+- `0284` 2026-07-07T14:36:43+00:00 **decision.recorded** `DEC-45464FE6` xq-skills package omits harness prefix
+- `0285` 2026-07-07T14:36:47+00:00 **task.created** `TASK-212D36EB` Rename xq-skills package and add CD workflow
+- `0286` 2026-07-07T14:36:51+00:00 **task.status_changed** `TASK-212D36EB`
+- `0287` 2026-07-07T15:33:29+00:00 **workspace.observed** `WS-CAD8A0E9`

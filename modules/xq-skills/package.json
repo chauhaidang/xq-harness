@@ -1,0 +1,38 @@
+{
+  "name": "@chauhaidang/xq-skills",
+  "version": "0.1.0",
+  "description": "Distributable agent skills for XQ harness modules",
+  "files": [
+    "README.md",
+    "LICENSE",
+    "skills"
+  ],
+  "scripts": {
+    "build": "node scripts/verify-skills.js",
+    "test": "node scripts/verify-skills.js"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chauhaidang/xq-harness.git",
+    "directory": "modules/xq-skills"
+  },
+  "packageManager": "pnpm@10.14.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": [
+    "xq",
+    "agents",
+    "skills",
+    "markdown"
+  ],
+  "author": "chauhaidang",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/chauhaidang/xq-harness/issues"
+  },
+  "homepage": "https://github.com/chauhaidang/xq-harness/tree/main/modules/xq-skills#readme"
+}
