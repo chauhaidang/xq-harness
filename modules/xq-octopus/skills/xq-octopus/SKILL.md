@@ -86,7 +86,7 @@ Rules:
 - `apiBaseUrl` is required and cannot be blank.
 - `apiToken` is optional; when present it is sent as `Authorization: Bearer ...`.
 - `headers` is optional; keys and values must be strings.
-- Never print or paste real token values in reports, logs, or harness-state.
+- Never print or paste real token values in reports or logs.
 - Use `--config path/to/xq.json` when the config is not in the current working
   directory.
 

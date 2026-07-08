@@ -41,7 +41,7 @@ Installs pnpm `10.14.0`, verifies `pnpm --version`, then runs:
 
 | Input | Default | Purpose |
 | --- | --- | --- |
-| `module` | (required) | Registry key, e.g. `harness-state` |
+| `module` | (required) | Registry key, e.g. `xq-domain-test-mcp` |
 | `python_version` | `3.12` | Python version |
 
 Runs: `./scripts/module ci <module>` after installing Python, uv, and yq. For
@@ -78,8 +78,6 @@ Installs pnpm `10.14.0`, verifies `pnpm --version`, runs
 | `cd-<module>.yml` | Push to `main` when `package.json` (or `VERSION`) changes; **never on PR** |
 | `cd-<module>.yml` | `workflow_dispatch` (manual publish) |
 | `cd-<module>.yml` (Node package) | Push tag `xq-domain-test-mcp-v*`; **not chained to CI** |
-| `harness-state-release.yml` | Push tag `harness-state-v*`; legacy filename |
-
 CD callers include a `version-check` job using:
 
 ```bash
@@ -111,7 +109,6 @@ Validate caller/callee permission parity locally:
 | `xq-test-infra` | `ci-xq-test-infra.yml` | `cd-xq-test-infra.yml` | CI also watches `xq-common-kit` |
 | `xq-test-harness` | `ci-xq-test-harness.yml` | `cd-xq-test-harness.yml` | `playwright_skip_browser: true` |
 | `xq-test-harness-e2e-consumer` | `ci-xq-test-harness-e2e-consumer.yml` | — | Private; CI only |
-| `harness-state` | — | `harness-state-release.yml` | Tag `harness-state-v*`; wheel + skills tarball |
 | `xq-domain-test-mcp` | `ci-xq-domain-test-mcp.yml` | `cd-xq-domain-test-mcp.yml` | Tag `xq-domain-test-mcp-v*`; GitHub Packages npm publish |
 | `xq-skills` | `ci-xq-skills.yml` | `cd-xq-skills.yml` | npm publish; central agent skills bundle |
 | `xq-scripts` | — | `cd-xq-scripts.yml` | Tarball release |

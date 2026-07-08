@@ -83,8 +83,6 @@ Use these repo skills in order:
 
 1. `implement` - for building the module from the guide.
 2. `tdd` - for writing the config, validation, REST, and CLI tests first.
-3. `harness-state` - for recording any requirement, decision, spec, or solution
-   that changes the documented plan.
 
 If the implementation starts drifting toward interface shape debates, use
 `codebase-design` before changing the public CLI or execution contract.

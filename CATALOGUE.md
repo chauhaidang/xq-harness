@@ -205,7 +205,7 @@ pnpm add -D @chauhaidang/xq-skills
 node path/to/xq-scripts/scripts/install-skills.js
 ```
 
-**Bundled skills:** `e2e-app`, `e2e-config`, `e2e-screen`, `harness-state`,
+**Bundled skills:** `e2e-app`, `e2e-config`, `e2e-screen`,
 `xq-domain-test-mcp`, `xq-octopus`, `xq-test-harness-bdd`
 
 **Docs:** [modules/xq-skills/README.md](modules/xq-skills/README.md)

@@ -170,8 +170,8 @@ the shipped skill at [`skills/xq-domain-test-mcp/SKILL.md`](skills/xq-domain-tes
 
 ### GitHub Release install (when published)
 
-When a release workflow publishes wheels to GitHub Releases (same pattern as
-`harness-state`), install a pinned version with:
+When a release workflow publishes wheels to GitHub Releases, install a pinned
+version with:
 
 ```bash
 uv tool install --force \

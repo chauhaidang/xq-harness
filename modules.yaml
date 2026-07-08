@@ -1,19 +1,6 @@
 version: 1
 
 modules:
-  harness-state:
-    path: modules/harness-state
-    language: python
-    version: 0.1.0
-    test_all: false
-    toolchain:
-      python: "3.12"
-      uv: required
-    commands:
-      install: uv sync --locked
-      build: SOURCE_DATE_EPOCH=0 uv build && uv run python scripts/build_release_artifacts.py
-      test: uv run pytest
-
   xq-domain-test-mcp:
     path: modules/xq-domain-test-mcp
     language: python

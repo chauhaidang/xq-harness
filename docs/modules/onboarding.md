@@ -220,7 +220,7 @@ Do **not** place module code at the xq-harness repo root.
 
 | Item | Convention |
 | --- | --- |
-| Module directory | `kebab-case`, stable short name, e.g. `harness-state` |
+| Module directory | `kebab-case`, stable short name, e.g. `xq-domain-test-mcp` |
 | npm package (if published) | `@chauhaidang/xq-harness-<short-name>` |
 | npm `repository.directory` | `modules/<module-name>` |
 | iOS bundle ID | Your team’s reverse-DNS; avoid `com.example` in production modules |

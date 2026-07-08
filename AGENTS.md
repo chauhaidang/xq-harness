@@ -11,8 +11,9 @@ packages ship as `@chauhaidang/xq-harness-*` on GitHub Packages.
 1. **Pick a skill** — read `.agents/skills/` (and module skills under
    `modules/*/skills/`) before acting. Match the user's goal to the closest
    skill and follow it end-to-end.
-2. **Load prior context** — run `harness-state init`, then read
-   `harness-state timeline --limit 100` and `docs/context/*.md` when they exist.
+2. **Load only task-relevant context** — read the docs and module files needed
+   for the current task. Do not preload broad repo history unless the task
+   explicitly requires it.
 3. **Confirm scope** — restate Situation, Task, Action, and expected Result
    (STAR) before making changes. Ask when requirements or the target module are
    unclear.
@@ -28,7 +29,6 @@ packages ship as `@chauhaidang/xq-harness-*` on GitHub Packages.
 | Skill                      | Use when…                                 |
 | -------------------------- | ----------------------------------------- |
 | `ask-matt`                 | Unsure which skill or flow fits           |
-| `harness-state`            | Recording or querying project memory      |
 | `implement`                | Building from a PRD or issue              |
 | `tdd`                      | Test-first development                    |
 | `review`                   | Reviewing changes since a fixed point     |
@@ -51,7 +51,6 @@ Use these when work is scoped to a specific module:
 
 | Module               | Skill                                 | Use when…                                      |
 | -------------------- | ------------------------------------- | ---------------------------------------------- |
-| `harness-state`      | `harness-state`                       | CLI usage details (canonical copy)             |
 | `xq-octopus`         | `xq-octopus`                          | Direct REST API checks with the xq-octopus CLI |
 | `xq-test-harness`    | `xq-test-harness-bdd`                 | Consumer BDD / Playwright setup                |
 | `xq-test-utils`      | `e2e-app`, `e2e-config`, `e2e-screen` | Detox / mobile E2E helpers                     |
@@ -66,29 +65,6 @@ minimal and aligned with surrounding code.
 
 ---
 
-## Project memory (harness-state)
-
-**Always record meaningful work.** Requirements, decisions (with rationale),
-specs, solutions, tasks, and workspace checkpoints must go through the
-`harness-state` CLI — not hand-edited Markdown or JSONL.
-
-```bash
-cd modules/harness-state && uv sync   # once per environment
-harness-state init                    # idempotent; run every session
-```
-
-Follow `.agents/skills/harness-state/SKILL.md` for commands and rules. Before
-ending a session that changed project understanding:
-
-- Record decisions with `--rationale`
-- Link entities by printed IDs (REQ-, DEC-, SPEC-, etc.)
-- Run `harness-state export` so `docs/context/*.md` stays reviewable
-
-Never commit secrets or large logs in event bodies — reference artifact paths
-under `.harness/artifacts/` instead.
-
----
-
 ## Key docs
 
 | Topic                       | Location                                                       |
@@ -99,7 +75,6 @@ under `.harness/artifacts/` instead.
 | CI/CD per module            | [docs/github-actions.md](docs/github-actions.md)               |
 | Architecture decisions      | [docs/decisions/](docs/decisions/)                             |
 | Product / stories           | [docs/product/](docs/product/), [docs/stories/](docs/stories/) |
-| Project context (generated) | [docs/context/](docs/context/)                                 |
 
 ---
 
@@ -143,8 +118,5 @@ After completing work, summarize for the user:
 
 - **Situation** — what context or problem existed
 - **Task** — what was asked or decided
-- **Action** — what you did (commands, files, harness-state records)
+- **Action** — what you did (commands, files, docs updated)
 - **Result** — outcome, test status, and anything left open
-
-Record the same Action and Result in harness-state when the work affects future
-decisions or project memory.

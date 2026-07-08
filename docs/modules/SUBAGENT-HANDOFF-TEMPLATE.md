@@ -32,7 +32,7 @@
 | Roadmap | `<path or "none">` |
 | Current phase | `<e.g. Track A Day 1>` |
 | Active plan | `<path to docs/plans/...>` |
-| Active task ID | `<TASK-… from harness-state, or "none">` |
+| Active task ID | `<tracker ID or "none">` |
 
 ## Current work
 
@@ -84,7 +84,7 @@ uv build                    # if applicable
 | --- | --- |
 | `<DEC-…>` | `<one line>` |
 
-Full history: monorepo `docs/context/decisions.md` (if root is available).
+Full history: link the relevant repo-level design or decision docs here when available.
 
 ## Pitfalls
 
@@ -100,9 +100,9 @@ Full history: monorepo `docs/context/decisions.md` (if root is available).
 
 - `<question or "none">`
 
-## Session log (module-only harness-state fallback)
+## Session log
 
-Append-only; sync to harness-state when monorepo root is available.
+Append-only; keep enough detail for the next module-scoped session to resume.
 
 | Date | Agent | Summary |
 | --- | --- | --- |

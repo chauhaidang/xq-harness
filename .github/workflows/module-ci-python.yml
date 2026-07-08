@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       module:
-        description: Module registry key (e.g. harness-state)
+        description: Module registry key (e.g. xq-domain-test-mcp)
         required: true
         type: string
       python_version:

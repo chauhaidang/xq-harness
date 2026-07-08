@@ -22,7 +22,7 @@ Do not duplicate those commands in the Makefile or CI workflows.
 ```bash
 ./scripts/module list
 ./scripts/module ci xq-common-kit
-make test MODULE=harness-state
+make test MODULE=xq-domain-test-mcp
 ./scripts/module test-all
 ```
 

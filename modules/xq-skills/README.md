@@ -27,7 +27,6 @@ consumer project has opted into one of those agent directories.
 - `e2e-app`
 - `e2e-config`
 - `e2e-screen`
-- `harness-state`
 - `xq-domain-test-mcp`
 - `xq-octopus`
 - `xq-test-harness-bdd`

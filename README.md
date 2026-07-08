@@ -56,7 +56,6 @@ modules/
   xq-test-harness/        # Playwright + Gherkin API harness
   xq-domain-test-mcp/     # Python MCP server for REST/E2E API test calls
   xq-scripts/             # release tarball scripts (not npm)
-  harness-state/          # project memory CLI
   ios-xq-finance-app/     # SwiftUI sample app
 docs/                     # contributor and package documentation
 ```
