@@ -19,6 +19,12 @@ final class PortfolioLifecycleTests: BaseUITestCase {
         portfolio.openPriceEditor().save(price: "120")
         portfolio.openBuyLotEditor().add(units: "2", price: "120")
         portfolio.transactionRow.requireExistence()
+        XCTAssertTrue(portfolio.assetCurrentValue.requireExistence().label.contains("$"))
+
+        portfolio.switchToVNDFromSegmentEdge()
+        XCTAssertTrue(portfolio.assetCurrentValue.requireExistence().label.contains("VND"))
+        portfolio.switchToUSDFromSegmentEdge()
+        XCTAssertTrue(portfolio.assetCurrentValue.requireExistence().label.contains("$"))
 
         portfolio.deductFirstTransaction()
         XCTAssertTrue(portfolio.transactionRow.waitForNonExistence(timeout: 8))

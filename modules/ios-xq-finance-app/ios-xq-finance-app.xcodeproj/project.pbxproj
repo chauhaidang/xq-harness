@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		467ECC4C9A251CAD3B0A651F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE2628BB9C63DAC245D5C6B3 /* Assets.xcassets */; };
 		5BD512AD15C0A6F2820B2C82 /* XQUIHarness in Frameworks */ = {isa = PBXBuildFile; productRef = FC2051F1B5ACA90819A15285 /* XQUIHarness */; };
+		77E3B39A2DE0443D8C8A7117 /* CurrencyToggleHitTargetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD992A2B7E84F4B8798D865 /* CurrencyToggleHitTargetTests.swift */; };
 		92CDB1D20E6D9F46E18A8B60 /* PortfolioScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8845BB66F8164E1CABD611 /* PortfolioScreen.swift */; };
 		A9A07FC67A3BDA4D0782FF09 /* TestApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6D936B784B8958FD1B7B4C3 /* TestApplication.swift */; };
 		B1C8ACBC93FE8AFCFE61CBE0 /* XQAccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55DCABEC2C9E80108AA07E1 /* XQAccessibilityIdentifier.swift */; };
@@ -45,6 +46,7 @@
 		1FC3EF28A4651572DF5A3739 /* AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTests.swift; sourceTree = "<group>"; };
 		2595EC3CDA86C5571DAF1D21 /* PriceEditorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceEditorScreen.swift; sourceTree = "<group>"; };
 		430D79DCFBC6D9079450D72F /* PortfolioLifecycleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioLifecycleTests.swift; sourceTree = "<group>"; };
+		6BD992A2B7E84F4B8798D865 /* CurrencyToggleHitTargetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyToggleHitTargetTests.swift; sourceTree = "<group>"; };
 		6FE12B90EA65E1C0C91EE9A6 /* xq-ios-ui-test-framework */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "xq-ios-ui-test-framework"; path = "../xq-ios-ui-test-framework"; sourceTree = SOURCE_ROOT; };
 		812300C42A31FA8950FD2845 /* ios-xq-finance-appUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = "ios-xq-finance-appUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD4B6A59787BAB97B7C2FBB1 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 			children = (
 				0D5B1236F5B7A803F196C72E /* AddAssetScreen.swift */,
 				FD1AF249961AC135201FBB88 /* BuyLotScreen.swift */,
+				6BD992A2B7E84F4B8798D865 /* CurrencyToggleHitTargetTests.swift */,
 				430D79DCFBC6D9079450D72F /* PortfolioLifecycleTests.swift */,
 				0D8845BB66F8164E1CABD611 /* PortfolioScreen.swift */,
 				2595EC3CDA86C5571DAF1D21 /* PriceEditorScreen.swift */,
@@ -263,6 +266,7 @@
 			files = (
 				B3F0737F2A2FAD6694D087B0 /* AddAssetScreen.swift in Sources */,
 				F8A59C2FF0A8F383C60DA2FA /* BuyLotScreen.swift in Sources */,
+				77E3B39A2DE0443D8C8A7117 /* CurrencyToggleHitTargetTests.swift in Sources */,
 				CC8BA377BBEA0A632EF7F31D /* PortfolioLifecycleTests.swift in Sources */,
 				92CDB1D20E6D9F46E18A8B60 /* PortfolioScreen.swift in Sources */,
 				F233DBAE028FC4E3E87504FF /* PriceEditorScreen.swift in Sources */,

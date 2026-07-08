@@ -12,8 +12,8 @@
 - The primary screen is a swipe-card portfolio browser. Each card represents one
   asset and shows current total value in the selected display currency plus a
   buy-lot list.
-- A thumb-sized USD/VND toggle controls the display currency for the portfolio
-  summary, asset card value, and buy-lot prices.
+- A full-width USD/VND segmented toggle controls the display currency for the
+  portfolio summary, asset card value, and buy-lot prices.
 - A portfolio summary below the currency toggle shows the total current value
   across all local assets, followed by an editable USD-to-VND exchange rate row.
 - The app launches empty on first install. A top-bar add button and empty-state

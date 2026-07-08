@@ -26,7 +26,8 @@ currency support.
 - The app launches empty on first install and provides an add-asset entry point
   instead of seeded default holdings.
 - Users can move through asset cards by dragging horizontally on the card stack.
-- Users can switch display currency with a large USD/VND toggle.
+- Users can switch display currency with a large USD/VND toggle that responds
+  to a single tap on either segment.
 - The screen shows total current portfolio value across all assets below the
   currency toggle and above the card stack.
 - The screen shows an editable USD/VND exchange rate row below the summary.

@@ -303,3 +303,75 @@ xq-octopus now has test/e2e-cli.test.ts. The test starts a local Node HTTP API e
 Status: `proposed`
 
 Added modules/xq-octopus/skills/xq-octopus/SKILL.md with practical CLI usage instructions: when to use the CLI, setup/build commands, xq.json contract, command discovery, REST call examples, JSON-pointer validation, exit code handling, OpenAPI smoke workflow, and safety guardrails. AGENTS.md now lists xq-octopus as a module-level skill.
+
+## SOL-F3E2D6F9 — iOS finance archive script
+
+Status: `proposed`
+
+Added modules/ios-xq-finance-app/scripts/archive-ipa.sh. It resolves the repo root, archives ios-xq-finance-app for generic iOS Release using the documented project/scheme/archive path, exports with exportOptions.plist, writes xcodebuild logs to stderr, and prints the absolute IPA path. Verified output: /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ipa/ios-xq-finance-app.ipa.
+
+## SOL-54B28A90 — iOS finance device provisioning guard
+
+Status: `proposed`
+
+Verified Xcode sees physical device 00008150-0012058A14F8401C as destination David for ios-xq-finance-app. The exported IPA embeds provisioning profile iOS Team Provisioning Profile: com.xq.finance.ios-xq-finance-app, UUID 11a9373c-781b-4390-8f6c-09c8b2729396, team T99X93V7Y2, and ProvisionedDevices includes 00008150-0012058A14F8401C. Updated archive-ipa.sh so IOS_DEVICE_ID=00008150-0012058A14F8401C archives/exports and fails if the exported IPA profile does not include that device. Verified output IPA: /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ipa/ios-xq-finance-app.ipa.
+
+## SOL-71BB4EF6 — Reliable iOS finance currency toggle
+
+Status: `proposed`
+
+Updated CurrencyToggleView so each USD/VND segment has a full capsule contentShape and a 52pt minimum hit target, preserving the existing visual style while making the transparent/unselected segment reliably tappable. Added accessibility identifiers for USD and VND segment buttons and extended the portfolio lifecycle UI test to tap VND then USD once and assert the asset current value changes format. Validation: ./scripts/module build ios-xq-finance-app passed. ./scripts/module test ios-xq-finance-app built the app/test bundle but the simulator runner hung waiting for target-runner workers and was interrupted, matching the existing simulator hang pattern.
+
+## SOL-42608C27 — Full-rectangle currency segment hit targets
+
+Status: `proposed`
+
+Updated CurrencyToggleView to use a ZStack with Color.clear and contentShape(Rectangle()) for each USD/VND segment, while keeping the selected capsule visual. This makes the far left/right segment areas tappable instead of only the center/text/capsule region. Added root scripts/archive-ipa.sh wrapper to call modules/ios-xq-finance-app/scripts/archive-ipa.sh, updated BUILD_AND_TEST.md to document the root command, and verified ./scripts/module build ios-xq-finance-app plus IOS_DEVICE_ID=00008150-0012058A14F8401C ./scripts/archive-ipa.sh. Fresh IPA: /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ipa/ios-xq-finance-app.ipa.
+
+## SOL-788DC77A — Currency toggle button wrapper hit area
+
+Status: `proposed`
+
+After user clarified that taps on USD/VND text worked but taps outside the text still missed, expanded the Button wrapper itself with frame(maxWidth: .infinity, minHeight: 56) and Rectangle contentShape, in addition to the label-level clear rectangular hit layer. This makes the segment's full half-width button area the tap target. Validation: ./scripts/module build ios-xq-finance-app passed.
+
+## SOL-09B1598B — Renderable invisible surface for unselected currency segment
+
+Status: `proposed`
+
+User observed selected segment produced button haptic outside the word, but unselected segment did not. Replaced Color.clear in CurrencyToggleView with Rectangle().fill(.white.opacity(0.001)) so the unselected USD/VND half has a real renderable hit surface while remaining visually invisible. Validation: ./scripts/module build ios-xq-finance-app passed; IOS_DEVICE_ID=00008150-0012058A14F8401C ./scripts/archive-ipa.sh succeeded and produced /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ipa/ios-xq-finance-app.ipa.
+
+## SOL-6858B8FB — Currency toggle uses explicit segment hit zones
+
+Status: `proposed`
+
+Replaced CurrencyToggleView's per-button visual layout with a single fixed-height segmented control that renders the selected thumb and text as passive layers, then overlays two explicit half-width Button hit zones. This targets the physical-device bug where the unselected USD/VND segment responded only when tapping directly on the text. Added UI-test screen-object helpers that tap the edge of each currency segment and updated the lifecycle test to assert currency switching from those edge taps. Validation: ./scripts/module build ios-xq-finance-app passed; xcodebuild -scheme ios-xq-finance-app build-for-testing passed; xcodebuild -scheme ios-xq-finance-app-ui-tests build-for-testing passed; IOS_DEVICE_ID=00008150-0012058A14F8401C ./scripts/archive-ipa.sh succeeded and exported /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ipa/ios-xq-finance-app.ipa with the embedded profile including that device.
+
+## SOL-9CB012B7 — Currency toggle parent gesture handles full-control taps
+
+Status: `proposed`
+
+Debugged the USD/VND segmented control after a physical-device screenshot showed only the text area effectively changed currency. The prior implementations expanded visual/touch surfaces around per-segment Buttons, but the user confirmed taps outside the text could be recognized without triggering the currency-change event. Root cause: the action was still owned by child Button/label hit testing, so visual capsule width and reliable event dispatch diverged. Changed CurrencyToggleView to render the segmented control as passive visuals and attach a SpatialTapGesture to the full parent control. The gesture maps the tap x-coordinate to USD or VND and calls the same setCurrency path for the entire left/right half. Added a single displayCurrencyToggle accessibility identifier and updated UI tests to tap the toggle by coordinate. Validation: ./scripts/module build ios-xq-finance-app passed; xcodebuild -scheme ios-xq-finance-app-ui-tests build-for-testing passed; IOS_DEVICE_ID=00008150-0012058A14F8401C ./scripts/archive-ipa.sh succeeded and exported /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ipa/ios-xq-finance-app.ipa.
+
+## SOL-E69F90F7 — Currency toggle edge-tap UI evidence
+
+Status: `proposed`
+
+Added CurrencyToggleHitTargetTests to the ios-xq-finance-app UI-test target and ran the focused test on iPhone 16 Simulator. Evidence bundle: /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ui-test-results/currency-toggle-hit-target-rerun.xcresult. Result: TEST SUCCEEDED; executed 1 test, 0 failures. The log shows taps on xq.display-currency.toggle at normalized coordinates [0.95, 0.50] for the right edge and [0.05, 0.50] for the left edge. Exported kept screenshot attachments to /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ui-test-results/currency-toggle-hit-target-images/01-start-usd.png, 02-after-right-edge-vnd.png, and 03-after-left-edge-usd.png.
+
+## SOL-94116D4D — Verified iOS IPA provisioning for device 00008101-000E548E34F0001E
+
+Status: `proposed`
+
+Archived ios-xq-finance-app with IOS_DEVICE_ID=00008101-000E548E34F0001E using ./scripts/archive-ipa.sh. Export succeeded, the decoded embedded.mobileprovision included the requested device UDID, and the script printed /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ipa/ios-xq-finance-app.ipa as the final IPA path.
+
+## SOL-2B28247C — Physical iPhone UI test blocked by untrusted developer certificate
+
+Status: `proposed`
+
+Attempted the focused CurrencyToggleHitTargetTests/testCurrencyToggleRespondsToEdgeTaps UI test on physical iPhone destination 00008101-000E548E34F0001E using xcodebuild. Xcode initially lacked a UI-test runner provisioning profile, then -allowProvisioningUpdates created/signed com.xq.finance.ios-xq-finance-appUITests.xctrunner. The device rejected launching the test runner because the Developer App certificate was not trusted on the phone. Xcode recovery suggestion: open Settings on the device, go to General -> VPN & Device Management, select the Developer App certificate, and trust it. Physical result bundle: /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ui-test-results/currency-toggle-hit-target-device-00008101-allow-provisioning.xcresult.
+
+## SOL-8273FC0A — Physical iPhone currency toggle edge-tap UI test passed
+
+Status: `proposed`
+
+Reran CurrencyToggleHitTargetTests/testCurrencyToggleRespondsToEdgeTaps on physical iPhone destination 00008101-000E548E34F0001E after trusting the developer certificate. xcodebuild succeeded with 1 test and 0 failures. Result bundle: /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ui-test-results/currency-toggle-hit-target-device-00008101-trusted.xcresult. Exported physical-device screenshots: /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ui-test-results/currency-toggle-hit-target-device-00008101-images/01-start-usd.png, /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ui-test-results/currency-toggle-hit-target-device-00008101-images/02-after-right-edge-vnd.png, /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ui-test-results/currency-toggle-hit-target-device-00008101-images/03-after-left-edge-usd.png.

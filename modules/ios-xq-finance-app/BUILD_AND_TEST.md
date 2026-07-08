@@ -122,6 +122,22 @@ All interface orientations must be supported unless the app requires full screen
 The warning did not block the physical-device XCTest run.
 
 ## Useful commands:
+
+Archive and export the app as an IPA. The script prints the generated IPA path
+to stdout and sends build logs to stderr:
+
+```bash
+./scripts/archive-ipa.sh
+```
+
+To fail the archive/export when the embedded provisioning profile does not
+include a target physical device:
+
+```bash
+IOS_DEVICE_ID=00008150-0012058A14F8401C \
+  ./scripts/archive-ipa.sh
+```
+
 ```bash
 xcodebuild \
   -project modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj \

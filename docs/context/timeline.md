@@ -256,3 +256,24 @@
 - `0285` 2026-07-07T14:36:47+00:00 **task.created** `TASK-212D36EB` Rename xq-skills package and add CD workflow
 - `0286` 2026-07-07T14:36:51+00:00 **task.status_changed** `TASK-212D36EB`
 - `0287` 2026-07-07T15:33:29+00:00 **workspace.observed** `WS-CAD8A0E9`
+- `0288` 2026-07-07T16:56:58+00:00 **task.created** `TASK-2EDE2CAF` Add iOS finance IPA archive script
+- `0289` 2026-07-07T16:57:03+00:00 **task.status_changed** `TASK-2EDE2CAF`
+- `0290` 2026-07-07T16:57:08+00:00 **solution.proposed** `SOL-F3E2D6F9` iOS finance archive script
+- `0291` 2026-07-07T16:57:14+00:00 **workspace.observed** `WS-994F2C2D`
+- `0292` 2026-07-07T17:02:22+00:00 **task.created** `TASK-01FC2AF2` Verify iOS finance IPA provisioning for device
+- `0293` 2026-07-07T17:02:28+00:00 **task.status_changed** `TASK-01FC2AF2`
+- `0294` 2026-07-07T17:02:35+00:00 **solution.proposed** `SOL-54B28A90` iOS finance device provisioning guard
+- `0295` 2026-07-07T17:27:36+00:00 **task.created** `TASK-BCEB3BC2` Improve iOS finance currency toggle tap reliability
+- `0296` 2026-07-07T17:27:42+00:00 **task.status_changed** `TASK-BCEB3BC2`
+- `0297` 2026-07-07T17:28:01+00:00 **solution.proposed** `SOL-71BB4EF6` Reliable iOS finance currency toggle
+- `0298` 2026-07-07T17:47:55+00:00 **task.created** `TASK-70CB0951` Fix iOS finance segment edge tap targets
+- `0299` 2026-07-07T17:48:00+00:00 **task.status_changed** `TASK-70CB0951`
+- `0300` 2026-07-07T17:48:10+00:00 **solution.proposed** `SOL-42608C27` Full-rectangle currency segment hit targets
+- `0301` 2026-07-07T17:59:13+00:00 **solution.proposed** `SOL-788DC77A` Currency toggle button wrapper hit area
+- `0302` 2026-07-07T18:14:53+00:00 **solution.proposed** `SOL-09B1598B` Renderable invisible surface for unselected currency segment
+- `0303` 2026-07-07T18:21:17+00:00 **solution.proposed** `SOL-6858B8FB` Currency toggle uses explicit segment hit zones
+- `0304` 2026-07-08T07:34:12+00:00 **solution.proposed** `SOL-9CB012B7` Currency toggle parent gesture handles full-control taps
+- `0305` 2026-07-08T13:39:33+00:00 **solution.proposed** `SOL-E69F90F7` Currency toggle edge-tap UI evidence
+- `0306` 2026-07-08T13:41:46+00:00 **solution.proposed** `SOL-94116D4D` Verified iOS IPA provisioning for device 00008101-000E548E34F0001E
+- `0307` 2026-07-08T13:47:35+00:00 **solution.proposed** `SOL-2B28247C` Physical iPhone UI test blocked by untrusted developer certificate
+- `0308` 2026-07-08T15:09:12+00:00 **solution.proposed** `SOL-8273FC0A` Physical iPhone currency toggle edge-tap UI test passed

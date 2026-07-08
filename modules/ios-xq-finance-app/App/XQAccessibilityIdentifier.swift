@@ -1,6 +1,9 @@
 enum XQAccessibilityIdentifier: String {
     case emptyPortfolio = "xq.portfolio.empty"
     case addAssetButton = "xq.portfolio.add-asset"
+    case displayCurrencyToggle = "xq.display-currency.toggle"
+    case displayCurrencyUSDButton = "xq.display-currency.usd"
+    case displayCurrencyVNDButton = "xq.display-currency.vnd"
     case assetCard = "xq.asset.card"
     case assetSymbol = "xq.asset.symbol"
     case assetCurrentValue = "xq.asset.current-value"

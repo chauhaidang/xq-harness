@@ -13,6 +13,10 @@ struct PortfolioScreen: ScreenObject {
         application.descendants(matching: .any)[XQAccessibilityIdentifier.assetSymbol.rawValue]
     }
 
+    var assetCurrentValue: XCUIElement {
+        application.descendants(matching: .any)[XQAccessibilityIdentifier.assetCurrentValue.rawValue]
+    }
+
     var transactionRow: XCUIElement {
         application.descendants(matching: .any)[XQAccessibilityIdentifier.transactionRow.rawValue]
     }
@@ -30,6 +34,28 @@ struct PortfolioScreen: ScreenObject {
     func openBuyLotEditor() -> BuyLotScreen {
         application.buttons[XQAccessibilityIdentifier.addBuyLotButton.rawValue].tapWhenHittable()
         return BuyLotScreen(application: application)
+    }
+
+    func switchToVND() {
+        tapDisplayCurrencyToggle(normalizedX: 0.75)
+    }
+
+    func switchToUSD() {
+        tapDisplayCurrencyToggle(normalizedX: 0.25)
+    }
+
+    func switchToVNDFromSegmentEdge() {
+        tapDisplayCurrencyToggle(normalizedX: 0.95)
+    }
+
+    func switchToUSDFromSegmentEdge() {
+        tapDisplayCurrencyToggle(normalizedX: 0.05)
+    }
+
+    private func tapDisplayCurrencyToggle(normalizedX: CGFloat) {
+        let toggle = application.descendants(matching: .any)[XQAccessibilityIdentifier.displayCurrencyToggle.rawValue]
+            .requireExistence()
+        toggle.coordinate(withNormalizedOffset: CGVector(dx: normalizedX, dy: 0.5)).tap()
     }
 
     func deductFirstTransaction() {
