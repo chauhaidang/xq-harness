@@ -34,6 +34,23 @@ they are relevant to the current task.
 - **No secrets in git**: Never commit tokens, `.env` contents, or credentials
 - **Commits and pushes**: Only when the user asks
 
+## Change State Model
+
+Every change session should explicitly capture these states in `progress.md`
+before claiming completion:
+
+- **Before state**: What behavior, files, feature status, and known risks exist before edits
+- **After state**: What behavior, files, feature status, and known risks exist after edits
+- **Regression test results**: Which commands ran, what passed or failed, and any gaps
+- **PR ready**: Whether the diff is reviewable, scoped, documented, and free of known unfinished work
+- **CI ready**: Whether the repo is ready for CI with the required local verification already run
+
+Minimum expectations:
+
+- Before edits, write or restate the **Before state** and the intended **After state**
+- After edits, record **Regression test results** with command evidence
+- Before ending, mark whether the work is **PR ready** and **CI ready**, with blockers if not
+
 ## Required Artifacts
 
 - `feature_list.json` — source of truth for feature status and evidence
@@ -61,8 +78,9 @@ Before ending a session:
 1. Update `progress.md`
 2. Update `feature_list.json`
 3. Update `session-handoff.md`
-4. Record unresolved blockers or risks
-5. Re-run relevant verification
+4. Record Before state, After state, regression results, PR-ready state, and CI-ready state
+5. Record unresolved blockers or risks
+6. Re-run relevant verification
 
 ## Verification Commands
 

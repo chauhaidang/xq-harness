@@ -61,8 +61,8 @@
       "dependencies": [
         "feat-005"
       ],
-      "status": "not-started",
-      "evidence": ""
+      "status": "in-progress",
+      "evidence": "Used real repo-maintenance tasks on 2026-07-09 to tighten the harness twice: first by switching Node workspace defaults from pnpm to npm, and then by adding explicit Before state, After state, Regression test results, PR ready, and CI ready checkpoints to `AGENTS.md`, `.repo-harness/topics/agent-workflow.md`, `progress.md`, and `session-handoff.md`."
     }
   ]
 }

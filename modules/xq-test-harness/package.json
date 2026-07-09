@@ -28,8 +28,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "bddgen": "pnpm exec bddgen -c playwright.config.ts",
-    "test": "pnpm run build && pnpm exec bddgen -c playwright.config.ts && pnpm exec playwright test -c playwright.config.ts",
+    "bddgen": "npm exec bddgen -- -c playwright.config.ts",
+    "test": "npm run build && npm exec bddgen -- -c playwright.config.ts && npm exec playwright -- test -c playwright.config.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "clean": "rm -rf dist .features-gen test-results playwright-report"
@@ -42,7 +42,7 @@
     "url": "git+https://github.com/chauhaidang/xq-harness.git",
     "directory": "modules/xq-harness-test-harness"
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "npm@11.16.0",
   "engines": {
     "node": ">=22.0.0"
   },

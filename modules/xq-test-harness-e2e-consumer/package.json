@@ -5,14 +5,14 @@
   "description": "Exercises @chauhaidang/xq-harness-test-harness like an external consumer (single harness dependency)",
   "scripts": {
     "build": "true",
-    "test": "pnpm run test:bdd",
+    "test": "npm run test:bdd",
     "test:bdd": "rm -rf ../xq-test-harness/node_modules/@playwright ../xq-test-harness/node_modules/playwright ../xq-test-harness/node_modules/playwright-bdd ../xq-test-harness/node_modules/playwright-core 2>/dev/null; NODE_PATH=\"${PWD}/node_modules\" ./node_modules/.bin/bddgen -c playwright.config.ts && NODE_PATH=\"${PWD}/node_modules\" ./node_modules/.bin/playwright test -c playwright.config.ts",
     "report:show": "./node_modules/.bin/playwright show-report playwright-report",
     "lint": "eslint . --ext .ts",
     "clean": "rm -rf .features-gen test-results playwright-report"
   },
   "dependencies": {
-    "@chauhaidang/xq-harness-test-harness": "workspace:*",
+    "@chauhaidang/xq-harness-test-harness": "^0.1.0",
     "@playwright/test": "1.60.0",
     "playwright-bdd": "^8.5.1"
   },
@@ -23,7 +23,7 @@
     "eslint": "^8.50.0",
     "typescript": "^5.9.3"
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "npm@11.16.0",
   "engines": {
     "node": ">=22.0.0"
   },

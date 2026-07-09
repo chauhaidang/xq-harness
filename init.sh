@@ -10,7 +10,7 @@ echo "=== node version ==="
 node --version
 
 echo "=== package manager ==="
-pnpm --version
+npm --version
 
 if ! command -v yq >/dev/null 2>&1; then
   echo "error: yq is required for ./scripts/module" >&2

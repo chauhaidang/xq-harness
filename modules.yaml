@@ -74,23 +74,25 @@ modules:
 
   # ── XQ packages (Level C: published semver, independent modules) ──────────────
   # Harness-lineage packages: @chauhaidang/xq-harness-* (see ADR 0010).
-  # Monorepo uses pnpm workspace links for sibling deps; external consumers use semver.
+  # Monorepo uses npm workspaces for sibling deps; external consumers use semver.
 
   xq-common-kit:
     path: modules/xq-common-kit
+    workspace: modules/xq-common-kit
     language: node
     version: 0.1.0
     test_all: true
     toolchain:
       node: ">=22"
-      pnpm: "10"
+      npm: "11"
     commands:
-      install: pnpm install --frozen-lockfile
-      build: pnpm run build
-      test: pnpm test
+      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
+      build: npm --prefix ../.. run build --workspace modules/xq-common-kit
+      test: npm --prefix ../.. test --workspace modules/xq-common-kit
 
   xq-test-utils:
     path: modules/xq-test-utils
+    workspace: modules/xq-test-utils
     language: node
     version: 0.1.0
     test_all: true
@@ -98,14 +100,15 @@ modules:
       - xq-common-kit
     toolchain:
       node: ">=22"
-      pnpm: "10"
+      npm: "11"
     commands:
-      install: pnpm install --frozen-lockfile
-      build: pnpm run build
-      test: pnpm test
+      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
+      build: npm --prefix ../.. run build --workspace modules/xq-test-utils
+      test: npm --prefix ../.. test --workspace modules/xq-test-utils
 
   xq-test-infra:
     path: modules/xq-test-infra
+    workspace: modules/xq-test-infra
     language: node
     version: 0.1.1
     test_all: true
@@ -113,29 +116,31 @@ modules:
       - xq-common-kit
     toolchain:
       node: ">=22"
-      pnpm: "10"
+      npm: "11"
       docker: optional
     commands:
-      install: pnpm install --frozen-lockfile
-      build: pnpm run build
-      test: pnpm test
+      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
+      build: npm --prefix ../.. run build --workspace modules/xq-test-infra
+      test: npm --prefix ../.. test --workspace modules/xq-test-infra
 
   xq-test-harness:
     path: modules/xq-test-harness
+    workspace: modules/xq-test-harness
     language: node
     version: 0.1.0
     test_all: true
     toolchain:
       node: ">=22"
-      pnpm: "10"
+      npm: "11"
       playwright: required
     commands:
-      install: pnpm install --frozen-lockfile
-      build: pnpm run build
-      test: pnpm test
+      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
+      build: npm --prefix ../.. run build --workspace modules/xq-test-harness
+      test: npm --prefix ../.. test --workspace modules/xq-test-harness
 
   xq-test-harness-e2e-consumer:
     path: modules/xq-test-harness-e2e-consumer
+    workspace: modules/xq-test-harness-e2e-consumer
     language: node
     version: 0.0.0
     test_all: true
@@ -143,38 +148,40 @@ modules:
       - xq-test-harness
     toolchain:
       node: ">=22"
-      pnpm: "10"
+      npm: "11"
       playwright: required
     commands:
-      install: pnpm install --frozen-lockfile
-      build: pnpm run build
-      test: pnpm test
+      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
+      build: npm --prefix ../.. run build --workspace modules/xq-test-harness-e2e-consumer
+      test: npm --prefix ../.. test --workspace modules/xq-test-harness-e2e-consumer
 
   xq-octopus:
     path: modules/xq-octopus
+    workspace: modules/xq-octopus
     language: node
     version: 0.1.0
     test_all: false
     toolchain:
       node: ">=22"
-      pnpm: "10"
+      npm: "11"
     commands:
-      install: pnpm install --frozen-lockfile
-      build: pnpm run build
-      test: pnpm test
+      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
+      build: npm --prefix ../.. run build --workspace modules/xq-octopus
+      test: npm --prefix ../.. test --workspace modules/xq-octopus
 
   xq-skills:
     path: modules/xq-skills
+    workspace: modules/xq-skills
     language: node
     version: 0.1.0
     test_all: false
     toolchain:
       node: ">=22"
-      pnpm: "10"
+      npm: "11"
     commands:
-      install: pnpm install --frozen-lockfile
-      build: pnpm run build
-      test: pnpm test
+      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
+      build: npm --prefix ../.. run build --workspace modules/xq-skills
+      test: npm --prefix ../.. test --workspace modules/xq-skills
 
   xq-scripts:
     path: modules/xq-scripts

@@ -1,7 +1,16 @@
 {
   "name": "xq-harness",
   "private": true,
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "npm@11.16.0",
+  "workspaces": [
+    "modules/xq-common-kit",
+    "modules/xq-test-utils",
+    "modules/xq-test-infra",
+    "modules/xq-test-harness",
+    "modules/xq-test-harness-e2e-consumer",
+    "modules/xq-octopus",
+    "modules/xq-skills"
+  ],
   "engines": {
     "node": ">=22.0.0"
   }
