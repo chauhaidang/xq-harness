@@ -74,7 +74,7 @@ modules:
 
   # ── XQ packages (Level C: published semver, independent modules) ──────────────
   # Harness-lineage packages: @chauhaidang/xq-harness-* (see ADR 0010).
-  # Monorepo uses npm workspaces for sibling deps; external consumers use semver.
+  # Modules install and run locally; cross-module consumers use published semver.
 
   xq-common-kit:
     path: modules/xq-common-kit
@@ -86,9 +86,9 @@ modules:
       node: ">=22"
       npm: "11"
     commands:
-      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
-      build: npm --prefix ../.. run build --workspace modules/xq-common-kit
-      test: npm --prefix ../.. test --workspace modules/xq-common-kit
+      install: npm install
+      build: npm run build
+      test: npm test
 
   xq-test-utils:
     path: modules/xq-test-utils
@@ -102,9 +102,9 @@ modules:
       node: ">=22"
       npm: "11"
     commands:
-      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
-      build: npm --prefix ../.. run build --workspace modules/xq-test-utils
-      test: npm --prefix ../.. test --workspace modules/xq-test-utils
+      install: npm install
+      build: npm run build
+      test: npm test
 
   xq-test-infra:
     path: modules/xq-test-infra
@@ -119,9 +119,9 @@ modules:
       npm: "11"
       docker: optional
     commands:
-      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
-      build: npm --prefix ../.. run build --workspace modules/xq-test-infra
-      test: npm --prefix ../.. test --workspace modules/xq-test-infra
+      install: npm install
+      build: npm run build
+      test: npm test
 
   xq-test-harness:
     path: modules/xq-test-harness
@@ -134,9 +134,9 @@ modules:
       npm: "11"
       playwright: required
     commands:
-      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
-      build: npm --prefix ../.. run build --workspace modules/xq-test-harness
-      test: npm --prefix ../.. test --workspace modules/xq-test-harness
+      install: npm install
+      build: npm run build
+      test: npm test
 
   xq-test-harness-e2e-consumer:
     path: modules/xq-test-harness-e2e-consumer
@@ -151,9 +151,9 @@ modules:
       npm: "11"
       playwright: required
     commands:
-      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
-      build: npm --prefix ../.. run build --workspace modules/xq-test-harness-e2e-consumer
-      test: npm --prefix ../.. test --workspace modules/xq-test-harness-e2e-consumer
+      install: npm install
+      build: npm run build
+      test: npm test
 
   xq-octopus:
     path: modules/xq-octopus
@@ -165,9 +165,9 @@ modules:
       node: ">=22"
       npm: "11"
     commands:
-      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
-      build: npm --prefix ../.. run build --workspace modules/xq-octopus
-      test: npm --prefix ../.. test --workspace modules/xq-octopus
+      install: npm install
+      build: npm run build
+      test: npm test
 
   xq-skills:
     path: modules/xq-skills
@@ -179,9 +179,9 @@ modules:
       node: ">=22"
       npm: "11"
     commands:
-      install: npm --prefix ../.. install --workspaces --include-workspace-root=false
-      build: npm --prefix ../.. run build --workspace modules/xq-skills
-      test: npm --prefix ../.. test --workspace modules/xq-skills
+      install: npm install
+      build: npm run build
+      test: npm test
 
   xq-scripts:
     path: modules/xq-scripts
