@@ -28,11 +28,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v6
-        with:
-          version: 10.14.0
-          run_install: false
-
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.node_version }}
@@ -40,8 +35,8 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: "@chauhaidang"
 
-      - name: Verify pnpm
-        run: pnpm --version
+      - name: Verify npm
+        run: npm --version
 
       - name: Install yq
         run: |
@@ -60,4 +55,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd "modules/${{ inputs.module }}"
-          pnpm publish --no-git-checks
+          npm publish
