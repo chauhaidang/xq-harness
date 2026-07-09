@@ -18,7 +18,6 @@ const publishPrefixes = [
   "xq-common-kit",
   "xq-test-utils",
   "xq-test-infra",
-  "xq-test-harness",
   "xq-octopus",
   "xq-skills",
 ];

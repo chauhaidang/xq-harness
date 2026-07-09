@@ -16,7 +16,6 @@ names below for code from this repo.
 | Logger, config, YAML, JUnit→Markdown            | `@chauhaidang/xq-harness-common-kit`      |
 | Postgres tests, wait-for-service, Jest config   | `@chauhaidang/xq-harness-test-utils`      |
 | Docker Compose test environments                | `@chauhaidang/xq-harness-test-infra`      |
-| Playwright API + Gherkin BDD backend tests      | `@chauhaidang/xq-harness-test-harness`    |
 | MCP server for scenario-driven REST API testing | `@chauhaidang/xq-harness-domain-test-mcp` |
 | Direct REST CLI checks                          | `xq-octopus`                              |
 | All bundled agent skills in one install         | `@chauhaidang/xq-skills`                  |
@@ -40,13 +39,9 @@ names below for code from this repo.
 pnpm add @chauhaidang/xq-harness-common-kit
 pnpm add -D @chauhaidang/xq-harness-test-utils
 pnpm add -D @chauhaidang/xq-harness-test-infra
-pnpm add -D @chauhaidang/xq-harness-test-harness
 pnpm add -D @chauhaidang/xq-harness-domain-test-mcp
 pnpm add -D @chauhaidang/xq-skills
 ```
-
-**Playwright harness:** do not add `@playwright/test` or `playwright-bdd`
-separately — they ship inside `@chauhaidang/xq-harness-test-harness`.
 
 ---
 
@@ -121,50 +116,6 @@ test environments (up / down / logs / gateway).
 
 ---
 
-### `@chauhaidang/xq-harness-test-harness` (0.1.0)
-
-**Purpose:** Single-dependency Playwright API + Gherkin (playwright-bdd) harness
-for backend black-box tests. Bundles `@playwright/test` and `playwright-bdd`.
-
-| Subpath      | Exports                                                                         | Audience                               |
-| ------------ | ------------------------------------------------------------------------------- | -------------------------------------- |
-| `.`          | `test`, `expect`, `Given`, `When`, `Then`, `Step`, `XQFixture`, `XQApiClients`  | **Default** — step files and bdd-world |
-| `./config`   | `defineApiHarnessConfig`, `mergeApiHarnessPlaywrightConfig`, `defineBddProject` | `playwright.config.ts`                 |
-| `./advanced` | `mergeTests`, `createHarnessBdd`                                                | Custom fixture merges                  |
-
-**Typical consumer layout**
-
-```text
-your-repo/
-  bdd-world.ts          # extend test, wire API clients into xq.apis
-  playwright.config.ts  # defineApiHarnessConfig + importTestFrom
-  features/**/*.feature
-  steps/**/*.ts
-  .features-gen/        # bddgen output (gitignore)
-```
-
-**Scripts in consumer `package.json`**
-
-```json
-{
-  "scripts": {
-    "test:bdd": "./node_modules/.bin/bddgen -c playwright.config.ts && ./node_modules/.bin/playwright test -c playwright.config.ts"
-  }
-}
-```
-
-Use `./node_modules/.bin/*` paths with pnpm 10 when `bddgen` is only a transitive
-dependency.
-
-**Bundled docs & skills**
-
-- [CONSUMER-GUIDE.md](modules/xq-test-harness/docs/CONSUMER-GUIDE.md)
-- `skills/xq-test-harness-bdd/` — agent setup checklist
-
-**Docs:** [modules/xq-test-harness/README.md](modules/xq-test-harness/README.md)
-
----
-
 ### `@chauhaidang/xq-harness-domain-test-mcp` (1.0.2)
 
 **Purpose:** Node 26 stdio MCP server for scenario-driven REST API testing.
@@ -206,7 +157,7 @@ node path/to/xq-scripts/scripts/install-skills.js
 ```
 
 **Bundled skills:** `e2e-app`, `e2e-config`, `e2e-screen`,
-`xq-domain-test-mcp`, `xq-octopus`, `xq-test-harness-bdd`
+`xq-domain-test-mcp`, `xq-octopus`
 
 **Docs:** [modules/xq-skills/README.md](modules/xq-skills/README.md)
 
@@ -218,9 +169,6 @@ node path/to/xq-scripts/scripts/install-skills.js
 @chauhaidang/xq-harness-common-kit
   ├── @chauhaidang/xq-harness-test-utils
   └── @chauhaidang/xq-harness-test-infra
-
-@chauhaidang/xq-harness-test-harness     (no internal xq-harness deps)
-  └── Playwright + playwright-bdd (bundled)
 
 @chauhaidang/xq-harness-domain-test-mcp  (no internal xq-harness deps)
 
@@ -235,7 +183,6 @@ node path/to/xq-scripts/scripts/install-skills.js
 | Artifact                         | How to get it                            | Notes                                                        |
 | -------------------------------- | ---------------------------------------- | ------------------------------------------------------------ |
 | **xq-scripts**                   | GitHub Release tarball (`xq-scripts/v*`) | `sync-openapi.sh`, `generate-report.js`, `install-skills.js` |
-| **xq-test-harness-e2e-consumer** | Monorepo only (`private`)                | Dogfood example; not for external use                        |
 
 ### xq-scripts (tarball)
 
@@ -263,7 +210,6 @@ Install `@chauhaidang/xq-skills` to get every skill below in one package.
 | Package                      | Skills                                |
 | ---------------------------- | ------------------------------------- |
 | `@chauhaidang/xq-skills`     | all skills in this table              |
-| `xq-harness-test-harness`    | `xq-test-harness-bdd`                 |
 | `xq-octopus`                 | `xq-octopus`                          |
 | `xq-harness-test-utils`      | `e2e-app`, `e2e-config`, `e2e-screen` |
 | `xq-harness-domain-test-mcp` | `xq-domain-test-mcp`                  |

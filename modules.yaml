@@ -123,38 +123,6 @@ modules:
       build: npm run build
       test: npm test
 
-  xq-test-harness:
-    path: modules/xq-test-harness
-    workspace: modules/xq-test-harness
-    language: node
-    version: 0.1.0
-    test_all: true
-    toolchain:
-      node: ">=22"
-      npm: "11"
-      playwright: required
-    commands:
-      install: npm install
-      build: npm run build
-      test: npm test
-
-  xq-test-harness-e2e-consumer:
-    path: modules/xq-test-harness-e2e-consumer
-    workspace: modules/xq-test-harness-e2e-consumer
-    language: node
-    version: 0.0.0
-    test_all: true
-    depends_on:
-      - xq-test-harness
-    toolchain:
-      node: ">=22"
-      npm: "11"
-      playwright: required
-    commands:
-      install: npm install
-      build: npm run build
-      test: npm test
-
   xq-octopus:
     path: modules/xq-octopus
     workspace: modules/xq-octopus

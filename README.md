@@ -8,7 +8,6 @@ packages ship to GitHub Packages as `@chauhaidang/xq-harness-*`.
 Install published packages in your own repo. Start here:
 
 - **[exposure/catalogue.md](CATALOGUE.md)** — package index, APIs, CLIs, and install notes
-- [modules/xq-test-harness/docs/CONSUMER-GUIDE.md](modules/xq-test-harness/docs/CONSUMER-GUIDE.md) — Playwright BDD harness setup
 
 Registry scope: `@chauhaidang`. Requires a GitHub token with `read:packages`
 (`NODE_AUTH_TOKEN` in CI).
@@ -20,7 +19,7 @@ Registry scope: `@chauhaidang`. Requires a GitHub token with `read:packages`
 ```
 
 ```bash
-pnpm add @chauhaidang/xq-harness-test-harness
+pnpm add @chauhaidang/xq-harness-test-utils
 ```
 
 Legacy xq-toolbox packages (`@chauhaidang/xq-common-kit`, `@chauhaidang/xq-test-*`
@@ -53,7 +52,6 @@ modules/
   xq-common-kit/          # shared TS utilities
   xq-test-utils/          # Jest / DB / Detox helpers
   xq-test-infra/          # xq-infra CLI (Docker test environments)
-  xq-test-harness/        # Playwright + Gherkin API harness
   xq-domain-test-mcp/     # Python MCP server for REST/E2E API test calls
   xq-scripts/             # release tarball scripts (not npm)
   ios-xq-finance-app/     # SwiftUI sample app

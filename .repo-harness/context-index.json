@@ -77,14 +77,6 @@
       "when": "Use for environment generation or infrastructure test support."
     },
     {
-      "name": "xq-test-harness",
-      "path": "modules/xq-test-harness",
-      "summary": "Playwright API plus Gherkin BDD backend test harness.",
-      "skill": "xq-test-harness-bdd",
-      "verification": "./scripts/module ci xq-test-harness",
-      "when": "Use for backend BDD harness work or consumer setup guidance."
-    },
-    {
       "name": "xq-octopus",
       "path": "modules/xq-octopus",
       "summary": "Direct REST CLI checks against XQ APIs.",

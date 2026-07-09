@@ -6,8 +6,6 @@
     "modules/xq-common-kit",
     "modules/xq-test-utils",
     "modules/xq-test-infra",
-    "modules/xq-test-harness",
-    "modules/xq-test-harness-e2e-consumer",
     "modules/xq-octopus",
     "modules/xq-skills"
   ],

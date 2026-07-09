@@ -29,4 +29,3 @@ consumer project has opted into one of those agent directories.
 - `e2e-screen`
 - `xq-domain-test-mcp`
 - `xq-octopus`
-- `xq-test-harness-bdd`

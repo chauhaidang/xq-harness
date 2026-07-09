@@ -12,8 +12,6 @@ Legacy workspace archived at `archive/xq-toolbox-workspace/`.
 | `xq-common-kit` | `modules/xq-common-kit/` | `@chauhaidang/xq-harness-common-kit` |
 | `xq-test-utils` | `modules/xq-test-utils/` | `@chauhaidang/xq-harness-test-utils` |
 | `xq-test-infra` | `modules/xq-test-infra/` | `@chauhaidang/xq-harness-test-infra` |
-| `xq-test-harness` | `modules/xq-test-harness/` | `@chauhaidang/xq-harness-test-harness` |
-| `xq-test-harness-e2e-consumer` | `modules/xq-test-harness-e2e-consumer/` | `@chauhaidang/xq-harness-test-harness-e2e-consumer` (private) |
 | `xq-scripts` | `modules/xq-scripts/` | tarball release only |
 
 Legacy xq-toolbox published `@chauhaidang/xq-*` (without `harness-`). Harness
@@ -23,15 +21,11 @@ line uses `xq-harness-*` names to avoid registry collision.
 
 ```text
 xq-common-kit                    @chauhaidang/xq-harness-common-kit
-  ├── xq-test-utils              portal:../xq-common-kit (monorepo)
-  └── xq-test-infra              portal:../xq-common-kit (monorepo)
-
-xq-test-harness                  @chauhaidang/xq-harness-test-harness
-  └── xq-test-harness-e2e-consumer   portal:../xq-test-harness (monorepo)
+  ├── xq-test-utils              @chauhaidang/xq-harness-common-kit
+  └── xq-test-infra              @chauhaidang/xq-harness-common-kit
 ```
 
-External consumers install semver from GitHub Packages after publish, e.g.
-`yarn add @chauhaidang/xq-harness-test-harness`.
+External consumers install semver from GitHub Packages after publish.
 
 ## CI
 

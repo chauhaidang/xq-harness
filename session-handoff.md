@@ -50,8 +50,6 @@
 - `modules/xq-common-kit/package.json`
 - `modules/xq-test-utils/package.json`
 - `modules/xq-test-infra/package.json`
-- `modules/xq-test-harness/package.json`
-- `modules/xq-test-harness-e2e-consumer/package.json`
 - `modules/xq-octopus/package.json`
 - `modules/xq-skills/package.json`
 - `pnpm-workspace.yaml`

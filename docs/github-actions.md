@@ -107,8 +107,6 @@ Validate caller/callee permission parity locally:
 | `xq-common-kit` | `ci-xq-common-kit.yml` | `cd-xq-common-kit.yml` | npm publish |
 | `xq-test-utils` | `ci-xq-test-utils.yml` | `cd-xq-test-utils.yml` | CI also watches `xq-common-kit` (portal dep) |
 | `xq-test-infra` | `ci-xq-test-infra.yml` | `cd-xq-test-infra.yml` | CI also watches `xq-common-kit` |
-| `xq-test-harness` | `ci-xq-test-harness.yml` | `cd-xq-test-harness.yml` | `playwright_skip_browser: true` |
-| `xq-test-harness-e2e-consumer` | `ci-xq-test-harness-e2e-consumer.yml` | — | Private; CI only |
 | `xq-domain-test-mcp` | `ci-xq-domain-test-mcp.yml` | `cd-xq-domain-test-mcp.yml` | Tag `xq-domain-test-mcp-v*`; GitHub Packages npm publish |
 | `xq-skills` | `ci-xq-skills.yml` | `cd-xq-skills.yml` | npm publish; central agent skills bundle |
 | `xq-scripts` | — | `cd-xq-scripts.yml` | Tarball release |

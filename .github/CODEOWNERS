@@ -10,9 +10,6 @@
 /.github/workflows/cd-xq-test-utils.yml       @chauhaidang/xq-harness-maintainers
 /.github/workflows/ci-xq-test-infra.yml       @chauhaidang/xq-harness-maintainers
 /.github/workflows/cd-xq-test-infra.yml       @chauhaidang/xq-harness-maintainers
-/.github/workflows/ci-xq-test-harness.yml     @chauhaidang/xq-harness-maintainers
-/.github/workflows/cd-xq-test-harness.yml     @chauhaidang/xq-harness-maintainers
-/.github/workflows/ci-xq-test-harness-e2e-consumer.yml @chauhaidang/xq-harness-maintainers
 /.github/workflows/ci-xq-skills.yml           @chauhaidang/xq-harness-maintainers
 /.github/workflows/cd-xq-skills.yml           @chauhaidang/xq-harness-maintainers
 /.github/workflows/cd-xq-scripts.yml          @chauhaidang/xq-harness-maintainers
@@ -23,8 +20,6 @@
 /modules/xq-common-kit/                       @chauhaidang/xq-harness-maintainers
 /modules/xq-test-utils/                       @chauhaidang/xq-harness-maintainers
 /modules/xq-test-infra/                       @chauhaidang/xq-harness-maintainers
-/modules/xq-test-harness/                     @chauhaidang/xq-harness-maintainers
-/modules/xq-test-harness-e2e-consumer/         @chauhaidang/xq-harness-maintainers
 /modules/xq-skills/                            @chauhaidang/xq-harness-maintainers
 /modules/xq-scripts/                            @chauhaidang/xq-harness-maintainers
 /modules/xq-ios-ui-test-framework/              @chauhaidang/xq-harness-maintainers
