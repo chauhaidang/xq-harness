@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-09",
+  "purpose": "Bounded startup context for xq-harness. Load this first, then query one feature, topic, or module at a time.",
+  "startup": {
+    "activeFeature": "feat-006",
+    "summaryRule": "Use summary first. Do not preload broad docs or module trees.",
+    "queryCommands": [
+      "node scripts/harness-context.mjs summary",
+      "node scripts/harness-context.mjs feature active",
+      "node scripts/harness-context.mjs topic <topic-id>",
+      "node scripts/harness-context.mjs module <module-name>",
+      "node scripts/harness-context.mjs search <term>"
+    ]
+  },
+  "topics": [
+    {
+      "id": "repo-overview",
+      "title": "Repo overview",
+      "file": ".repo-harness/topics/repo-overview.md",
+      "summary": "What xq-harness contains, the main package lines, and where code lives.",
+      "when": "Use when the task is repo-wide or the target area is still unknown."
+    },
+    {
+      "id": "module-workflow",
+      "title": "Module workflow",
+      "file": ".repo-harness/topics/module-workflow.md",
+      "summary": "How to use modules.yaml and ./scripts/module without ad-hoc commands.",
+      "when": "Use before install/build/test work or when touching a specific module."
+    },
+    {
+      "id": "agent-workflow",
+      "title": "Agent workflow",
+      "file": ".repo-harness/topics/agent-workflow.md",
+      "summary": "How agents should start, narrow context, update state, and close a session.",
+      "when": "Use when process, startup, or handoff behavior is relevant."
+    },
+    {
+      "id": "architecture-decisions",
+      "title": "Architecture and decision docs",
+      "file": ".repo-harness/topics/architecture-decisions.md",
+      "summary": "Where architecture, product, and story docs live and when to open them.",
+      "when": "Use before making design decisions or changing public behavior."
+    }
+  ],
+  "modules": [
+    {
+      "name": "xq-domain-test-mcp",
+      "path": "modules/xq-domain-test-mcp",
+      "summary": "Scenario-driven REST API MCP server module.",
+      "skill": "xq-domain-test-mcp",
+      "verification": "./scripts/module ci xq-domain-test-mcp",
+      "when": "Use for MCP runtime, scenario tooling, or REST API testing work."
+    },
+    {
+      "name": "xq-common-kit",
+      "path": "modules/xq-common-kit",
+      "summary": "Shared TypeScript utilities for the harness-lineage packages.",
+      "skill": "none",
+      "verification": "./scripts/module ci xq-common-kit",
+      "when": "Use for shared helpers, logging, YAML, or common package behavior."
+    },
+    {
+      "name": "xq-test-utils",
+      "path": "modules/xq-test-utils",
+      "summary": "Jest, database, and Detox/mobile E2E support helpers.",
+      "skill": "e2e-app / e2e-config / e2e-screen",
+      "verification": "./scripts/module ci xq-test-utils",
+      "when": "Use for test helpers, database integration test support, or Detox utilities."
+    },
+    {
+      "name": "xq-test-infra",
+      "path": "modules/xq-test-infra",
+      "summary": "Docker Compose-backed infrastructure tooling for tests.",
+      "skill": "none",
+      "verification": "./scripts/module ci xq-test-infra",
+      "when": "Use for environment generation or infrastructure test support."
+    },
+    {
+      "name": "xq-test-harness",
+      "path": "modules/xq-test-harness",
+      "summary": "Playwright API plus Gherkin BDD backend test harness.",
+      "skill": "xq-test-harness-bdd",
+      "verification": "./scripts/module ci xq-test-harness",
+      "when": "Use for backend BDD harness work or consumer setup guidance."
+    },
+    {
+      "name": "xq-octopus",
+      "path": "modules/xq-octopus",
+      "summary": "Direct REST CLI checks against XQ APIs.",
+      "skill": "xq-octopus",
+      "verification": "./scripts/module ci xq-octopus",
+      "when": "Use for command-line API calls or direct REST validation."
+    },
+    {
+      "name": "xq-skills",
+      "path": "modules/xq-skills",
+      "summary": "Bundled distributable agent skills package.",
+      "skill": "none",
+      "verification": "./scripts/module ci xq-skills",
+      "when": "Use when changing shipped skill bundles or consumer install behavior."
+    },
+    {
+      "name": "ios-xq-finance-app",
+      "path": "modules/ios-xq-finance-app",
+      "summary": "SwiftUI sample/finance iOS module with its own skill.",
+      "skill": "ios-xq-finance-app",
+      "verification": "./scripts/module ci ios-xq-finance-app",
+      "when": "Use for SwiftUI portfolio, model, or XCTest work."
+    },
+    {
+      "name": "xq-ios-shell-app",
+      "path": "modules/xq-ios-shell-app",
+      "summary": "iOS shell module for remote payload and React Native shell experiments.",
+      "skill": "none",
+      "verification": "./scripts/module ci xq-ios-shell-app",
+      "when": "Use for shell app, brownfield RN, or remote payload work."
+    },
+    {
+      "name": "xq-ios-ui-test-framework",
+      "path": "modules/xq-ios-ui-test-framework",
+      "summary": "Swift package for iOS UI test automation.",
+      "skill": "none",
+      "verification": "./scripts/module ci xq-ios-ui-test-framework",
+      "when": "Use for Swift package and UI test framework work."
+    },
+    {
+      "name": "poc",
+      "path": "modules/poc",
+      "summary": "Registered home for exploratory prototypes and spikes.",
+      "skill": "none",
+      "verification": "./scripts/module ci poc",
+      "when": "Use for disposable experiments before promoting them to durable modules."
+    }
+  ],
+  "docs": [
+    {
+      "id": "catalogue",
+      "path": "CATALOGUE.md",
+      "summary": "Consumer-facing package index."
+    },
+    {
+      "id": "modules-readme",
+      "path": "docs/modules/README.md",
+      "summary": "Module registry and runner details."
+    },
+    {
+      "id": "github-actions",
+      "path": "docs/github-actions.md",
+      "summary": "Reusable workflow and release guidance."
+    },
+    {
+      "id": "decisions",
+      "path": "docs/decisions/",
+      "summary": "Architecture decisions and repo conventions."
+    }
+  ]
+}

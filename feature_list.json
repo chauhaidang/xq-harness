@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "activeFeature": "feat-006",
+  "features": [
+    {
+      "id": "feat-001",
+      "name": "On-demand context query entrypoint",
+      "description": "Add a lightweight CLI that shows summary metadata first and requires explicit queries for deeper repo context.",
+      "dependencies": [],
+      "status": "done",
+      "evidence": "Created scripts/harness-context.mjs and verified `node scripts/harness-context.mjs summary` on 2026-07-09."
+    },
+    {
+      "id": "feat-002",
+      "name": "Bounded context index and topic files",
+      "description": "Store always-on metadata in a small index and move detailed repo guidance into on-demand topic files.",
+      "dependencies": [
+        "feat-001"
+      ],
+      "status": "done",
+      "evidence": "Created .repo-harness/context-index.json with topic and module metadata plus topic Markdown files under .repo-harness/topics/."
+    },
+    {
+      "id": "feat-003",
+      "name": "Harness lifecycle artifacts",
+      "description": "Add progress, handoff, and feature tracking files so the next session can resume without chat history.",
+      "dependencies": [
+        "feat-001"
+      ],
+      "status": "done",
+      "evidence": "Created feature_list.json, progress.md, and session-handoff.md and seeded them with the current harness state."
+    },
+    {
+      "id": "feat-004",
+      "name": "Monorepo-specific startup verification",
+      "description": "Replace generic package-manager startup with repo-specific checks that validate the registry, module runner, and harness query surface.",
+      "dependencies": [
+        "feat-001",
+        "feat-002"
+      ],
+      "status": "done",
+      "evidence": "Created init.sh to check node, yq, scripts/module, and harness summary; verified it locally on 2026-07-09."
+    },
+    {
+      "id": "feat-005",
+      "name": "Adopt query-first workflow in AGENTS.md",
+      "description": "Route startup through init + harness summary, then require targeted queries before opening broad docs or module trees.",
+      "dependencies": [
+        "feat-001",
+        "feat-002",
+        "feat-003",
+        "feat-004"
+      ],
+      "status": "done",
+      "evidence": "Rewrote AGENTS.md to require `./init.sh`, `node scripts/harness-context.mjs summary`, and targeted query commands before loading deeper context."
+    },
+    {
+      "id": "feat-006",
+      "name": "Trial and tighten the harness from real sessions",
+      "description": "Observe the next few real tasks, prune noisy topics, and add missing query paths only where agents still drift or over-read.",
+      "dependencies": [
+        "feat-005"
+      ],
+      "status": "not-started",
+      "evidence": ""
+    }
+  ]
+}

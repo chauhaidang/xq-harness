@@ -1,122 +1,87 @@
 # Agent Instructions
 
-Instructions for AI agents working in **xq-harness** — a polyglot monorepo of
-XQ testing libraries, a module runner, and supporting tooling. Published npm
-packages ship as `@chauhaidang/xq-harness-*` on GitHub Packages.
+`xq-harness` is a polyglot monorepo of XQ testing libraries, MCP tooling, iOS
+modules, and release scripts. Published npm packages ship as
+`@chauhaidang/xq-harness-*`.
 
----
+## Startup Workflow
 
-## Start of every session
+Before writing code:
 
-1. **Pick a skill** — read `.agents/skills/` (and module skills under
-   `modules/*/skills/`) before acting. Match the user's goal to the closest
-   skill and follow it end-to-end.
-2. **Load only task-relevant context** — read the docs and module files needed
-   for the current task. Do not preload broad repo history unless the task
-   explicitly requires it.
-3. **Confirm scope** — restate Situation, Task, Action, and expected Result
-   (STAR) before making changes. Ask when requirements or the target module are
-   unclear.
-4. **Touch one module at a time** — use `./scripts/module` for install, build,
-   test, and CI. Do not duplicate commands from `modules.yaml` elsewhere.
+1. Confirm working directory with `pwd`
+2. Read this file completely
+3. Run `./init.sh`
+4. Run `node scripts/harness-context.mjs summary`
+5. Read `feature_list.json` and `progress.md`
+6. Query only the needed detail:
+   - `node scripts/harness-context.mjs topic <topic-id>`
+   - `node scripts/harness-context.mjs module <module-name>`
+   - `node scripts/harness-context.mjs feature <feature-id|active>`
+   - `node scripts/harness-context.mjs search <term>`
+7. Restate Situation, Task, Action, and expected Result before edits
 
----
+Do not preload broad docs or module trees unless the harness query tells you
+they are relevant to the current task.
 
-## Skills
+## Working Rules
 
-### Repo-level (`.agents/skills/`)
+- **One feature at a time**: Pick exactly one active or next feature from `feature_list.json`
+- **Query before loading**: Use the harness query script before opening broad docs
+- **Verification required**: Do not claim done without running the relevant checks
+- **Update artifacts**: Before ending a session, update `progress.md`, `feature_list.json`, and `session-handoff.md`
+- **Touch one module at a time**: Use `./scripts/module` for install, build, test, and CI
+- **Minimal diffs**: Match existing patterns; do not refactor unrelated code
+- **No secrets in git**: Never commit tokens, `.env` contents, or credentials
+- **Commits and pushes**: Only when the user asks
 
-| Skill                      | Use when…                                 |
-| -------------------------- | ----------------------------------------- |
-| `ask-matt`                 | Unsure which skill or flow fits           |
-| `implement`                | Building from a PRD or issue              |
-| `tdd`                      | Test-first development                    |
-| `review`                   | Reviewing changes since a fixed point     |
-| `qa`                       | Interactive bug reports → GitHub issues   |
-| `triage`                   | Triage incoming issues or external PRs    |
-| `to-prd` / `to-issues`     | Turn conversation into a PRD, then issues |
-| `grill-with-docs`          | Sharpen a plan; writes ADRs and context   |
-| `design-an-interface`      | Explore multiple interface designs        |
-| `codebase-design`          | Deep-module vocabulary for API design     |
-| `handoff`                  | Compact context for a fresh session       |
-| `setup-matt-pocock-skills` | First-time setup for engineering skills   |
-| `setup-pre-commit`         | Husky + lint-staged hooks                 |
+## Required Artifacts
 
-Full skill bodies live in `.agents/skills/<name>/SKILL.md`. Read the matching
-file before executing — do not improvise when a skill exists.
+- `feature_list.json` — source of truth for feature status and evidence
+- `progress.md` — current state, decisions, verification, next step
+- `session-handoff.md` — fast resume file for the next session
+- `.repo-harness/context-index.json` — bounded context index
+- `.repo-harness/topics/*.md` — on-demand detail
+- `scripts/harness-context.mjs` — query entrypoint
+- `init.sh` — startup and verification path
 
-### Module-level (`modules/*/skills/`)
+## Definition of Done
 
-Use these when work is scoped to a specific module:
+A feature is done only when all of the following are true:
 
-| Module               | Skill                                 | Use when…                                      |
-| -------------------- | ------------------------------------- | ---------------------------------------------- |
-| `xq-octopus`         | `xq-octopus`                          | Direct REST API checks with the xq-octopus CLI |
-| `xq-test-harness`    | `xq-test-harness-bdd`                 | Consumer BDD / Playwright setup                |
-| `xq-test-utils`      | `e2e-app`, `e2e-config`, `e2e-screen` | Detox / mobile E2E helpers                     |
-| `ios-xq-finance-app` | `ios-xq-finance-app`                  | SwiftUI app, portfolio model, XCTest           |
+- [ ] Target behavior is implemented
+- [ ] Required verification actually ran
+- [ ] Evidence is written into `feature_list.json` or `progress.md`
+- [ ] Session artifacts are updated for the next agent
+- [ ] The repository still starts cleanly from `./init.sh`
 
-**Consumer install:** `@chauhaidang/xq-skills` bundles all distributable module
-skills. Run `xq-scripts/scripts/install-skills.js` after installing it in a
-consumer project.
+## End of Session
 
-If no skill matches, proceed with normal engineering judgment — keep changes
-minimal and aligned with surrounding code.
+Before ending a session:
 
----
+1. Update `progress.md`
+2. Update `feature_list.json`
+3. Update `session-handoff.md`
+4. Record unresolved blockers or risks
+5. Re-run relevant verification
 
-## Key docs
-
-| Topic                       | Location                                                       |
-| --------------------------- | -------------------------------------------------------------- |
-| Consumer package index      | [CATALOGUE.md](CATALOGUE.md)                                   |
-| Contributor overview        | [README.md](README.md)                                         |
-| Module registry & runner    | [docs/modules/README.md](docs/modules/README.md)               |
-| CI/CD per module            | [docs/github-actions.md](docs/github-actions.md)               |
-| Architecture decisions      | [docs/decisions/](docs/decisions/)                             |
-| Product / stories           | [docs/product/](docs/product/), [docs/stories/](docs/stories/) |
-
----
-
-## Build and test
-
-`modules.yaml` is the single source of truth for module paths, versions, and
-commands.
+## Verification Commands
 
 ```bash
-./scripts/module list                    # all modules
-./scripts/module ci xq-common-kit        # install + build + test
-make test-all                            # modules with test_all: true
+./init.sh
 ```
 
-Requires [yq](https://github.com/mikefarah/yq). Each module has its own
-lockfile and toolchain (Node 22+, Python/uv, Xcode, etc.) — see `modules.yaml`.
+Common task checks:
 
-**XQ npm packages** (`xq-common-kit`, `xq-test-utils`, `xq-test-infra`,
-`xq-test-harness`): pnpm 10 with `workspace:*` sibling deps inside the monorepo;
-consumers install `@chauhaidang/xq-harness-*` from GitHub Packages.
+- `./scripts/module list`
+- `./scripts/module ci <module>`
+- `make test-all`
+- `node scripts/harness-context.mjs summary`
 
----
+## Escalation
 
-## Conventions
+If you encounter:
 
-- **Minimal diffs** — match existing naming, types, and patterns in the module
-  you touch. Do not refactor unrelated code.
-- **No secrets in git** — never commit tokens, `.env` contents, or credentials.
-- **Commits and PRs** — only when the user asks. Do not push unless asked.
-- **Module runner** — prefer `./scripts/module` over ad-hoc commands so CI and
-  local runs stay aligned.
-- **Package naming** — harness-lineage packages use the `xq-harness-*` prefix
-  (see [ADR 0010](docs/decisions/0010-xq-harness-package-rename.md)). Legacy
-  `xq-*` names without `harness-` are a separate product line.
-
----
-
-## STAR reporting
-
-After completing work, summarize for the user:
-
-- **Situation** — what context or problem existed
-- **Task** — what was asked or decided
-- **Action** — what you did (commands, files, docs updated)
-- **Result** — outcome, test status, and anything left open
+- **Module ambiguity**: query `node scripts/harness-context.mjs module <name>` before reading module docs
+- **Architecture decisions**: query `node scripts/harness-context.mjs topic architecture-decisions`
+- **Process uncertainty**: query `node scripts/harness-context.mjs topic module-workflow`
+- **Scope ambiguity**: re-read `feature_list.json` and `progress.md`, then ask the user
