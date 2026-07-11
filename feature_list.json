@@ -62,7 +62,7 @@
         "feat-005"
       ],
       "status": "in-progress",
-      "evidence": "Used real repo-maintenance tasks on 2026-07-09 to tighten the harness twice: first by switching Node workspace defaults from pnpm to npm, and then by adding explicit Before state, After state, Regression test results, PR ready, and CI ready checkpoints to `AGENTS.md`, `.repo-harness/topics/agent-workflow.md`, `progress.md`, and `session-handoff.md`."
+      "evidence": "Used real repo-maintenance tasks on 2026-07-09 and 2026-07-10 to tighten the harness four ways: first by switching Node workspace defaults from pnpm to npm, then by adding explicit Before state, After state, Regression test results, PR ready, and CI ready checkpoints to `AGENTS.md`, `.repo-harness/topics/agent-workflow.md`, `progress.md`, and `session-handoff.md`, then by recreating the isolated-module migration handoff as an in-repo artifact at `isolated-modules-migration-handoff.md`, and finally by executing that migration: removing the root Node workspace file, moving active Node modules to module-local `package-lock.json` plus `npm ci --include=dev`, eliminating shared `workspace` and shared TS-config assumptions, and verifying representative modules through `./scripts/module ci`."
     }
   ]
 }

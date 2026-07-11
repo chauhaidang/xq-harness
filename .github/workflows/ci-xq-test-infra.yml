@@ -8,8 +8,6 @@ on:
       - modules.yaml
       - scripts/module
       - scripts/check-xq-version-changes.js
-      - pnpm-workspace.yaml
-      - pnpm-lock.yaml
       - .github/workflows/ci-xq-test-infra.yml
       - .github/workflows/module-*.yml
   push:

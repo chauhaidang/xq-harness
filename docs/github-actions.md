@@ -8,7 +8,7 @@ reusable templates.
 
 ```text
 .github/workflows/
-  module-ci-node.yml              # CI template (Node / pnpm modules)
+  module-ci-node.yml              # CI template (Node / npm modules)
   module-ci-python.yml            # CI template (Python / uv modules)
   module-cd-github-packages.yml   # CD template (npm publish)
   module-cd-tarball.yml           # CD template (GitHub Release tarball)
@@ -20,9 +20,9 @@ Commands always run through [`scripts/module`](../scripts/module) and
 [`modules.yaml`](../modules.yaml) — do not duplicate install/build/test in
 workflow YAML.
 
-Node templates install pnpm explicitly with `pnpm/action-setup@v6` at
-`10.14.0`, then verify `pnpm --version` before invoking the module runner. Do
-not rely on the hosted runner or Corepack alone to provide pnpm.
+Node templates install Node with `actions/setup-node@v6`, disable root
+package-manager auto-cache, verify `npm --version`, and then invoke the module
+runner. Each module owns its own install state.
 
 ## Reusable templates
 
@@ -34,7 +34,7 @@ not rely on the hosted runner or Corepack alone to provide pnpm.
 | `node_version` | `22` | Node.js version |
 | `playwright_skip_browser` | `false` | Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` |
 
-Installs pnpm `10.14.0`, verifies `pnpm --version`, then runs:
+Verifies `npm --version`, then runs:
 `./scripts/module ci <module>`.
 
 ### `module-ci-python.yml`
@@ -57,8 +57,8 @@ and let the module's `build` command run `uv run basedpyright`.
 | `node_version` | `22` | Node.js version |
 | `playwright_skip_browser` | `false` | Skip browser download during CI gate |
 
-Installs pnpm `10.14.0`, verifies `pnpm --version`, runs
-`./scripts/module ci <module>`, then `pnpm publish --no-git-checks` in
+Verifies `npm --version`, runs
+`./scripts/module ci <module>`, then `npm publish` in
 `modules/<module>/`.
 
 ### `module-cd-tarball.yml`
@@ -105,7 +105,7 @@ Validate caller/callee permission parity locally:
 | Module | CI | CD | Notes |
 | --- | --- | --- | --- |
 | `xq-common-kit` | `ci-xq-common-kit.yml` | `cd-xq-common-kit.yml` | npm publish |
-| `xq-test-utils` | `ci-xq-test-utils.yml` | `cd-xq-test-utils.yml` | CI also watches `xq-common-kit` (portal dep) |
+| `xq-test-utils` | `ci-xq-test-utils.yml` | `cd-xq-test-utils.yml` | CI also watches `xq-common-kit` |
 | `xq-test-infra` | `ci-xq-test-infra.yml` | `cd-xq-test-infra.yml` | CI also watches `xq-common-kit` |
 | `xq-domain-test-mcp` | `ci-xq-domain-test-mcp.yml` | `cd-xq-domain-test-mcp.yml` | Tag `xq-domain-test-mcp-v*`; GitHub Packages npm publish |
 | `xq-skills` | `ci-xq-skills.yml` | `cd-xq-skills.yml` | npm publish; central agent skills bundle |

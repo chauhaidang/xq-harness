@@ -35,7 +35,7 @@ and parse the result without reading source code.
 Use the same general stack as the existing Node modules in this harness repo:
 
 - Node.js `>=22`
-- pnpm `10`
+- npm `11`
 - TypeScript
 - Commander for CLI command routing
 - Built-in `node:test` for tests
@@ -118,28 +118,18 @@ Check the required tools:
 
 ```bash
 node --version
-pnpm --version
+npm --version
 ```
 
 Expected:
 
 - Node.js is `22` or newer.
-- pnpm is `10.x` or close to the repo pin.
+- npm is `11.x` or close to the repo pin.
 
-If `pnpm --version` is missing but Node is installed, enable Corepack:
-
-```bash
-corepack enable
-```
-
-Then check pnpm again:
-
-```bash
-pnpm --version
-```
+If `npm --version` is missing, fix the Node/npm installation before continuing.
 
 Do not install global npm packages for this module. Keep dependencies in
-`package.json` and install them with pnpm inside `modules/xq-octopus`.
+`package.json` and install them with npm inside `modules/xq-octopus`.
 
 Use this implementation order:
 
@@ -217,20 +207,19 @@ Now fill in these files from the templates in this guide:
 Then install dependencies:
 
 ```bash
-pnpm install
+npm install --include=dev
 ```
 
-This updates the root workspace lockfile. After the lockfile exists, use
-immutable install in normal validation:
+Use a module-local `package-lock.json` and keep validation reproducible with:
 
 ```bash
-pnpm install --frozen-lockfile
+npm ci --include=dev
 ```
 
 Build the starter CLI:
 
 ```bash
-pnpm run build
+npm run build
 ```
 
 Run the compiled starter CLI:
@@ -262,16 +251,16 @@ Put that test in `test/setup.test.ts` or one of the existing test files. Then
 run:
 
 ```bash
-pnpm test
+npm test
 ```
 
 Project setup is done only when these commands work from inside
 `modules/xq-octopus`:
 
 ```bash
-pnpm install --frozen-lockfile
-pnpm run build
-pnpm test
+npm ci --include=dev
+npm run build
+npm test
 node dist/cli/main.js --help
 ```
 
@@ -368,7 +357,7 @@ Use this as the starting shape:
     "format:check": "prettier --check .",
     "clean": "rm -rf dist"
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "npm@11.16.0",
   "engines": {
     "node": ">=22.0.0"
   },
@@ -494,22 +483,17 @@ main()
 After the files exist, run these module-local setup commands:
 
 ```bash
-pnpm install
-pnpm run build
-pnpm test
-pnpm run format:check
-pnpm run lint
+npm install --include=dev
+npm run build
+npm test
+npm run format:check
+npm run lint
 ```
 
-Use `pnpm install` the first time so pnpm can update the root lockfile. After the
-lockfile exists, use the stricter command:
+Use `npm ci --include=dev` for reproducible validation.
 
-```bash
-pnpm install --frozen-lockfile
-```
-
-Do not move on until `pnpm run build` can compile the starter CLI. Once the
-starter test exists, `pnpm test`, `pnpm run format:check`, and `pnpm run lint`
+Do not move on until `npm run build` can compile the starter CLI. Once the
+starter test exists, `npm test`, `npm run format:check`, and `npm run lint`
 must also pass.
 
 ## Step 4: Define `xq.json`
@@ -571,11 +555,11 @@ Agent-friendly REST API testing CLI.
 ## Local commands
 
 ```bash
-pnpm install --frozen-lockfile
-pnpm run build
-pnpm test
-pnpm run format:check
-pnpm run lint
+npm ci --include=dev
+npm run build
+npm test
+npm run format:check
+npm run lint
 node dist/cli/main.js --help
 ```
 
@@ -1124,11 +1108,11 @@ Testing tips for TypeScript beginners:
 Run these commands while standing inside `modules/xq-octopus`:
 
 ```bash
-pnpm install --frozen-lockfile
-pnpm run build
-pnpm test
-pnpm run format:check
-pnpm run lint
+npm ci --include=dev
+npm run build
+npm test
+npm run format:check
+npm run lint
 ```
 
 Done means:

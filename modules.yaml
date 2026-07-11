@@ -78,7 +78,6 @@ modules:
 
   xq-common-kit:
     path: modules/xq-common-kit
-    workspace: modules/xq-common-kit
     language: node
     version: 0.1.0
     test_all: true
@@ -86,13 +85,12 @@ modules:
       node: ">=22"
       npm: "11"
     commands:
-      install: npm install
+      install: npm ci --include=dev
       build: npm run build
       test: npm test
 
   xq-test-utils:
     path: modules/xq-test-utils
-    workspace: modules/xq-test-utils
     language: node
     version: 0.1.0
     test_all: true
@@ -102,13 +100,12 @@ modules:
       node: ">=22"
       npm: "11"
     commands:
-      install: npm install
+      install: npm ci --include=dev
       build: npm run build
       test: npm test
 
   xq-test-infra:
     path: modules/xq-test-infra
-    workspace: modules/xq-test-infra
     language: node
     version: 0.1.1
     test_all: true
@@ -119,13 +116,12 @@ modules:
       npm: "11"
       docker: optional
     commands:
-      install: npm install
+      install: npm ci --include=dev
       build: npm run build
       test: npm test
 
   xq-octopus:
     path: modules/xq-octopus
-    workspace: modules/xq-octopus
     language: node
     version: 0.1.0
     test_all: false
@@ -133,13 +129,12 @@ modules:
       node: ">=22"
       npm: "11"
     commands:
-      install: npm install
+      install: npm ci --include=dev
       build: npm run build
       test: npm test
 
   xq-skills:
     path: modules/xq-skills
-    workspace: modules/xq-skills
     language: node
     version: 0.1.0
     test_all: false
@@ -147,7 +142,7 @@ modules:
       node: ">=22"
       npm: "11"
     commands:
-      install: npm install
+      install: npm ci --include=dev
       build: npm run build
       test: npm test
 

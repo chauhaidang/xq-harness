@@ -61,13 +61,13 @@ Cross-module consumers use semver after publish.
 | `xq-skills` | 0.1.0 | `@chauhaidang/xq-skills` |
 | `xq-scripts` | VERSION file | tarball release only |
 
-**Prerequisites:** Node ≥ 18, Corepack. `NODE_AUTH_TOKEN` only needed when
+**Prerequisites:** Node ≥ 22 with npm available. `NODE_AUTH_TOKEN` only needed when
 installing published `@chauhaidang/xq-harness-*` from GitHub Packages.
 
 ```bash
 export NODE_AUTH_TOKEN=...
 ./scripts/module ci xq-test-utils
-./scripts/module list-test-all
+./scripts/module test-all
 ```
 
 After changing an upstream package API, bump its version, publish to GitHub

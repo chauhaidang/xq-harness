@@ -21,8 +21,8 @@ secrets, build artifacts, or repo-specific wiring from the old home.
 
 Modules are **independent**: they build and test on their own. They do not
 share `node_modules` across module directories. Cross-module deps are declared
-explicitly in `modules.yaml` (`depends_on`) and in package manifests (`workspace:*`
-for sibling npm packages).
+explicitly in `modules.yaml` (`depends_on`) and in package manifests (published
+semver for sibling npm packages).
 
 See [Polyglot modules](./README.md) and [ADR 0008](../decisions/0008-polyglot-monorepo-modules.md).
 
@@ -50,11 +50,11 @@ work. Confirm:
 1. **Module name** — directory name under `modules/` (kebab-case, e.g.
    `my-service-cli`). Publishable npm packages use the `@chauhaidang/xq-harness-*`
    namespace ([ADR 0010](../decisions/0010-xq-harness-package-rename.md)).
-2. **Language & toolchain** — Node (pnpm 10), Python (uv), iOS (Xcode + optional
+2. **Language & toolchain** — Node (npm 11), Python (uv), iOS (Xcode + optional
    XcodeGen), SwiftPM, etc.
 3. **Publish intent** — library published to GitHub Packages, private app module,
    or internal-only (no CD).
-4. **Dependencies on other xq-harness modules** — e.g. `workspace:*` for a package listed in `pnpm-workspace.yaml`.
+4. **Dependencies on other xq-harness modules** — e.g. published semver for an internal package such as `@chauhaidang/xq-harness-common-kit`.
 5. **CI cost** — iOS/macOS jobs need macOS runners; Playwright modules need
    browser setup or skip flags.
 
@@ -147,7 +147,7 @@ Search and fix **before** copy:
 | Absolute paths (`/Users/…`, `C:\…`) | Replace with repo-relative paths or env vars |
 | Old org URLs (`github.com/old-org/…`) | Update to xq-harness paths or remove |
 | Internal hostnames | Replace with placeholders or `.example` domains |
-| `file:` / local-only deps | Convert to `workspace:*` siblings or published semver |
+| `file:` / local-only deps | Convert to published semver or another explicit distribution path |
 | Duplicate lockfiles at wrong level | One lockfile per module directory |
 
 ### 1.4 License and third-party compliance
@@ -209,7 +209,7 @@ All module source lives here:
 modules/<module-name>/
   README.md              # required — how to install, build, test, env vars
   package.json | pyproject.toml | project.yml | Package.swift | ...
-  <lockfile>             # pnpm-lock.yaml, uv.lock, etc.
+  <lockfile>             # package-lock.json, uv.lock, etc.
   src/ or App/           # language-typical layout
   tests/ or *Tests/
 ```
@@ -232,7 +232,7 @@ Do not publish under legacy `@chauhaidang/xq-*` names without `harness-`
 
 | Language | Lockfile | Install command (typical) |
 | --- | --- | --- |
-| Node | root `pnpm-lock.yaml` | `pnpm install --frozen-lockfile` |
+| Node | module-local `package-lock.json` | `npm ci --include=dev` |
 | Python | `uv.lock` | `uv sync --locked` or `uv sync --dev` |
 | iOS | Xcode project + optional `project.yml` for XcodeGen | `true` or `xcodegen generate` |
 | SwiftPM | `Package.resolved` | `swift package resolve` |
@@ -263,11 +263,11 @@ Example registry entry (Node):
     test_all: true          # false = skip in `make test-all`
     toolchain:
       node: ">=22"
-      pnpm: "10"
+      npm: "11"
     commands:
-      install: pnpm install --frozen-lockfile
-      build: pnpm run build
-      test: pnpm test
+      install: npm ci --include=dev
+      build: npm run build
+      test: npm test
 ```
 
 Example (Python):
@@ -408,10 +408,10 @@ Reviewers use this list; prepare your PR so each item is easy to verify.
 
 ### Node / TypeScript
 
-- Use pnpm 10 through the root `pnpm-workspace.yaml`.
-- Shared TS config: extend [`modules/tsconfig.base.json`](../../modules/tsconfig.base.json) when applicable.
-- Sibling deps: `"@chauhaidang/xq-harness-common-kit": "workspace:*"`.
-- Commit package metadata and the root `pnpm-lock.yaml`; do not commit package-manager binaries.
+- Use module-local npm with the lockfile owned by each module.
+- Keep TypeScript compiler settings inside the module so the package can build outside the repo root.
+- Internal package deps should point at published semver, for example `"@chauhaidang/xq-harness-common-kit": "^0.1.0"`.
+- Commit package metadata and each module's `package-lock.json`; use `npm ci --include=dev` for reproducible installs.
 
 ### Python
 

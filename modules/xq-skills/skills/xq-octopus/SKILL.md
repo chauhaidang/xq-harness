@@ -47,14 +47,14 @@ Build before running subprocess or dist-backed tests:
 For local CLI use inside `modules/xq-octopus`:
 
 ```bash
-pnpm install --frozen-lockfile
-pnpm run build
+npm install
+npm run build
 node dist/cli/main.js commands --json
 ```
 
-If `pnpm` verification fails in a sandboxed environment because the configured
-package-manager release cannot be fetched or verified, rerun the module command
-with the normal approval path rather than changing package-manager settings.
+If module install or build fails in a sandboxed environment because dependencies
+cannot be fetched, rerun the module command with the normal approval path rather
+than changing package-manager settings.
 
 ## xq.json
 

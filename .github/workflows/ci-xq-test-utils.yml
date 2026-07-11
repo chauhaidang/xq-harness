@@ -8,9 +8,6 @@ on:
       - modules.yaml
       - scripts/module
       - scripts/check-xq-version-changes.js
-      - modules/tsconfig.base.json
-      - pnpm-workspace.yaml
-      - pnpm-lock.yaml
       - .github/workflows/ci-xq-test-utils.yml
       - .github/workflows/module-*.yml
   push:

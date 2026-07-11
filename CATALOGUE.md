@@ -36,11 +36,11 @@ names below for code from this repo.
 
 ```bash
 # examples
-pnpm add @chauhaidang/xq-harness-common-kit
-pnpm add -D @chauhaidang/xq-harness-test-utils
-pnpm add -D @chauhaidang/xq-harness-test-infra
-pnpm add -D @chauhaidang/xq-harness-domain-test-mcp
-pnpm add -D @chauhaidang/xq-skills
+npm install @chauhaidang/xq-harness-common-kit
+npm install --save-dev @chauhaidang/xq-harness-test-utils
+npm install --save-dev @chauhaidang/xq-harness-test-infra
+npm install --save-dev @chauhaidang/xq-harness-domain-test-mcp
+npm install --save-dev @chauhaidang/xq-skills
 ```
 
 ---
@@ -152,7 +152,7 @@ projects. No runtime code — only `skills/<name>/SKILL.md` files.
 **Install and copy into your agent directory:**
 
 ```bash
-pnpm add -D @chauhaidang/xq-skills
+npm install --save-dev @chauhaidang/xq-skills
 node path/to/xq-scripts/scripts/install-skills.js
 ```
 

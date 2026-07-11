@@ -19,7 +19,7 @@ Registry scope: `@chauhaidang`. Requires a GitHub token with `read:packages`
 ```
 
 ```bash
-pnpm add @chauhaidang/xq-harness-test-utils
+npm install @chauhaidang/xq-harness-test-utils
 ```
 
 Legacy xq-toolbox packages (`@chauhaidang/xq-common-kit`, `@chauhaidang/xq-test-*`
@@ -32,7 +32,7 @@ Run one module:
 
 ```bash
 ./scripts/module list
-make ci MODULE=xq-common-kit
+./scripts/module ci xq-common-kit
 make test-all          # all xq modules with test_all: true
 ```
 

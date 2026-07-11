@@ -52,7 +52,7 @@ The CLI should:
 Use the same general stack as the existing Node modules in this harness repo:
 
 - Node.js `>=22`
-- pnpm `10`
+- npm `11`
 - TypeScript
 - Commander for CLI command routing
 - Built-in `node:test` for tests
@@ -255,16 +255,14 @@ network access.
 Run these commands while standing inside `modules/xq-octopus`:
 
 ```bash
-pnpm install
-pnpm install --frozen-lockfile
-pnpm run build
-pnpm test
+npm ci --include=dev
+npm run build
+npm test
 node dist/cli/main.js --help
 ```
 
-Use `pnpm install` for first-time setup so the root workspace lockfile can be updated.
-After the lockfile exists, use `pnpm install --frozen-lockfile` for normal validation.
-The module should keep its package metadata aligned with the root pnpm workspace.
+Use `npm ci --include=dev` for reproducible validation.
+The module should keep its own `package-lock.json` and not rely on a root workspace.
 
 ## Current Workspace Notes
 

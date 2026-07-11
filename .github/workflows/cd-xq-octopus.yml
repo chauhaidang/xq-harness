@@ -29,18 +29,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v6
-        with:
-          version: 10.14.0
-          run_install: false
-
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
+          package-manager-cache: false
           registry-url: https://registry.npmjs.org
 
-      - name: Verify pnpm
-        run: pnpm --version
+      - name: Verify npm
+        run: npm --version
 
       - name: Install yq
         run: |
@@ -55,4 +51,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           cd modules/xq-octopus
-          pnpm publish --no-git-checks
+          npm publish

@@ -9,7 +9,7 @@ directory.
 ## Install
 
 ```bash
-pnpm add -D @chauhaidang/xq-skills
+npm install --save-dev @chauhaidang/xq-skills
 node path/to/xq-scripts/scripts/install-skills.js
 ```
 

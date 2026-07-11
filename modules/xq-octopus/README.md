@@ -5,15 +5,15 @@ Agent-friendly REST API testing CLI.
 ## Local commands
 
 ```bash
-pnpm install --frozen-lockfile
-pnpm run build
-pnpm test
-pnpm run format:check
-pnpm run lint
+npm install
+npm run build
+npm test
+npm run format:check
+npm run lint
 node dist/cli/main.js --help
 ```
 
-`pnpm test` includes subprocess E2E tests that start a local HTTP API with
+`npm test` includes subprocess E2E tests that start a local HTTP API with
 `/health`, `/echo`, and `/openapi.json` endpoints, then call the compiled CLI.
 
 ## Config
@@ -48,7 +48,7 @@ registry. The package includes `skills/xq-octopus/SKILL.md` so consumers can
 install the CLI and copy the skill into their agent workspace:
 
 ```bash
-pnpm add -D xq-octopus
+npm install --save-dev xq-octopus
 node path/to/xq-scripts/scripts/install-skills.js
 ```
 

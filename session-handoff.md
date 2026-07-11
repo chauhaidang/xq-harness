@@ -3,14 +3,14 @@
 ## Current Objective
 
 - Goal: keep startup context small and force explicit harness queries for repo context
-- Current status: core harness framework is in place; the first real maintenance task also switched the Node workspace default from pnpm to npm
+- Current status: core harness framework is in place, and the isolated Node module migration is now implemented
 - Branch / commit: main / local working tree
 
 ## Change Checkpoints
 
-- Before state: the harness had startup and closeout rules, but no named checkpoints for before state, after state, regression results, PR readiness, or CI readiness
-- After state: those checkpoints are now explicitly defined in `AGENTS.md`, `.repo-harness/topics/agent-workflow.md`, and mirrored in `progress.md`
-- Regression test results: `./init.sh` pass; `node scripts/harness-context.mjs summary` pass
+- Before state: the repo still had a root Node workspace file, shared TypeScript base config for two Node modules, and active pnpm/root-workspace guidance in CI and docs
+- After state: the root Node workspace file is gone, Node modules use module-local `package-lock.json` plus `npm ci --include=dev`, and active docs/workflows now describe the isolated module model
+- Regression test results: `./init.sh` pass; `node scripts/harness-context.mjs summary` pass; `./scripts/module ci` passes for `xq-common-kit`, `xq-test-utils`, `xq-test-infra`, `xq-skills`, and `xq-octopus`
 - PR ready: yes
 - CI ready: yes
 
@@ -24,6 +24,8 @@
 - [x] Switched root/package module metadata and module-runner commands from pnpm to npm
 - [x] Removed stale `pnpm-workspace.yaml` and `pnpm-lock.yaml`
 - [x] Added explicit before/after, regression, PR-ready, and CI-ready harness checkpoints
+- [x] Recreated the isolated-modules migration handoff inside the project root
+- [x] Executed the isolated-module migration for the active Node modules
 
 ## Verification Evidence
 
@@ -31,9 +33,13 @@
 |---|---|---|---|
 | Harness startup | `./init.sh` | pass | Startup path runs and checks registry + harness summary |
 | Summary query | `node scripts/harness-context.mjs summary` | pass | Confirms bounded startup context |
-| Harness validation | `node .agents/skills/harness-creator/scripts/validate-harness.mjs --target /Users/automation2/Documents/workspace/xq-harness` | pass | Structural harness audit scored 100/100 |
-| Module registry | `./scripts/module info xq-common-kit` | pass | Shows npm workspace metadata for a Node module |
-| Root npm lockfile | `npm install --package-lock-only --ignore-scripts --workspaces --include-workspace-root=false` | partial | `workspace:*` blockers were fixed, but a clean lockfile was not generated in-session |
+| Module registry | `./scripts/module info xq-common-kit` | pass | Confirms no `workspace` field remains in module info output |
+| Repo CI check | `./scripts/module ci xq-common-kit` | pass | Sequential rerun after lockfile + tsconfig isolation |
+| Repo CI check | `./scripts/module ci xq-test-utils` | pass | Includes downstream internal package resolution through semver |
+| Repo CI check | `./scripts/module ci xq-test-infra` | pass | Passes with existing listener warnings in tests |
+| Repo CI check | `./scripts/module ci xq-skills` | pass | Verifies bundled skills package |
+| Repo CI check | `./scripts/module ci xq-octopus` | pass | Passes when localhost bind is allowed during verification |
+| Active stale-reference scan | `rg -n 'pnpm|workspace:\*|pnpm-workspace.yaml|pnpm-lock.yaml|tsconfig\.base\.json' ...` | pass | No remaining matches in active docs/workflows/config outside intentionally historical areas |
 
 ## Files Changed
 
@@ -46,14 +52,22 @@
 - `.repo-harness/context-index.json`
 - `.repo-harness/topics/*.md`
 - `package.json`
+- `modules/xq-common-kit/package-lock.json`
+- `modules/xq-test-utils/package-lock.json`
+- `modules/xq-test-infra/package-lock.json`
+- `modules/xq-octopus/package-lock.json`
+- `modules/xq-skills/package-lock.json`
 - `modules.yaml`
+- `scripts/module`
 - `modules/xq-common-kit/package.json`
+- `modules/xq-common-kit/tsconfig.json`
 - `modules/xq-test-utils/package.json`
+- `modules/xq-test-utils/tsconfig.json`
 - `modules/xq-test-infra/package.json`
 - `modules/xq-octopus/package.json`
 - `modules/xq-skills/package.json`
-- `pnpm-workspace.yaml`
-- `pnpm-lock.yaml`
+- `modules/tsconfig.base.json`
+- `isolated-modules-migration-handoff.md`
 
 ## Decisions Made
 
@@ -61,14 +75,16 @@
 - Store detailed context in topic files loaded only by explicit query
 - Keep verification monorepo-aware and lightweight
 - Make npm, not pnpm, the repo-default Node package manager in root metadata and module commands
+- Remove the root Node workspace completely rather than keeping a stub package file
+- Make the Node modules self-contained at the TypeScript-config level and lockfile level
 - Add named change checkpoints so agents must report before state, after state, regression results, PR readiness, and CI readiness
 
 ## Blockers / Risks
 
 - Topic metadata can drift if process docs change and the harness is not updated
 - Real usage may reveal missing topics or overly broad summaries
-- Historical docs still contain pnpm instructions and need a cleanup pass
-- A fresh root `package-lock.json` still needs to be generated in a clean npm install flow
+- Historical docs under `docs/MIGRATION_XQ_TOOLBOX.md` and decision history still describe older workspace models by design
+- `xq-test-utils` still force-exits Jest after passing tests, and `xq-test-infra` still emits `MaxListenersExceededWarning`; these are pre-existing quality issues, not migration failures
 
 ## Next Session Startup
 
@@ -80,5 +96,4 @@
 
 ## Recommended Next Step
 
-- Run a clean root npm install flow to generate `package-lock.json`, then update
-  the most-used docs that still mention pnpm as the default
+- Use the repo normally under the new isolated-module model, then tighten harness summaries if future agents still over-read or miss the new Node contract
