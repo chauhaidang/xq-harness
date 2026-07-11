@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chauhaidang.github.io/xq-harness/dashboard-data.schema.json",
+  "title": "XQ workflow dashboard snapshot",
+  "type": "object",
+  "required": ["schemaVersion", "repository", "generatedAt", "summary", "modules"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "repository": { "type": "string", "minLength": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "summary": {
+      "type": "object",
+      "required": ["workflows", "active", "successful", "failed", "stale"],
+      "additionalProperties": false,
+      "properties": {
+        "workflows": { "type": "integer", "minimum": 0 },
+        "active": { "type": "integer", "minimum": 0 },
+        "successful": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "stale": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "modules": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/module" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "module": {
+      "type": "object",
+      "required": ["module", "workflows"],
+      "additionalProperties": false,
+      "properties": {
+        "module": { "type": "string", "minLength": 1 },
+        "workflows": { "type": "array", "items": { "$ref": "#/$defs/workflow" } }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "required": ["id", "name", "path", "url", "module", "type", "latestRun", "runs", "stale", "successRate", "medianDurationSeconds"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": ["integer", "string"] },
+        "name": { "type": "string" },
+        "path": { "type": "string" },
+        "url": { "type": "string", "format": "uri" },
+        "module": { "type": "string" },
+        "type": { "enum": ["ci", "cd", "release"] },
+        "latestRun": { "anyOf": [{ "$ref": "#/$defs/run" }, { "type": "null" }] },
+        "runs": { "type": "array", "items": { "$ref": "#/$defs/run" }, "maxItems": 20 },
+        "stale": { "type": "boolean" },
+        "successRate": { "type": ["integer", "null"], "minimum": 0, "maximum": 100 },
+        "medianDurationSeconds": { "type": ["integer", "null"], "minimum": 0 }
+      }
+    },
+    "run": {
+      "type": "object",
+      "required": ["id", "number", "attempt", "status", "conclusion", "event", "branch", "commit", "title", "actor", "createdAt", "startedAt", "updatedAt", "durationSeconds", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "integer" },
+        "number": { "type": "integer" },
+        "attempt": { "type": "integer" },
+        "status": { "type": "string" },
+        "conclusion": { "type": ["string", "null"] },
+        "event": { "type": "string" },
+        "branch": { "type": ["string", "null"] },
+        "commit": { "type": ["string", "null"] },
+        "title": { "type": "string" },
+        "actor": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "startedAt": { "type": ["string", "null"], "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "durationSeconds": { "type": ["integer", "null"], "minimum": 0 },
+        "url": { "type": "string", "format": "uri" }
+      }
+    }
+  }
+}

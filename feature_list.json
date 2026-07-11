@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "activeFeature": "feat-006",
+  "activeFeature": "feat-007",
   "features": [
     {
       "id": "feat-001",
@@ -61,8 +61,16 @@
       "dependencies": [
         "feat-005"
       ],
-      "status": "in-progress",
-      "evidence": "Used real repo-maintenance tasks on 2026-07-09 and 2026-07-10 to tighten the harness four ways: first by switching Node workspace defaults from pnpm to npm, then by adding explicit Before state, After state, Regression test results, PR ready, and CI ready checkpoints to `AGENTS.md`, `.repo-harness/topics/agent-workflow.md`, `progress.md`, and `session-handoff.md`, then by recreating the isolated-module migration handoff as an in-repo artifact at `isolated-modules-migration-handoff.md`, and finally by executing that migration: removing the root Node workspace file, moving active Node modules to module-local `package-lock.json` plus `npm ci --include=dev`, eliminating shared `workspace` and shared TS-config assumptions, and verifying representative modules through `./scripts/module ci`."
+      "status": "done",
+      "evidence": "Used real repo-maintenance tasks on 2026-07-09 through 2026-07-11 to tighten the harness five ways: first by switching Node workspace defaults from pnpm to npm, then by adding explicit Before state, After state, Regression test results, PR ready, and CI ready checkpoints to `AGENTS.md`, `.repo-harness/topics/agent-workflow.md`, `progress.md`, and `session-handoff.md`, then by recreating the isolated-modules migration handoff as an in-repo artifact at `isolated-modules-migration-handoff.md`, then by executing that migration: removing the root Node workspace file, moving active Node modules to module-local `package-lock.json` plus `npm ci --include=dev`, eliminating shared `workspace` and shared TS-config assumptions, and verifying representative modules through `./scripts/module ci`, and finally by using a live `xq-kraken` review/fix task to confirm the harness supports narrow module work while documenting a contract correction in `modules/xq-kraken/model/api_catalog.py` and `modules/xq-kraken/API_CATALOG_CONTRACT.md`."
+    },
+    {
+      "id": "feat-007",
+      "name": "GitHub workflow observability dashboard",
+      "description": "Run a local, read-only live dashboard with current health, recent history, filters, and reliability metrics for runnable repository workflows.",
+      "dependencies": [],
+      "status": "done",
+      "evidence": "Added the isolated xq-workflow-dashboard module, gh-authenticated local polling service, Server-Sent Events, versioned JSON Schema validation, responsive UI, and scoped CI. Verified module CI, zero-vulnerability npm audit, live discovery of 14 workflows, localhost serving, interactive filtering, and mobile layout on 2026-07-11."
     }
   ]
 }

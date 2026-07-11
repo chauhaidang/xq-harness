@@ -3,14 +3,16 @@
 ## Current Objective
 
 - Goal: keep startup context small and force explicit harness queries for repo context
-- Current status: core harness framework is in place, and the isolated Node module migration is now implemented
+- Current status: core harness framework and isolated Node migration are in place; the local live workflow observability dashboard is implemented
 - Branch / commit: main / local working tree
 
 ## Change Checkpoints
 
 - Before state: the repo still had a root Node workspace file, shared TypeScript base config for two Node modules, and active pnpm/root-workspace guidance in CI and docs
 - After state: the root Node workspace file is gone, Node modules use module-local `package-lock.json` plus `npm ci --include=dev`, and active docs/workflows now describe the isolated module model
-- Regression test results: `./init.sh` pass; `node scripts/harness-context.mjs summary` pass; `./scripts/module ci` passes for `xq-common-kit`, `xq-test-utils`, `xq-test-infra`, `xq-skills`, and `xq-octopus`
+- After state: the root Node workspace file is gone, Node modules use module-local `package-lock.json` plus `npm ci --include=dev`, active docs/workflows now describe the isolated module model, and `modules/xq-kraken` now has an immutable API catalog domain model with required `operation_id`
+- After state: `xq-workflow-dashboard` collects and validates live Actions telemetry through local `gh` authentication, streams near-real-time health/history updates, and has scoped CI with no deployment workflow
+- Regression test results: existing evidence remains valid; dashboard module CI, zero-vulnerability npm audit, live 14-workflow collection, YAML parsing, localhost serving, interactive filtering, and mobile browser checks pass
 - PR ready: yes
 - CI ready: yes
 
@@ -26,6 +28,8 @@
 - [x] Added explicit before/after, regression, PR-ready, and CI-ready harness checkpoints
 - [x] Recreated the isolated-modules migration handoff inside the project root
 - [x] Executed the isolated-module migration for the active Node modules
+- [x] Corrected the `xq-kraken` API catalog model and contract so `operation_id` is required and request/response payloads are distinct immutable types
+- [x] Built and visually verified the isolated GitHub workflow observability dashboard
 
 ## Verification Evidence
 
@@ -40,6 +44,10 @@
 | Repo CI check | `./scripts/module ci xq-skills` | pass | Verifies bundled skills package |
 | Repo CI check | `./scripts/module ci xq-octopus` | pass | Passes when localhost bind is allowed during verification |
 | Active stale-reference scan | `rg -n 'pnpm|workspace:\*|pnpm-workspace.yaml|pnpm-lock.yaml|tsconfig\.base\.json' ...` | pass | No remaining matches in active docs/workflows/config outside intentionally historical areas |
+| Dashboard module CI | `./scripts/module ci xq-workflow-dashboard` | pass | Installs, builds, validates frontend syntax, and runs five behavioral tests |
+| Dependency audit | `npm audit --audit-level=moderate` | pass | Zero vulnerabilities after pinning AJV 8.20.0 |
+| Live collector | `npm run collect` with repository token | pass | Discovered 14 runnable workflows and emitted schema-valid telemetry |
+| Browser smoke test | localhost in-app browser | pass | Live data rendered, search filter worked, and mobile viewport had no horizontal overflow |
 
 ## Files Changed
 
@@ -68,6 +76,13 @@
 - `modules/xq-skills/package.json`
 - `modules/tsconfig.base.json`
 - `isolated-modules-migration-handoff.md`
+- `modules/xq-kraken/model/api_catalog.py`
+- `modules/xq-kraken/API_CATALOG_CONTRACT.md`
+- `modules/xq-workflow-dashboard/*`
+- `.github/workflows/ci-xq-workflow-dashboard.yml`
+- `.repo-harness/context-index.json`
+- `.github/CODEOWNERS`
+- `docs/github-actions.md`
 
 ## Decisions Made
 
@@ -78,6 +93,8 @@
 - Remove the root Node workspace completely rather than keeping a stub package file
 - Make the Node modules self-contained at the TypeScript-config level and lockfile level
 - Add named change checkpoints so agents must report before state, after state, regression results, PR readiness, and CI readiness
+- Keep `operation_id` as a required domain invariant in `xq-kraken` because downstream callers will query endpoints by that key
+- Keep the dashboard local and read-only; delegate authentication to `gh`, poll server-side, and never expose credentials to browser code or committed files
 
 ## Blockers / Risks
 
@@ -85,6 +102,7 @@
 - Real usage may reveal missing topics or overly broad summaries
 - Historical docs under `docs/MIGRATION_XQ_TOOLBOX.md` and decision history still describe older workspace models by design
 - `xq-test-utils` still force-exits Jest after passing tests, and `xq-test-infra` still emits `MaxListenersExceededWarning`; these are pre-existing quality issues, not migration failures
+- The dashboard requires a locally authenticated GitHub CLI and only runs while `npm run dashboard` is active
 
 ## Next Session Startup
 
@@ -97,3 +115,5 @@
 ## Recommended Next Step
 
 - Use the repo normally under the new isolated-module model, then tighten harness summaries if future agents still over-read or miss the new Node contract
+- Build the `xq-kraken` extractor against the corrected API catalog contract and make missing `operationId` an explicit extraction error
+- Run the dashboard locally with `npm run dashboard` when live workflow monitoring is needed

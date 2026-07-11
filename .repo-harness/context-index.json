@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-09",
+  "updatedAt": "2026-07-11",
   "purpose": "Bounded startup context for xq-harness. Load this first, then query one feature, topic, or module at a time.",
   "startup": {
-    "activeFeature": "feat-006",
+    "activeFeature": "feat-007",
     "summaryRule": "Use summary first. Do not preload broad docs or module trees.",
     "queryCommands": [
       "node scripts/harness-context.mjs summary",
@@ -91,6 +91,14 @@
       "skill": "none",
       "verification": "./scripts/module ci xq-skills",
       "when": "Use when changing shipped skill bundles or consumer install behavior."
+    },
+    {
+      "name": "xq-workflow-dashboard",
+      "path": "modules/xq-workflow-dashboard",
+      "summary": "Local live observability dashboard for GitHub workflow health and history.",
+      "skill": "none",
+      "verification": "./scripts/module ci xq-workflow-dashboard",
+      "when": "Use for local workflow monitoring, Actions telemetry collection, or dashboard UI work."
     },
     {
       "name": "ios-xq-finance-app",
