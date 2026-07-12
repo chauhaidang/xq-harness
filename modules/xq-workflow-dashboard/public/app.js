@@ -16,6 +16,7 @@ function applySnapshot(data) {
   document.querySelector("#error").hidden = true;
   if (!initialized) {
     bindFilters();
+    bindReload();
     initialized = true;
   }
   renderMetadata();
@@ -38,6 +39,26 @@ function connectLiveUpdates() {
   events.addEventListener("snapshot", (event) => applySnapshot(JSON.parse(event.data)));
   events.addEventListener("error", (event) => {
     if (event.data) showError(JSON.parse(event.data).message);
+  });
+}
+
+function bindReload() {
+  const button = document.querySelector("#reload-button");
+  button.addEventListener("click", async () => {
+    button.disabled = true;
+    button.classList.add("is-loading");
+    button.firstChild.textContent = "Refreshing… ";
+    try {
+      const response = await fetch("refresh", { method: "POST" });
+      if (!response.ok) throw new Error(`Refresh returned HTTP ${response.status}`);
+      applySnapshot(await response.json());
+    } catch (error) {
+      showError(`Manual refresh failed: ${error.message}`);
+    } finally {
+      button.disabled = false;
+      button.classList.remove("is-loading");
+      button.firstChild.textContent = "Reload data ";
+    }
   });
 }
 

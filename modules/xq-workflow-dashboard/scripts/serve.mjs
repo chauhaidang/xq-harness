@@ -17,7 +17,7 @@ import { validateDashboardSnapshot } from "../src/validate-snapshot.mjs";
 
 const host = "127.0.0.1";
 const port = Number.parseInt(process.env.DASHBOARD_PORT ?? "4173", 10);
-const pollMs = Math.max(5_000, Number.parseInt(process.env.DASHBOARD_POLL_MS ?? "15000", 10));
+const pollMs = Math.max(5_000, Number.parseInt(process.env.DASHBOARD_POLL_MS ?? "30000", 10));
 const publicDirectory = fileURLToPath(new URL("../public/", import.meta.url));
 const clients = new Set();
 const repository = await resolveRepository();
@@ -27,6 +27,9 @@ let snapshot = await createSnapshot();
 const server = createServer(async (request, response) => {
   const url = new URL(request.url, `http://${host}:${port}`);
   if (url.pathname === "/api/snapshot") return sendJson(response, snapshot);
+  if (url.pathname === "/refresh" && request.method === "POST") {
+    return sendJson(response, await refresh());
+  }
   if (url.pathname === "/events") return openEventStream(request, response);
   await sendStatic(url.pathname, response);
 });
@@ -48,9 +51,11 @@ async function refresh() {
     workflows = mergeWorkflowRuns(reconcileWorkflows(workflows, activeWorkflows), recentRuns);
     snapshot = await createSnapshot();
     broadcast("snapshot", snapshot);
+    return snapshot;
   } catch (error) {
     console.error(`[refresh] ${error.message}`);
     broadcast("error", { message: "GitHub refresh failed; showing the last successful snapshot." });
+    throw error;
   }
 }
 

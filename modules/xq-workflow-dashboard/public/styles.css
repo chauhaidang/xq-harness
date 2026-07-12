@@ -29,6 +29,12 @@ h1 { font-size: clamp(3.6rem, 5vw, 5.25rem); line-height: 0.82; }
 h2 { font-size: clamp(2rem, 3vw, 3rem); }
 .masthead-meta { display: grid; justify-items: end; gap: 10px; color: var(--muted); font-size: 0.78rem; }
 .masthead-meta p { margin: 0; }
+.masthead-actions { display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
+.reload-button { border: 1px solid var(--line); border-radius: 7px; padding: 8px 11px; background: var(--surface); color: var(--ink); cursor: pointer; font: 700 0.68rem "SFMono-Regular", Consolas, monospace; }
+.reload-button:hover:not(:disabled), .reload-button:focus-visible { border-color: var(--green); color: var(--green); }
+.reload-button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.reload-button:disabled { cursor: wait; opacity: 0.65; }
+.reload-button.is-loading span { display: inline-block; animation: spin 0.8s linear infinite; }
 .repo-link { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink); padding-bottom: 4px; font-weight: 700; }
 .summary-grid { display: grid; grid-template-columns: 1.2fr repeat(4, 0.7fr) 0.7fr; }
 .health-score, .summary-stat, .summary-total { min-height: 112px; padding: 15px 18px; border-left: 1px solid var(--line); display: flex; flex-direction: column; justify-content: center; }
@@ -84,6 +90,7 @@ footer { display: flex; justify-content: space-between; padding: 22px 0 36px; bo
 .reveal { animation: rise 0.55s both; }
 @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes signalPulse { 50% { box-shadow: 0 0 0 5px var(--paper), 0 0 0 11px var(--signal-ring); } }
+@keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; } }
 @media (max-width: 900px) {
   main, footer { width: min(100% - 32px, 1360px); }
@@ -104,6 +111,7 @@ footer { display: flex; justify-content: space-between; padding: 22px 0 36px; bo
   main { padding-top: 22px; }
   .masthead { align-items: flex-start; flex-direction: column; }
   .masthead-meta { justify-items: start; }
+  .masthead-actions { justify-content: flex-start; flex-wrap: wrap; }
   h1 { font-size: 3.6rem; }
   .summary-grid { grid-template-columns: repeat(2, 1fr); }
   .health-score { grid-column: span 2; grid-row: auto; }
