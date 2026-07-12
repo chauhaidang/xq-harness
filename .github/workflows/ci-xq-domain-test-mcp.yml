@@ -5,7 +5,10 @@ on:
     paths: &paths
       - modules/xq-domain-test-mcp/**
       - modules.yaml
+      - modules/xq-domain-test-mcp/version.yaml
       - scripts/module
+      - scripts/check-registry-version-changes.py
+      - scripts/validate-module-versions.py
       - .github/workflows/ci-xq-domain-test-mcp.yml
       - .github/workflows/xq-domain-test-mcp-release.yml
       - .github/workflows/module-ci-python.yml

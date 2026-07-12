@@ -6,8 +6,10 @@ on:
       - modules/xq-test-utils/**
       - modules/xq-common-kit/**
       - modules.yaml
+      - modules/xq-test-utils/version.yaml
       - scripts/module
-      - scripts/check-xq-version-changes.js
+      - scripts/check-registry-version-changes.py
+      - scripts/validate-module-versions.py
       - .github/workflows/ci-xq-test-utils.yml
       - .github/workflows/module-*.yml
   push:

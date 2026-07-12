@@ -17,7 +17,7 @@ secrets, build artifacts, or repo-specific wiring from the old home.
 | Standalone project root | `modules/<module-name>/` only |
 | Your own CI/CD workflows | Per-module workflows under `.github/workflows/` |
 | Your own release process | Optional CD via shared templates (npm tarball, Swift tag, etc.) |
-| Implicit conventions | `modules.yaml` is the single registry for install / build / test |
+| Implicit conventions | `modules.yaml` owns execution; each module's `version.yaml` owns its releases |
 
 Modules are **independent**: they build and test on their own. They do not
 share `node_modules` across module directories. Cross-module deps are declared
@@ -240,6 +240,17 @@ Do not publish under legacy `@chauhaidang/xq-*` names without `harness-`
 Pin versions in `modules.yaml` `toolchain` for documentation; CI reads module
 commands from the registry, not duplicated in Makefiles.
 
+Every onboarded module must include `version.yaml` in its module root. That
+makes the repo rule explicit:
+
+- top-level `version` owns the current semver value
+- `changelog[0].version` must match `version`
+- every changelog entry has a non-empty `changes` list
+- native files such as `package.json`, `pyproject.toml`, `project.yml`, `VERSION`,
+  or `.xcodeproj/project.pbxproj` may mirror that value only under `mirrors`
+- `./scripts/module sync-version <module>` writes the current version to mirrors
+- `./init.sh` and `./scripts/module ...` fail on drift
+
 ### 2.4 Commands your module must support
 
 xq-harness expects three commands per module (defined in `modules.yaml`):
@@ -259,7 +270,6 @@ Example registry entry (Node):
   my-module:
     path: modules/my-module
     language: node
-    version: 0.1.0
     test_all: true          # false = skip in `make test-all`
     toolchain:
       node: ">=22"
@@ -268,6 +278,22 @@ Example registry entry (Node):
       install: npm ci --include=dev
       build: npm run build
       test: npm test
+```
+
+Matching `modules/my-module/version.yaml`:
+
+```yaml
+schema_version: 1
+version: 0.1.0
+mirrors:
+  - path: package.json
+    format: package-json
+  - path: package-lock.json
+    format: package-lock-json
+changelog:
+  - version: 0.1.0
+    changes:
+      - Initial release.
 ```
 
 Example (Python):
@@ -369,8 +395,8 @@ Follow [GitHub Actions — modular CI/CD](../github-actions.md):
 1. Copy an existing caller workflow (e.g. `ci-xq-common-kit.yml`).
 2. Rename to `ci-<module>.yml` / `cd-<module>.yml`.
 3. Set `paths` to your module directory + shared bootstrap files.
-4. For npm publish: add module to `scripts/check-xq-version-changes.js`
-   `publishPrefixes`.
+4. For publishable modules, include its `version.yaml` plus declared mirror
+   paths in the CD workflow `paths` filter.
 5. For CD, verify workflow permissions against the existing CD caller patterns in
    this repo before opening the PR.
 
@@ -393,7 +419,7 @@ Use a GitHub team handle (e.g. `@chauhaidang/my-team`) so reviews route correctl
 Reviewers use this list; prepare your PR so each item is easy to verify.
 
 - [ ] Sanitization sign-off present and credible
-- [ ] `modules.yaml` entry complete; version matches native project file
+- [ ] `modules.yaml` entry and module-local `version.yaml` complete; mirrors synchronized
 - [ ] `./scripts/module ci <module>` passes locally and in CI
 - [ ] No secrets, env files, or large binaries
 - [ ] Lockfile committed; install is reproducible

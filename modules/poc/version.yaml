@@ -1,0 +1,7 @@
+schema_version: 1
+version: 0.0.0
+mirrors: []
+changelog:
+  - version: 0.0.0
+    changes:
+      - Initial placeholder for non-published prototypes.

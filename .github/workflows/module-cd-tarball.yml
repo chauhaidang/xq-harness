@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       version_file:
-        description: Path to VERSION file relative to module directory
+        description: Path to a declared mirror file relative to module directory
         required: false
         type: string
         default: VERSION
@@ -22,12 +22,35 @@ on:
         required: false
         type: string
         default: xq-scripts-v
+      check_version_change:
+        description: Release only when the module's version.yaml version changed from the previous commit
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   contents: write
 
 jobs:
+  version-check:
+    if: inputs.check_version_change
+    runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ steps.version.outputs.version_changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check version change
+        id: version
+        env:
+          MODULE: ${{ inputs.module }}
+        run: python3 scripts/check-registry-version-changes.py --module "$MODULE"
+
   release:
+    needs: version-check
+    if: always() && (inputs.check_version_change == false || needs.version-check.outputs.version_changed == 'true')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,10 +62,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           MODULE="${{ inputs.module }}"
-          VERSION_FILE="${{ inputs.version_file }}"
           TAG_PREFIX="${{ inputs.tag_prefix }}"
           ARCHIVE_PREFIX="${{ inputs.archive_prefix }}"
-          VERSION="$(tr -d '[:space:]' < "modules/${MODULE}/${VERSION_FILE}")"
+          python3 scripts/validate-module-versions.py --module "$MODULE"
+          MODULE_PATH="$(yq -r ".modules[\"${MODULE}\"].path" modules.yaml)"
+          VERSION="$(yq -r '.version' "${MODULE_PATH}/version.yaml")"
           TAG="${TAG_PREFIX}${VERSION}"
           ARCHIVE="${ARCHIVE_PREFIX}${VERSION}.tar.gz"
           if gh release view "$TAG" >/dev/null 2>&1; then

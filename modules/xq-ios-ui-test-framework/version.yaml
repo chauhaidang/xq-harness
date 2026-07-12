@@ -1,0 +1,9 @@
+schema_version: 1
+version: 0.1.0
+mirrors:
+  - path: VERSION
+    format: plain
+changelog:
+  - version: 0.1.0
+    changes:
+      - Baseline imported into the module release manifest.
