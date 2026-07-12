@@ -1,0 +1,23 @@
+name: CI xq-workflow-dashboard
+
+on:
+  pull_request:
+    paths: &paths
+      - modules/xq-workflow-dashboard/**
+      - modules.yaml
+      - scripts/module
+      - .github/workflows/ci-xq-workflow-dashboard.yml
+      - .github/workflows/module-*.yml
+  push:
+    branches: [main]
+    paths: *paths
+
+concurrency:
+  group: ci-xq-workflow-dashboard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: ./.github/workflows/module-ci-node.yml
+    with:
+      module: xq-workflow-dashboard

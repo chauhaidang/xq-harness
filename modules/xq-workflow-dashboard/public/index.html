@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>XQ Workflow Observatory</title>
+    <meta name="description" content="Operational health and recent history for xq-harness GitHub workflows.">
+    <link rel="stylesheet" href="styles.css?v=heatmap-grid">
+    <script type="module" src="app.js?v=heatmap-grid"></script>
+  </head>
+  <body>
+    <main>
+      <div class="top-deck reveal">
+        <header class="masthead">
+          <div>
+            <p class="product-mark">XQ Workflow</p>
+            <h1>Observatory</h1>
+          </div>
+          <div class="masthead-meta">
+            <a id="repository-link" class="repo-link" href="https://github.com/chauhaidang/xq-harness/actions">Open GitHub Actions <span aria-hidden="true">↗</span></a>
+            <p id="generated-at">Loading telemetry…</p>
+          </div>
+        </header>
+        <section id="summary" class="summary-grid" aria-label="Workflow summary" aria-live="polite"></section>
+      </div>
+
+      <div id="error" class="error" role="alert" hidden></div>
+
+      <section class="heatmap-section reveal">
+        <form id="filters" class="filters" aria-label="Filter workflows">
+          <label class="search-field"><span class="sr-only">Search workflows</span><input id="search" type="search" placeholder="Search workflows…" autocomplete="off"></label>
+          <label><span class="sr-only">Workflow type</span><select id="type-filter"><option value="">All types</option><option value="ci">CI</option><option value="cd">CD</option><option value="release">Release</option></select></label>
+          <label><span class="sr-only">Status</span><select id="status-filter"><option value="">All states</option><option value="success">Successful</option><option value="failure">Failed</option><option value="active">Active</option><option value="stale">Stale</option></select></label>
+          <label><span class="sr-only">Event</span><select id="event-filter"><option value="">All events</option></select></label>
+          <label><span class="sr-only">Branch</span><select id="branch-filter"><option value="">All branches</option></select></label>
+        </form>
+        <div class="heatmap-heading">
+          <div><p class="eyebrow">Live health map</p><h2>Workflow signals</h2></div>
+          <p>Each circle is one workflow. Select a signal to inspect its run.</p>
+        </div>
+        <div id="module-grid" class="heatmap-grid"></div>
+        <p id="empty-state" class="empty-state" hidden>No workflow signals match these filters.</p>
+      </section>
+
+      <section id="incident-section" class="incident-section reveal" hidden>
+        <div class="section-heading">
+          <div><p class="eyebrow">Needs attention</p><h2>Active incidents</h2></div>
+        </div>
+        <div id="incidents" class="incidents"></div>
+      </section>
+    </main>
+    <footer><span>XQ Harness</span><span>Live via local GitHub CLI</span></footer>
+  </body>
+</html>

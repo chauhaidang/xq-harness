@@ -2,9 +2,9 @@
 
 ## Current State
 
-**Last Updated:** 2026-07-10 00:00  
+**Last Updated:** 2026-07-11 18:52
 **Session ID:** current-thread  
-**Active Feature:** feat-006 - Trial and tighten the harness from real sessions
+**Active Feature:** feat-007 - GitHub workflow observability dashboard
 
 ## Change Checkpoints
 
@@ -23,6 +23,11 @@
 - `scripts/module` and `modules.yaml` no longer expose a dead `workspace` concept.
 - `xq-common-kit` and `xq-test-utils` are self-contained at the TypeScript-config level; `modules/tsconfig.base.json` was removed.
 - CI callers, release workflows, README/docs, and live `xq-octopus` skills/docs now describe the isolated npm model instead of pnpm/root workspace behavior.
+- `modules/xq-kraken/model/api_catalog.py` now uses immutable tuple-backed domain types, separate `ApiRequestBody` and `ApiResponse` classes, and a required `operation_id` invariant aligned with the module contract.
+- `modules/xq-kraken/API_CATALOG_CONTRACT.md` now states that `operation_id` is required and must trigger an extraction error when missing in the source document.
+- `xq-workflow-dashboard` is now an isolated Node module that uses local `gh` authentication, validates live GitHub Actions telemetry, and renders a responsive read-only operations dashboard.
+- The local server polls one repository-wide endpoint every 15 seconds after initial history loading and streams updates to the browser with Server-Sent Events; no Pages deployment or browser-side token exists.
+- The dashboard UI now uses the selected Fleet Grid heatmap direction: equal circular workflow signals, semantic health colors, two-column module clusters, overall health score, and failure-focused incidents.
 
 ### Regression Test Results
 
@@ -39,6 +44,14 @@
   - `xq-test-infra` install/build/test - pass
   - `xq-skills` install/build/test - pass
   - `xq-octopus` install/build - pass, tests pass with escalation because local HTTP bind is allowed there
+- `./.venv/bin/python -c "from model.api_catalog import ApiCatalog, ApiEndpoint, ApiRequestBody, ApiResponse; ..."` from `modules/xq-kraken` - pass
+- `./.venv/bin/python -m compileall model/api_catalog.py` from `modules/xq-kraken` - pass
+- `./scripts/module ci xq-workflow-dashboard` - pass
+- `npm audit --audit-level=moderate` from `modules/xq-workflow-dashboard` - pass, zero vulnerabilities
+- Live `npm run collect` - pass, discovered 14 runnable workflows and produced a schema-valid snapshot
+- Localhost browser smoke test - pass, HTML/data loaded, module search reduced the view to one matching card, and a 355px mobile viewport had no horizontal overflow
+- `yq eval` for the dashboard CI workflow - pass
+- Heatmap design QA - pass at 1440 x 1024; failure and search filters pass, browser console is clean, and 390px mobile has no horizontal overflow
 
 ### PR Ready
 
@@ -62,13 +75,11 @@
 - [x] Added explicit before/after, regression, PR-ready, and CI-ready checkpoints to the harness workflow
 - [x] Copied the isolated-modules migration handoff into the project root for durable resume
 - [x] Removed the root Node workspace model and moved the Node modules to module-local lockfiles plus `npm ci`
+- [x] Added and visually verified the read-only GitHub workflow observability dashboard
 
 ### What's In Progress
 
-- [ ] Observe whether real tasks still force agents to read too much up front
-  - Details: next sessions should use `summary`, `feature`, `topic`, and `module` queries first
-- [ ] Observe whether the harness summaries/topics should mention that isolated Node modules now use module-local `package-lock.json`
-  - Details: startup summary still describes the repo broadly, but does not yet call out the new Node module contract
+- [ ] No implementation work remains for `feat-007`; local operation requires an authenticated `gh` session
 
 ### What's Next
 
@@ -126,6 +137,13 @@
 - `README.md`, `CATALOGUE.md`, `docs/github-actions.md`, `docs/modules/*.md`, `modules/xq-octopus/*`, and skill docs - rewrote active guidance to the isolated npm model
 - `AGENTS.md` - added explicit change-state checkpoints and end-of-session expectations
 - `.repo-harness/topics/agent-workflow.md` - added required checkpoint details for change sessions
+- `modules/xq-kraken/model/api_catalog.py` - replaced mutable, merged payload types with immutable request/response domain models and kept `operation_id` required
+- `modules/xq-kraken/API_CATALOG_CONTRACT.md` - aligned the written contract with the required `operation_id` invariant
+- `modules/xq-workflow-dashboard` - added the isolated collector, schema, static UI, tests, local docs, and lockfile
+- `modules/xq-workflow-dashboard/design-qa.md` - recorded selected-reference comparison history and passing visual QA evidence
+- `.github/workflows/ci-xq-workflow-dashboard.yml` - added scoped module CI; the planned Pages deployment workflow was removed for local-only operation
+- `modules.yaml` - registered the isolated dashboard module
+- `.repo-harness/context-index.json` - made the dashboard discoverable through bounded module queries
 
 ## Evidence of Completion
 
@@ -141,6 +159,7 @@
   - `./scripts/module ci xq-test-infra`
   - `./scripts/module ci xq-skills`
   - `./scripts/module ci xq-octopus`
+- [x] Dashboard module CI, schema validation, live API collection, browser filtering, responsive smoke test, and npm audit passed
 
 ## Notes for Next Session
 
@@ -148,4 +167,8 @@ This harness is intentionally small. Start with `summary`, then load one topic
 or module at a time. The isolated-module migration has now been implemented:
 there is no root Node workspace file, Node modules own their own lockfiles, and
 active docs/workflows reflect `npm ci --include=dev` per module. The remaining
-follow-up is observational rather than structural.
+follow-up is observational rather than structural. Separately, `xq-kraken` now
+has an explicit API catalog contract that treats `operation_id` as required and
+uses immutable tuple-backed domain models.
+The workflow dashboard is local-only. Run `npm run dashboard` from its module
+directory after confirming `gh auth status`, then open `http://127.0.0.1:4173`.

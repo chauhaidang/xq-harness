@@ -111,6 +111,7 @@ Validate caller/callee permission parity locally:
 | `xq-skills` | `ci-xq-skills.yml` | `cd-xq-skills.yml` | npm publish; central agent skills bundle |
 | `xq-scripts` | — | `cd-xq-scripts.yml` | Tarball release |
 | `xq-ios-ui-test-framework` | `ci-xq-ios-ui-test-framework.yml` | `cd-xq-ios-ui-test-framework.yml` | Swift package; subtree Git release |
+| `xq-workflow-dashboard` | `ci-xq-workflow-dashboard.yml` | — | Local-only live Actions observability dashboard |
 
 The iOS UI framework uses a dedicated macOS workflow rather than the Node
 templates. CI runs module package validation and an XQ consumer compile check.

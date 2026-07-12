@@ -146,6 +146,19 @@ modules:
       build: npm run build
       test: npm test
 
+  xq-workflow-dashboard:
+    path: modules/xq-workflow-dashboard
+    language: node
+    version: 0.1.0
+    test_all: false
+    toolchain:
+      node: ">=22"
+      npm: "11"
+    commands:
+      install: npm ci --include=dev
+      build: npm run build
+      test: npm test
+
   xq-scripts:
     path: modules/xq-scripts
     language: shell
