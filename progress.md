@@ -27,6 +27,7 @@
 - `modules/xq-kraken/API_CATALOG_CONTRACT.md` now states that `operation_id` is required and must trigger an extraction error when missing in the source document.
 - `xq-workflow-dashboard` is now an isolated Node module that uses local `gh` authentication, validates live GitHub Actions telemetry, and renders a responsive read-only operations dashboard.
 - The local server polls one repository-wide endpoint every 15 seconds after initial history loading and streams updates to the browser with Server-Sent Events; no Pages deployment or browser-side token exists.
+- The dashboard UI now uses the selected Fleet Grid heatmap direction: equal circular workflow signals, semantic health colors, two-column module clusters, overall health score, and failure-focused incidents.
 
 ### Regression Test Results
 
@@ -50,6 +51,7 @@
 - Live `npm run collect` - pass, discovered 14 runnable workflows and produced a schema-valid snapshot
 - Localhost browser smoke test - pass, HTML/data loaded, module search reduced the view to one matching card, and a 355px mobile viewport had no horizontal overflow
 - `yq eval` for the dashboard CI workflow - pass
+- Heatmap design QA - pass at 1440 x 1024; failure and search filters pass, browser console is clean, and 390px mobile has no horizontal overflow
 
 ### PR Ready
 
@@ -138,6 +140,7 @@
 - `modules/xq-kraken/model/api_catalog.py` - replaced mutable, merged payload types with immutable request/response domain models and kept `operation_id` required
 - `modules/xq-kraken/API_CATALOG_CONTRACT.md` - aligned the written contract with the required `operation_id` invariant
 - `modules/xq-workflow-dashboard` - added the isolated collector, schema, static UI, tests, local docs, and lockfile
+- `modules/xq-workflow-dashboard/design-qa.md` - recorded selected-reference comparison history and passing visual QA evidence
 - `.github/workflows/ci-xq-workflow-dashboard.yml` - added scoped module CI; the planned Pages deployment workflow was removed for local-only operation
 - `modules.yaml` - registered the isolated dashboard module
 - `.repo-harness/context-index.json` - made the dashboard discoverable through bounded module queries

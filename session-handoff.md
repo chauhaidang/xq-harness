@@ -11,7 +11,7 @@
 - Before state: the repo still had a root Node workspace file, shared TypeScript base config for two Node modules, and active pnpm/root-workspace guidance in CI and docs
 - After state: the root Node workspace file is gone, Node modules use module-local `package-lock.json` plus `npm ci --include=dev`, and active docs/workflows now describe the isolated module model
 - After state: the root Node workspace file is gone, Node modules use module-local `package-lock.json` plus `npm ci --include=dev`, active docs/workflows now describe the isolated module model, and `modules/xq-kraken` now has an immutable API catalog domain model with required `operation_id`
-- After state: `xq-workflow-dashboard` collects and validates live Actions telemetry through local `gh` authentication, streams near-real-time health/history updates, and has scoped CI with no deployment workflow
+- After state: `xq-workflow-dashboard` collects and validates live Actions telemetry through local `gh` authentication, streams near-real-time updates, and renders workflows as a responsive semantic circle heatmap with scoped CI and no deployment workflow
 - Regression test results: existing evidence remains valid; dashboard module CI, zero-vulnerability npm audit, live 14-workflow collection, YAML parsing, localhost serving, interactive filtering, and mobile browser checks pass
 - PR ready: yes
 - CI ready: yes
@@ -48,6 +48,7 @@
 | Dependency audit | `npm audit --audit-level=moderate` | pass | Zero vulnerabilities after pinning AJV 8.20.0 |
 | Live collector | `npm run collect` with repository token | pass | Discovered 14 runnable workflows and emitted schema-valid telemetry |
 | Browser smoke test | localhost in-app browser | pass | Live data rendered, search filter worked, and mobile viewport had no horizontal overflow |
+| Heatmap design QA | 1440 x 1024 reference comparison plus 390 x 844 responsive check | pass | Fleet Grid hierarchy matched; filters worked; no console errors or mobile overflow |
 
 ## Files Changed
 

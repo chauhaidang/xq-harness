@@ -20,7 +20,6 @@ function applySnapshot(data) {
   }
   renderMetadata();
   renderSummary();
-  renderActiveRuns();
   populateFilters();
   renderFilteredViews();
 }
@@ -43,28 +42,16 @@ function connectLiveUpdates() {
 }
 
 function renderSummary() {
-  const labels = [
-    ["workflows", "Tracked workflows"],
-    ["active", "In motion"],
-    ["successful", "Healthy"],
-    ["failed", "Need attention"],
-    ["stale", "Stale signals"],
-  ];
-  document.querySelector("#summary").innerHTML = labels.map(([key, label]) => `
-    <article class="summary-card"><strong>${state.data.summary[key]}</strong><span>${label}</span></article>
-  `).join("");
-}
-
-function renderActiveRuns() {
-  const active = allWorkflows().filter(({ latestRun }) => latestRun && ACTIVE.has(latestRun.status));
-  const section = document.querySelector("#active-section");
-  section.hidden = active.length === 0;
-  document.querySelector("#active-runs").innerHTML = active.map((workflow) => `
-    <a class="active-run" href="${escapeAttribute(workflow.latestRun.url)}">
-      <div><strong>${escapeHtml(workflow.name)}</strong><span>${escapeHtml(workflow.latestRun.title)}</span></div>
-      <span>${escapeHtml(workflow.latestRun.status.replaceAll("_", " "))} · ${relativeTime(workflow.latestRun.updatedAt)}</span>
-    </a>
-  `).join("");
+  const summary = state.data.summary;
+  const health = summary.workflows ? Math.round((summary.successful / summary.workflows) * 100) : 0;
+  document.querySelector("#summary").innerHTML = `
+    <article class="health-score"><strong>${health}<small>%</small></strong><span>Overall health</span></article>
+    <div class="summary-stat summary-success"><strong>${summary.successful}</strong><span>Healthy</span></div>
+    <div class="summary-stat summary-active"><strong>${summary.active}</strong><span>In motion</span></div>
+    <div class="summary-stat summary-failure"><strong>${summary.failed}</strong><span>Failed</span></div>
+    <div class="summary-stat summary-stale"><strong>${summary.stale}</strong><span>Old signals</span></div>
+    <div class="summary-total"><strong>${summary.workflows}</strong><span>Total</span></div>
+  `;
 }
 
 function populateFilters() {
@@ -98,18 +85,14 @@ function renderFilteredViews() {
   })).filter(({ workflows }) => workflows.length);
 
   document.querySelector("#module-grid").innerHTML = modules.map((module, index) => `
-    <article class="module-card" style="animation-delay:${Math.min(index * 45, 360)}ms">
-      <header class="module-card-header"><h3>${escapeHtml(module.module)}</h3><span>${module.workflows.length} signal${module.workflows.length === 1 ? "" : "s"}</span></header>
-      <div class="workflow-list">${module.workflows.map(renderWorkflow).join("")}</div>
+    <article class="module-band" style="animation-delay:${Math.min(index * 45, 360)}ms">
+      <header class="module-band-header"><h3>${escapeHtml(module.module)}</h3><span>${module.workflows.length} workflow${module.workflows.length === 1 ? "" : "s"}</span></header>
+      <div class="signal-row">${module.workflows.map(renderWorkflow).join("")}</div>
     </article>
   `).join("");
   document.querySelector("#empty-state").hidden = modules.length > 0;
 
-  const runs = modules.flatMap(({ workflows }) => workflows.flatMap((workflow) => workflow.runs
-    .filter(matchesRunFilters)
-    .map((run) => ({ ...run, workflow }))));
-  runs.sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt));
-  document.querySelector("#run-history").innerHTML = runs.slice(0, 50).map(renderRun).join("");
+  renderIncidents(modules.flatMap(({ workflows }) => workflows));
 }
 
 function matchesRunFilters(run) {
@@ -135,43 +118,47 @@ function matchesFilters(workflow) {
 
 function renderWorkflow(workflow) {
   const latest = workflow.latestRun;
-  const status = statusFor(workflow);
-  const metrics = [
-    workflow.successRate === null ? null : `${workflow.successRate}% success`,
-    workflow.medianDurationSeconds === null ? null : `${formatDuration(workflow.medianDurationSeconds)} median`,
-  ].filter(Boolean).join(" · ") || "No completed runs";
-  return `<a class="workflow-row" href="${escapeAttribute(latest?.url ?? workflow.url)}">
-    <span class="type-mark">${escapeHtml(workflow.type)}</span>
-    <span><span class="workflow-name">${escapeHtml(workflow.name)}</span><span class="workflow-metrics">${metrics}</span></span>
-    <span class="status status-${status.key}">${status.label}</span>
+  const status = heatmapStatus(workflow);
+  const age = latest ? relativeTime(latest.updatedAt) : "No runs";
+  return `<a class="signal signal-${status.key}${workflow.stale ? " signal-aged" : ""}" href="${escapeAttribute(latest?.url ?? workflow.url)}" aria-label="${escapeAttribute(`${workflow.name}: ${status.label}, ${age}`)}">
+    <span class="signal-core">
+      <span class="signal-name">${escapeHtml(shortWorkflowName(workflow))}</span>
+      <span class="signal-type">${escapeHtml(workflow.type)}</span>
+    </span>
+    <span class="signal-age">${escapeHtml(age)}</span>
   </a>`;
 }
 
-function renderRun(run) {
-  const status = statusFor({ latestRun: run, stale: false });
-  return `<tr>
-    <td><a href="${escapeAttribute(run.url)}">${escapeHtml(run.workflow.name)}</a><br><small>${escapeHtml(run.title)}</small></td>
-    <td><span class="status status-${status.key}">${status.label}</span></td>
-    <td>${escapeHtml(run.branch ?? "—")}<br><small>${escapeHtml(run.commit ?? "")}</small></td>
-    <td>${escapeHtml(run.event ?? "—")}</td>
-    <td>${run.durationSeconds === null ? "—" : formatDuration(run.durationSeconds)}</td>
-    <td title="${escapeAttribute(new Date(run.updatedAt).toLocaleString())}">${relativeTime(run.updatedAt)}</td>
-  </tr>`;
+function renderIncidents(workflows) {
+  const incidents = workflows.filter((workflow) => heatmapStatus(workflow).key === "failure");
+  const section = document.querySelector("#incident-section");
+  section.hidden = incidents.length === 0;
+  document.querySelector("#incidents").innerHTML = incidents.map((workflow) => {
+    const run = workflow.latestRun;
+    return `<a class="incident" href="${escapeAttribute(run.url)}">
+      <span class="incident-dot"></span>
+      <span><strong>${escapeHtml(workflow.name)}</strong><small>${escapeHtml(run.title)}</small></span>
+      <span class="incident-meta">${escapeHtml(run.branch ?? "No branch")} · ${relativeTime(run.updatedAt)}</span>
+    </a>`;
+  }).join("");
 }
 
-function statusFor(workflow) {
-  if (workflow.stale) return { key: "stale", label: "Stale" };
+function heatmapStatus(workflow) {
   const run = workflow.latestRun;
-  if (!run) return { key: "stale", label: "No runs" };
+  if (!run) return { key: "stale", label: "Unknown" };
   if (ACTIVE.has(run.status)) return { key: "active", label: run.status.replaceAll("_", " ") };
   if (run.conclusion === "success") return { key: "success", label: "Success" };
   if (["failure", "timed_out", "action_required", "startup_failure"].includes(run.conclusion)) return { key: "failure", label: run.conclusion.replaceAll("_", " ") };
   return { key: "stale", label: (run.conclusion ?? run.status).replaceAll("_", " ") };
 }
 
+function shortWorkflowName(workflow) {
+  const prefix = `${workflow.type.toUpperCase()} `;
+  return workflow.name.startsWith(prefix) ? workflow.name.slice(prefix.length) : workflow.name;
+}
+
 function allWorkflows() { return state.data.modules.flatMap(({ workflows }) => workflows); }
 function showError(message) { const element = document.querySelector("#error"); element.hidden = false; element.textContent = message; }
-function formatDuration(seconds) { return seconds < 60 ? `${seconds}s` : `${Math.floor(seconds / 60)}m ${seconds % 60}s`; }
 function relativeTime(value) {
   const delta = Date.parse(value) - Date.now();
   const minutes = Math.round(delta / 60000);
