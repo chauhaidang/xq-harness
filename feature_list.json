@@ -70,7 +70,7 @@
       "description": "Run a local, read-only live dashboard with current health, recent history, filters, and reliability metrics for runnable repository workflows.",
       "dependencies": [],
       "status": "done",
-      "evidence": "Added the isolated xq-workflow-dashboard module, gh-authenticated local polling service, Server-Sent Events, versioned JSON Schema validation, responsive Fleet Grid heatmap UI, and scoped CI. Verified module CI, zero-vulnerability npm audit, live discovery of 14 workflows, interactive filtering, 1440 x 1024 design QA, and mobile layout on 2026-07-12."
+      "evidence": "Added the isolated xq-workflow-dashboard module, gh-authenticated local polling service, Server-Sent Events, versioned JSON Schema validation, responsive Fleet Grid heatmap UI, and scoped CI. Verified module CI, zero-vulnerability npm audit, live discovery of 14 workflows, interactive filtering, 1440 x 1024 design QA, and mobile layout on 2026-07-12. Merged via PR #21 into main at commit 14a2ccd."
     }
   ]
 }

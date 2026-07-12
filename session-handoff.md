@@ -3,8 +3,8 @@
 ## Current Objective
 
 - Goal: keep startup context small and force explicit harness queries for repo context
-- Current status: core harness framework and isolated Node migration are in place; the local live workflow observability dashboard is implemented
-- Branch / commit: main / local working tree
+- Current status: core harness framework, isolated Node migration, and local live workflow observability dashboard are complete; PR #21 is merged into remote `main`
+- Branch / commit: main / remote merge `14a2ccd`; local checkout retains unrelated unstaged files and is one commit behind remote `main`
 
 ## Change Checkpoints
 
@@ -12,7 +12,10 @@
 - After state: the root Node workspace file is gone, Node modules use module-local `package-lock.json` plus `npm ci --include=dev`, and active docs/workflows now describe the isolated module model
 - After state: the root Node workspace file is gone, Node modules use module-local `package-lock.json` plus `npm ci --include=dev`, active docs/workflows now describe the isolated module model, and `modules/xq-kraken` now has an immutable API catalog domain model with required `operation_id`
 - After state: `xq-workflow-dashboard` collects and validates live Actions telemetry through local `gh` authentication, streams near-real-time updates, and renders workflows as a responsive semantic circle heatmap with scoped CI and no deployment workflow
+- After state: PR #21 merged the dashboard into `main` as squash commit `14a2ccd`
 - Regression test results: existing evidence remains valid; dashboard module CI, zero-vulnerability npm audit, live 14-workflow collection, YAML parsing, localhost serving, interactive filtering, and mobile browser checks pass
+- Regression test results: GitHub PR checks all passed before merge
+- Pre-push health check: local dashboard started successfully and reported one red workflow, `CD xq-scripts`, run `28882976134`; 15 workflows loaded.
 - PR ready: yes
 - CI ready: yes
 
@@ -30,6 +33,7 @@
 - [x] Executed the isolated-module migration for the active Node modules
 - [x] Corrected the `xq-kraken` API catalog model and contract so `operation_id` is required and request/response payloads are distinct immutable types
 - [x] Built and visually verified the isolated GitHub workflow observability dashboard
+- [x] Merged PR #21 into `main`
 
 ## Verification Evidence
 
@@ -104,6 +108,7 @@
 - Historical docs under `docs/MIGRATION_XQ_TOOLBOX.md` and decision history still describe older workspace models by design
 - `xq-test-utils` still force-exits Jest after passing tests, and `xq-test-infra` still emits `MaxListenersExceededWarning`; these are pre-existing quality issues, not migration failures
 - The dashboard requires a locally authenticated GitHub CLI and only runs while `npm run dashboard` is active
+- Remote `main` contains merge commit `14a2ccd`; do not synchronize the local checkout until the unrelated unstaged files are handled safely
 
 ## Next Session Startup
 

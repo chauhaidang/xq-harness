@@ -2,7 +2,7 @@
 
 ## Current State
 
-**Last Updated:** 2026-07-11 18:52
+**Last Updated:** 2026-07-12 20:00
 **Session ID:** current-thread  
 **Active Feature:** feat-007 - GitHub workflow observability dashboard
 
@@ -28,6 +28,7 @@
 - `xq-workflow-dashboard` is now an isolated Node module that uses local `gh` authentication, validates live GitHub Actions telemetry, and renders a responsive read-only operations dashboard.
 - The local server polls one repository-wide endpoint every 15 seconds after initial history loading and streams updates to the browser with Server-Sent Events; no Pages deployment or browser-side token exists.
 - The dashboard UI now uses the selected Fleet Grid heatmap direction: equal circular workflow signals, semantic health colors, two-column module clusters, overall health score, and failure-focused incidents.
+- PR #21 merged the dashboard into `main` with squash commit `14a2ccd`; the local checkout still has unrelated unstaged xq-kraken/iOS changes and is not synchronized to that remote commit.
 
 ### Regression Test Results
 
@@ -52,16 +53,18 @@
 - Localhost browser smoke test - pass, HTML/data loaded, module search reduced the view to one matching card, and a 355px mobile viewport had no horizontal overflow
 - `yq eval` for the dashboard CI workflow - pass
 - Heatmap design QA - pass at 1440 x 1024; failure and search filters pass, browser console is clean, and 390px mobile has no horizontal overflow
+- PR #21 GitHub checks - pass; merged into `main` as `14a2ccd`
+- Pre-push dashboard health check - one red signal: `CD xq-scripts` failed in run `28882976134`; dashboard served 15 workflows successfully at 2026-07-12 20:32 +07.
 
 ### PR Ready
 
 - Status: yes
-- Reason: the diff is scoped to the isolated-module migration, removes obsolete root-workspace behavior, and includes the required docs/runner/lockfile updates together.
+- Reason: the dashboard implementation and Fleet Grid redesign were reviewed, validated, and merged through PR #21.
 
 ### CI Ready
 
 - Status: yes
-- Reason: startup verification passes and representative repo-level module CI runs passed sequentially after the migration.
+- Reason: startup verification, dashboard module CI, browser QA, and all PR checks passed before merge.
 
 ## Status
 
@@ -76,21 +79,23 @@
 - [x] Copied the isolated-modules migration handoff into the project root for durable resume
 - [x] Removed the root Node workspace model and moved the Node modules to module-local lockfiles plus `npm ci`
 - [x] Added and visually verified the read-only GitHub workflow observability dashboard
+- [x] Redesigned the dashboard as a Fleet Grid heatmap and merged PR #21 into `main`
 
 ### What's In Progress
 
-- [ ] No implementation work remains for `feat-007`; local operation requires an authenticated `gh` session
+- [ ] No active implementation work remains; local operation requires an authenticated `gh` session
 
 ### What's Next
 
 1. Decide whether `.repo-harness` topic summaries should explicitly mention the module-local lockfile model
 2. Continue using the harness on real tasks and tighten topic/module summaries only when they prove insufficient
-3. Commit or push the isolated-module migration when requested
+3. Keep the local checkout aligned with remote `main` when it is safe to handle the unrelated unstaged files
 
 ## Blockers / Risks
 
 - [ ] Topic staleness: `.repo-harness/context-index.json` and topic Markdown can drift from repo reality if not updated after process changes
 - [ ] Coverage gaps: a future task may need a missing topic, especially for new modules or release workflows
+- [ ] Local checkout is behind remote `main` after PR #21 because unrelated unstaged files must be preserved before synchronizing
 - [ ] Historical docs remain intentionally stale in `docs/MIGRATION_XQ_TOOLBOX.md` and decision history; they still describe older workspace models
 - [ ] `xq-test-utils` test run still reports a Jest force-exit warning, and `xq-test-infra` tests emit `MaxListenersExceededWarning`; neither blocked CI, but both remain worth tracking separately
 

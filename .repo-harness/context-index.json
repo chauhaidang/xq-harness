@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-11",
+  "updatedAt": "2026-07-12",
   "purpose": "Bounded startup context for xq-harness. Load this first, then query one feature, topic, or module at a time.",
   "startup": {
     "activeFeature": "feat-007",
