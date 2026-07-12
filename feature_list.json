@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "activeFeature": "feat-007",
+  "activeFeature": "feat-008",
   "features": [
     {
       "id": "feat-001",
@@ -71,6 +71,17 @@
       "dependencies": [],
       "status": "done",
       "evidence": "Added the isolated xq-workflow-dashboard module, gh-authenticated local polling service, Server-Sent Events, versioned JSON Schema validation, responsive Fleet Grid heatmap UI, and scoped CI. Verified module CI, zero-vulnerability npm audit, live discovery of 14 workflows, interactive filtering, 1440 x 1024 design QA, and mobile layout on 2026-07-12. Merged via PR #21 into main at commit 14a2ccd."
+    },
+    {
+      "id": "feat-008",
+      "name": "Module-local version manifests",
+      "description": "Make each module's version.yaml the canonical source for its semantic version, changelog, and generated native version mirrors.",
+      "dependencies": [
+        "feat-004",
+        "feat-006"
+      ],
+      "status": "done",
+      "evidence": "Added a uniform `version.yaml` to all registered modules, added mirror synchronization and validation through `./scripts/module sync-version`, switched CI/CD reads, path filters, and change detection to each module's file, and verified startup plus xq-common-kit CI on 2026-07-12."
     }
   ]
 }

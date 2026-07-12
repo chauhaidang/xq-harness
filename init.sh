@@ -27,6 +27,9 @@ test -f .repo-harness/context-index.json
 echo "=== module registry ==="
 ./scripts/module list >/dev/null
 
+echo "=== version policy ==="
+python3 scripts/validate-module-versions.py >/dev/null
+
 echo "=== harness summary ==="
 node scripts/harness-context.mjs summary >/dev/null
 

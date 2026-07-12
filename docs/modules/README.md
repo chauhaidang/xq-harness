@@ -9,11 +9,13 @@ secrets and old CI in the source repo before opening a PR here.
 
 ## Registry
 
-`modules.yaml` at the repo root is the single source of truth for:
+`modules.yaml` at the repo root is the execution registry for:
 
 - module paths
-- versions
 - install / build / test commands
+
+Each module's `version.yaml` is its single source of truth for semantic version,
+newest-first changelog entries, and approved native mirrors.
 
 Do not duplicate those commands in the Makefile or CI workflows.
 
@@ -59,7 +61,7 @@ Cross-module consumers use semver after publish.
 | `xq-test-utils` | 0.1.0 | `@chauhaidang/xq-harness-common-kit` |
 | `xq-test-infra` | 0.1.1 | `@chauhaidang/xq-harness-common-kit` |
 | `xq-skills` | 0.1.0 | `@chauhaidang/xq-skills` |
-| `xq-scripts` | VERSION file | tarball release only |
+| `xq-scripts` | 1.0.2 | tarball release only (`VERSION` mirror) |
 
 **Prerequisites:** Node ≥ 22 with npm available. `NODE_AUTH_TOKEN` only needed when
 installing published `@chauhaidang/xq-harness-*` from GitHub Packages.
@@ -137,7 +139,13 @@ filters, and how module owners add pipelines.
 
 ## Versioning
 
-Each module version is declared in `modules.yaml` and mirrored in the native
-project file (`package.json`, `pyproject.toml`, Gradle `version`, Xcode
-marketing version). Publishable XQ packages use per-module `cd-<module>.yml`
-workflows; CD runs on `package.json` version bump to `main` or manual dispatch.
+Each module declares its current `version` and newest-first `changelog` in its
+own `version.yaml`. The first changelog item must match the current version and
+every item must include non-empty `changes`. Any module-native copy is declared
+under `mirrors` and must match exactly.
+
+Publishable modules still keep native manifest versions because package
+managers and platform toolchains require them, but those fields are mirrors,
+not authorities. After adding a release, run
+`./scripts/module sync-version <module>` to update native files. CI and CD
+validate the result, and CD detects changes from that module's `version.yaml`.

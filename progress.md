@@ -2,69 +2,45 @@
 
 ## Current State
 
-**Last Updated:** 2026-07-12 20:00
+**Last Updated:** 2026-07-12 22:17 +07
 **Session ID:** current-thread  
-**Active Feature:** feat-007 - GitHub workflow observability dashboard
+**Active Feature:** feat-008 - Module-local version manifests
 
 ## Change Checkpoints
 
 ### Before State
 
-- The repo still had a root [package.json](/Users/automation2/Documents/workspace/xq-harness/package.json:1) declaring Node workspaces.
-- Node CI callers still watched `pnpm-workspace.yaml` and `pnpm-lock.yaml`.
-- `xq-common-kit` and `xq-test-utils` still depended on a shared repo-level `modules/tsconfig.base.json`.
-- Active docs and skills still described pnpm/root-workspace behavior for Node modules, especially `xq-octopus`.
-- Node modules did not have clean module-local lockfiles checked into the repo.
+- The repo documentation already claimed `modules.yaml` was the single version authority, but modules still carried independent semantic-version definitions in `package.json`, `pyproject.toml`, Xcode files, and plain `VERSION` files without one enforced rule.
+- Release automation for publishable Node modules still keyed version-change detection off `package.json`, while the tarball flow keyed off `VERSION`, so the registry and release callers were not aligned.
+- `xq-scripts` still had placeholder registry version `0.0.0` in `modules.yaml` even though its real released version was `1.0.2` in `modules/xq-scripts/VERSION`.
+- Onboarding docs did not require a module to declare which native files were allowed to mirror the registry version.
 
 ### After State
 
-- The root Node workspace artifact is removed: repo root no longer has a `package.json`.
-- Node modules now own their install state with module-local `package-lock.json` files and `npm ci --include=dev` commands in [modules.yaml](/Users/automation2/Documents/workspace/xq-harness/modules.yaml:1).
-- `scripts/module` and `modules.yaml` no longer expose a dead `workspace` concept.
-- `xq-common-kit` and `xq-test-utils` are self-contained at the TypeScript-config level; `modules/tsconfig.base.json` was removed.
-- CI callers, release workflows, README/docs, and live `xq-octopus` skills/docs now describe the isolated npm model instead of pnpm/root workspace behavior.
-- `modules/xq-kraken/model/api_catalog.py` now uses immutable tuple-backed domain types, separate `ApiRequestBody` and `ApiResponse` classes, and a required `operation_id` invariant aligned with the module contract.
-- `modules/xq-kraken/API_CATALOG_CONTRACT.md` now states that `operation_id` is required and must trigger an extraction error when missing in the source document.
-- `xq-workflow-dashboard` is now an isolated Node module that uses local `gh` authentication, validates live GitHub Actions telemetry, and renders a responsive read-only operations dashboard.
-- The local server polls one repository-wide endpoint every 15 seconds after initial history loading and streams updates to the browser with Server-Sent Events; no Pages deployment or browser-side token exists.
-- The dashboard UI now uses the selected Fleet Grid heatmap direction: equal circular workflow signals, semantic health colors, two-column module clusters, overall health score, and failure-focused incidents.
-- PR #21 merged the dashboard into `main` with squash commit `14a2ccd`; the local checkout still has unrelated unstaged xq-kraken/iOS changes and is not synchronized to that remote commit.
+- Every registered module now owns a `version.yaml` containing its current semantic version, newest-first changelog, and native mirror declarations.
+- `modules.yaml` is limited to module execution metadata rather than duplicating release state.
+- `scripts/validate-module-versions.py` validates the release schema and native mirrors, while `./scripts/module sync-version <module>` generates package, lockfile, Python, Xcode, and plain version mirrors.
+- `./scripts/module ...` and `./init.sh` fail fast when release definitions are missing or mirrors drift.
+- CI/CD workflows read and compare only the selected module's `version.yaml`; initial adoption is a non-publishing baseline.
+- Active onboarding and Actions docs describe the manifest-first release workflow.
 
 ### Regression Test Results
 
+- `python3 scripts/validate-module-versions.py` - pass
+- `python3 scripts/validate-module-versions.py --sync` - pass
+- `python3 scripts/check-registry-version-changes.py --module xq-common-kit` - pass; reports `version_changed: false` for initial manifest adoption
 - `./init.sh` - pass
-- `node scripts/harness-context.mjs summary` - pass
 - `./scripts/module ci xq-common-kit` - pass
-- `./scripts/module ci xq-test-utils` - pass
-- `./scripts/module ci xq-test-infra` - pass
-- `./scripts/module ci xq-skills` - pass
-- `./scripts/module ci xq-octopus` - pass
-- clean temp validation with escalated npm registry access:
-  - `xq-common-kit` install/build/test - pass
-  - `xq-test-utils` install/build/test - pass
-  - `xq-test-infra` install/build/test - pass
-  - `xq-skills` install/build/test - pass
-  - `xq-octopus` install/build - pass, tests pass with escalation because local HTTP bind is allowed there
-- `./.venv/bin/python -c "from model.api_catalog import ApiCatalog, ApiEndpoint, ApiRequestBody, ApiResponse; ..."` from `modules/xq-kraken` - pass
-- `./.venv/bin/python -m compileall model/api_catalog.py` from `modules/xq-kraken` - pass
-- `./scripts/module ci xq-workflow-dashboard` - pass
-- `npm audit --audit-level=moderate` from `modules/xq-workflow-dashboard` - pass, zero vulnerabilities
-- Live `npm run collect` - pass, discovered 14 runnable workflows and produced a schema-valid snapshot
-- Localhost browser smoke test - pass, HTML/data loaded, module search reduced the view to one matching card, and a 355px mobile viewport had no horizontal overflow
-- `yq eval` for the dashboard CI workflow - pass
-- Heatmap design QA - pass at 1440 x 1024; failure and search filters pass, browser console is clean, and 390px mobile has no horizontal overflow
-- PR #21 GitHub checks - pass; merged into `main` as `14a2ccd`
-- Pre-push dashboard health check - one red signal: `CD xq-scripts` failed in run `28882976134`; dashboard served 15 workflows successfully at 2026-07-12 20:32 +07.
 
 ### PR Ready
 
 - Status: yes
-- Reason: the dashboard implementation and Fleet Grid redesign were reviewed, validated, and merged through PR #21.
+- Reason: the version-policy diff is scoped, documented, and backed by local startup plus representative module verification.
 
 ### CI Ready
 
 - Status: yes
-- Reason: startup verification, dashboard module CI, browser QA, and all PR checks passed before merge.
+- Reason: module-local manifest validation, synchronization, and version-change detection pass locally, and representative Node module CI still succeeds.
 
 ## Status
 
@@ -80,15 +56,16 @@
 - [x] Removed the root Node workspace model and moved the Node modules to module-local lockfiles plus `npm ci`
 - [x] Added and visually verified the read-only GitHub workflow observability dashboard
 - [x] Redesigned the dashboard as a Fleet Grid heatmap and merged PR #21 into `main`
+- [x] Moved semantic versions and changelogs into each module's `version.yaml` and generated declared native mirrors
 
 ### What's In Progress
 
-- [ ] No active implementation work remains; local operation requires an authenticated `gh` session
+- [ ] No active implementation work remains; future releases add one manifest entry and run the mirror sync command
 
 ### What's Next
 
-1. Decide whether `.repo-harness` topic summaries should explicitly mention the module-local lockfile model
-2. Continue using the harness on real tasks and tighten topic/module summaries only when they prove insufficient
+1. Require `version.yaml` for the next module onboarding
+2. Update the module version, prepend its changelog entry, and run `./scripts/module sync-version <module>`
 3. Keep the local checkout aligned with remote `main` when it is safe to handle the unrelated unstaged files
 
 ## Blockers / Risks
@@ -98,6 +75,7 @@
 - [ ] Local checkout is behind remote `main` after PR #21 because unrelated unstaged files must be preserved before synchronizing
 - [ ] Historical docs remain intentionally stale in `docs/MIGRATION_XQ_TOOLBOX.md` and decision history; they still describe older workspace models
 - [ ] `xq-test-utils` test run still reports a Jest force-exit warning, and `xq-test-infra` tests emit `MaxListenersExceededWarning`; neither blocked CI, but both remain worth tracking separately
+- [ ] `cd-xq-scripts.yml` still triggers from `modules/xq-scripts/VERSION` changes, not `modules.yaml`, so future xq-scripts releases must update the registry and mirror file in the same change
 
 ## Decisions Made
 
@@ -121,6 +99,10 @@
   - Context: removing the root `package.json` required each Node module to become self-contained at install, TypeScript config, and workflow levels
   - Alternatives considered: keeping a minimal root package file; mixed npm/pnpm module policy; leaving shared `modules/tsconfig.base.json`
 
+- **Make each module's `version.yaml` its enforced release authority**
+  - Context: version history and release notes belong with the independently built and released module
+  - Alternatives considered: one root release manifest; storing current versions in `modules.yaml`
+
 ## Files Modified This Session
 
 - `AGENTS.md` - rewrote startup flow around query-first harness usage
@@ -134,6 +116,15 @@
 - `.repo-harness/topics/*.md` - added on-demand context topics
 - `package.json` - removed the obsolete root Node workspace file
 - `modules.yaml` - switched Node module installs to `npm ci --include=dev`, removed `workspace` metadata, and kept module-local commands only
+- `modules/*/version.yaml` - added canonical versions, changelogs, and mirror declarations per module
+- `modules.yaml` - removed release state so it remains an execution registry
+- `scripts/validate-module-versions.py` - added shared version-policy validation across native file formats
+- `scripts/check-registry-version-changes.py` - added module-local version change detection for workflows
+- `scripts/check-xq-version-changes.js` - redirected the legacy checker to module-local version detection
+- `scripts/module` - added per-module version validation before install/build/test commands
+- `init.sh` - added a repo-wide version-policy check
+- `.github/workflows/*.yml` - switched version checks to the registry policy and aligned CI trigger paths with the new validator scripts
+- `docs/modules/README.md`, `docs/modules/onboarding.md`, `docs/github-actions.md`, and `docs/product/xq-toolbox-overview.md` - documented `modules.yaml` as the canonical semver source with declared mirror files
 - `modules/xq-*/package.json` - aligned packageManager metadata with npm and removed direct pnpm script usage where needed
 - `modules/xq-*/package-lock.json` - added clean module-local npm lockfiles for Node modules
 - `modules/xq-common-kit/tsconfig.json` and `modules/xq-test-utils/tsconfig.json` - inlined TypeScript compiler settings so the modules no longer depend on `modules/tsconfig.base.json`
@@ -165,6 +156,11 @@
   - `./scripts/module ci xq-skills`
   - `./scripts/module ci xq-octopus`
 - [x] Dashboard module CI, schema validation, live API collection, browser filtering, responsive smoke test, and npm audit passed
+- [x] Release manifest validation, synchronization, and version detection passed:
+  - `python3 scripts/validate-module-versions.py`
+  - `python3 scripts/check-registry-version-changes.py --module xq-scripts`
+  - `./init.sh`
+  - `./scripts/module ci xq-common-kit`
 
 ## Notes for Next Session
 
@@ -177,3 +173,6 @@ has an explicit API catalog contract that treats `operation_id` as required and
 uses immutable tuple-backed domain models.
 The workflow dashboard is local-only. Run `npm run dashboard` from its module
 directory after confirming `gh auth status`, then open `http://127.0.0.1:4173`.
+The active semver policy is module-local: update `modules/<module>/version.yaml`,
+prepend its changelog entry, run `./scripts/module sync-version <module>`, and
+rely on `./init.sh` or `./scripts/module ...` to catch drift.

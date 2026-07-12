@@ -4,7 +4,6 @@ modules:
   xq-domain-test-mcp:
     path: modules/xq-domain-test-mcp
     language: python
-    version: 1.0.3
     test_all: false
     toolchain:
       python: "3.12"
@@ -18,7 +17,6 @@ modules:
   ios-xq-finance-app:
     path: modules/ios-xq-finance-app
     language: ios
-    version: 0.1.0
     test_all: false
     toolchain:
       xcode: "16"
@@ -39,7 +37,6 @@ modules:
   xq-ios-shell-app:
     path: modules/xq-ios-shell-app
     language: ios
-    version: 0.1.0
     test_all: false
     toolchain:
       xcode: "16"
@@ -61,7 +58,6 @@ modules:
   xq-ios-ui-test-framework:
     path: modules/xq-ios-ui-test-framework
     language: swift
-    version: 0.1.0
     test_all: false
     toolchain:
       swift: "5.10+"
@@ -79,7 +75,6 @@ modules:
   xq-common-kit:
     path: modules/xq-common-kit
     language: node
-    version: 0.1.0
     test_all: true
     toolchain:
       node: ">=22"
@@ -92,7 +87,6 @@ modules:
   xq-test-utils:
     path: modules/xq-test-utils
     language: node
-    version: 0.1.0
     test_all: true
     depends_on:
       - xq-common-kit
@@ -107,7 +101,6 @@ modules:
   xq-test-infra:
     path: modules/xq-test-infra
     language: node
-    version: 0.1.1
     test_all: true
     depends_on:
       - xq-common-kit
@@ -123,7 +116,6 @@ modules:
   xq-octopus:
     path: modules/xq-octopus
     language: node
-    version: 0.1.0
     test_all: false
     toolchain:
       node: ">=22"
@@ -136,7 +128,6 @@ modules:
   xq-skills:
     path: modules/xq-skills
     language: node
-    version: 0.1.0
     test_all: false
     toolchain:
       node: ">=22"
@@ -149,7 +140,6 @@ modules:
   xq-workflow-dashboard:
     path: modules/xq-workflow-dashboard
     language: node
-    version: 0.1.0
     test_all: false
     toolchain:
       node: ">=22"
@@ -162,7 +152,6 @@ modules:
   xq-scripts:
     path: modules/xq-scripts
     language: shell
-    version: 0.0.0
     test_all: false
     commands:
       install: "true"
@@ -172,7 +161,6 @@ modules:
   poc:
     path: modules/poc
     language: mixed
-    version: 0.0.0
     test_all: false
     commands:
       install: "true"

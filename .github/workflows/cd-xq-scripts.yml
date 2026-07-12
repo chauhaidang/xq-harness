@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - modules/xq-scripts/version.yaml
       - modules/xq-scripts/VERSION
-      - modules/xq-scripts/**
   workflow_dispatch:
 
 jobs:
@@ -16,3 +16,4 @@ jobs:
     secrets: inherit
     with:
       module: xq-scripts
+      check_version_change: true

@@ -26,7 +26,7 @@ jobs:
           set -euo pipefail
           version="${GITHUB_REF_NAME#ios-ui-test-framework-v}"
           declared="$(tr -d '[:space:]' < modules/xq-ios-ui-test-framework/VERSION)"
-          registry="$(yq -r '."xq-ios-ui-test-framework".version' modules.yaml)"
+          registry="$(yq -r '.version' modules/xq-ios-ui-test-framework/version.yaml)"
           test "$version" = "$declared"
           test "$version" = "$registry"
           echo "version=$version" >> "$GITHUB_OUTPUT"

@@ -66,25 +66,29 @@ Verifies `npm --version`, runs
 | Input | Default | Purpose |
 | --- | --- | --- |
 | `module` | (required) | e.g. `xq-scripts` |
-| `version_file` | `VERSION` | Version file inside module |
+| `version_file` | `VERSION` | Mirror file inside module used to build the archive after registry validation |
 | `tag_prefix` | `xq-scripts/v` | Git tag prefix |
 | `archive_prefix` | `xq-scripts-v` | Tarball filename prefix |
+| `check_version_change` | `true` | Skip release when the module's `version.yaml` version matches the previous commit |
 
 ## CI vs CD triggers
 
 | Workflow | When it runs |
 | --- | --- |
 | `ci-<module>.yml` | Pull request and push to `main` when `paths` match |
-| `cd-<module>.yml` | Push to `main` when `package.json` (or `VERSION`) changes; **never on PR** |
+| `cd-<module>.yml` | Push to `main` when that module's `version.yaml` and/or a mirror changes; **never on PR** |
 | `cd-<module>.yml` | `workflow_dispatch` (manual publish) |
 | `cd-<module>.yml` (Node package) | Push tag `xq-domain-test-mcp-v*`; **not chained to CI** |
 CD callers include a `version-check` job using:
 
 ```bash
-node scripts/check-xq-version-changes.js --module <module>
+python3 scripts/check-registry-version-changes.py --module <module>
 ```
 
 Publish runs only when the version changed or the workflow was dispatched manually.
+Tarball releases use the same module-local version check and skip a
+release when the canonical version has not changed, while the existing duplicate
+GitHub Release check remains a final safety guard.
 
 ## CD permissions
 
@@ -116,7 +120,7 @@ Validate caller/callee permission parity locally:
 The iOS UI framework uses a dedicated macOS workflow rather than the Node
 templates. CI runs module package validation and an XQ consumer compile check.
 CD is tag-driven (`ios-ui-test-framework-vX.Y.Z`), validates `VERSION` and
-`modules.yaml`, subtree-splits the module, pushes to the private distribution
+the module's `version.yaml`, subtree-splits the module, pushes to the private distribution
 repository, creates immutable `X.Y.Z` tags, and publishes release notes.
 
 ## Add CI/CD for a new module
@@ -127,9 +131,8 @@ repository, creates immutable `X.Y.Z` tags, and publishes release notes.
 4. Update `paths` filters for the module directory and any upstream deps.
 5. Set template inputs (`module`, `playwright_skip_browser`, etc.).
 6. Add lines to `.github/CODEOWNERS`.
-7. If npm-publishable, add the module to `publishPrefixes` in
-   `scripts/check-xq-version-changes.js`.
-8. Bump `package.json` version when ready to trigger CD on merge to `main`.
+7. Add `modules/<module>/version.yaml` with mirrors and an initial changelog.
+8. Update its version and prepend a changelog entry, then run `./scripts/module sync-version <module>`.
 9. Run `./scripts/check-cd-workflow-permissions` when adding or changing a CD caller.
 
 ## Ownership

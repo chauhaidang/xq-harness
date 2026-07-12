@@ -58,7 +58,9 @@ module_command() {
 
 module_version() {
   local module="$1"
-  yq -r ".modules[\"${module}\"].version" "${REGISTRY}"
+  local rel_path
+  rel_path="$(module_path "${module}")"
+  yq -r '.version' "${ROOT}/${rel_path}/version.yaml"
 }
 
 module_depends_on() {
@@ -91,6 +93,7 @@ run_action() {
   fi
 
   validate_depends_on "${module}"
+  python3 "${ROOT}/scripts/validate-module-versions.py" --module "${module}"
 
   local rel_path cmd
   rel_path="$(module_path "${module}")"
@@ -166,6 +169,7 @@ Usage:
   ./scripts/module list-test-all
   ./scripts/module info <module>
   ./scripts/module version [module]
+  ./scripts/module sync-version [module]
   ./scripts/module install <module>
   ./scripts/module build <module>
   ./scripts/module test <module>
@@ -209,6 +213,16 @@ main() {
           exit 1
         fi
         module_version "$2"
+      else
+        usage
+        exit 1
+      fi
+      ;;
+    sync-version)
+      if [[ $# -eq 1 ]]; then
+        python3 "${ROOT}/scripts/validate-module-versions.py" --sync
+      elif [[ $# -eq 2 ]]; then
+        python3 "${ROOT}/scripts/validate-module-versions.py" --module "$2" --sync
       else
         usage
         exit 1

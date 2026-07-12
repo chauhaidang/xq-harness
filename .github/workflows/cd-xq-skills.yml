@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - modules/xq-skills/version.yaml
       - modules/xq-skills/package.json
   workflow_dispatch:
 
@@ -18,7 +19,7 @@ jobs:
           fetch-depth: 0
       - name: Check version bump
         id: v
-        run: node scripts/check-xq-version-changes.js --module xq-skills
+        run: python3 scripts/check-registry-version-changes.py --module xq-skills
 
   publish:
     needs: version-check

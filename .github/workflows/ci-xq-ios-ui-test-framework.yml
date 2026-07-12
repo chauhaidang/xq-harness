@@ -6,7 +6,10 @@ on:
       - modules/xq-ios-ui-test-framework/**
       - modules/ios-xq-finance-app/**
       - modules.yaml
+      - modules/xq-ios-ui-test-framework/version.yaml
       - scripts/module
+      - scripts/check-registry-version-changes.py
+      - scripts/validate-module-versions.py
       - .github/workflows/ci-xq-ios-ui-test-framework.yml
   push:
     branches: [main]
