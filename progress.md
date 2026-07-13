@@ -2,9 +2,9 @@
 
 ## Current State
 
-**Last Updated:** 2026-07-12 22:17 +07
+**Last Updated:** 2026-07-13 08:13 +07
 **Session ID:** current-thread  
-**Active Feature:** feat-008 - Module-local version manifests
+**Active Feature:** feat-009 - Accurate dashboard health classification
 
 ## Change Checkpoints
 
@@ -31,6 +31,8 @@
 - `python3 scripts/check-registry-version-changes.py --module xq-common-kit` - pass; reports `version_changed: false` for initial manifest adoption
 - `./init.sh` - pass
 - `./scripts/module ci xq-common-kit` - pass
+- `./scripts/module ci xq-workflow-dashboard` - pass; 8 tests passed
+- Live dashboard after restart - pass; merged commit `6232532` reports 0 active, 14 successful, 0 failed
 
 ### PR Ready
 
@@ -57,6 +59,7 @@
 - [x] Added and visually verified the read-only GitHub workflow observability dashboard
 - [x] Redesigned the dashboard as a Fleet Grid heatmap and merged PR #21 into `main`
 - [x] Moved semantic versions and changelogs into each module's `version.yaml` and generated declared native mirrors
+- [x] Fixed dashboard duplicate-run reconciliation so completed successful runs remain green
 
 ### What's In Progress
 
@@ -103,6 +106,10 @@
   - Context: version history and release notes belong with the independently built and released module
   - Alternatives considered: one root release manifest; storing current versions in `modules.yaml`
 
+- **Prefer newer completed run records when GitHub API sources disagree**
+  - Context: repository-wide and workflow-specific endpoints can briefly return different statuses for the same run ID
+  - Alternatives considered: treating all warnings as failures; keeping first-seen duplicate records
+
 ## Files Modified This Session
 
 - `AGENTS.md` - rewrote startup flow around query-first harness usage
@@ -136,6 +143,7 @@
 - `modules/xq-kraken/model/api_catalog.py` - replaced mutable, merged payload types with immutable request/response domain models and kept `operation_id` required
 - `modules/xq-kraken/API_CATALOG_CONTRACT.md` - aligned the written contract with the required `operation_id` invariant
 - `modules/xq-workflow-dashboard` - added the isolated collector, schema, static UI, tests, local docs, and lockfile
+- `modules/xq-workflow-dashboard/src/github-client.mjs` and `test/dashboard-data.test.mjs` - reconciled duplicate run status and added regression coverage
 - `modules/xq-workflow-dashboard/design-qa.md` - recorded selected-reference comparison history and passing visual QA evidence
 - `.github/workflows/ci-xq-workflow-dashboard.yml` - added scoped module CI; the planned Pages deployment workflow was removed for local-only operation
 - `modules.yaml` - registered the isolated dashboard module
