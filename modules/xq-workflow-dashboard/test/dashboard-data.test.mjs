@@ -141,6 +141,31 @@ test("merges repository-wide updates into per-workflow history without duplicate
   assert.equal(updated[0].runs.length, 2);
 });
 
+test("prefers completed success when duplicate run data disagrees on status", () => {
+  const workflows = [workflowFixture("ci-xq-skills.yml", [runFixture({
+    id: 401,
+    status: "completed",
+    conclusion: "success",
+    updated_at: "2026-07-12T12:02:00.000Z",
+  })])];
+  workflows[0].id = 77;
+
+  const updated = mergeWorkflowRuns(workflows, [
+    {
+      ...runFixture({
+        id: 401,
+        status: "queued",
+        conclusion: null,
+        updated_at: "2026-07-12T12:01:00.000Z",
+      }),
+      workflow_id: 77,
+    },
+  ]);
+
+  assert.equal(updated[0].runs[0].status, "completed");
+  assert.equal(updated[0].runs[0].conclusion, "success");
+});
+
 test("reconciles newly active and disabled workflows without losing history", () => {
   const existing = [{ id: 1, name: "old", path: "old.yml", runs: [{ id: 10 }] }, { id: 2, runs: [] }];
   const active = [{ id: 1, name: "renamed", path: "renamed.yml" }, { id: 3, name: "new", path: "new.yml" }];

@@ -2,7 +2,7 @@
 
 ## Current Objective
 
-- Goal: keep startup context small, preserve the isolated-module model, and enforce one version manifest per module
+- Goal: keep startup context small, preserve the isolated-module model, and maintain accurate local workflow health
 - Current status: core harness framework, isolated Node migration, dashboard work, and the centralized version-policy enforcement are complete; PR #21 is merged into remote `main`
 - Branch / commit: main / remote merge `14a2ccd`; local checkout retains unrelated unstaged files and is one commit behind remote `main`
 
@@ -12,8 +12,10 @@
 - After state: each registered module owns a `version.yaml` with current semver, newest-first changelog, and native mirror declarations; `modules.yaml` owns execution only
 - After state: `./scripts/module sync-version <module>` generates declared native mirrors, while startup, module commands, and release callers validate drift
 - After state: CI/CD callers read only the selected module's `version.yaml`, and initial manifest adoption is a non-publishing baseline
+- After state: dashboard duplicate-run reconciliation prefers newer records and completed statuses, preventing transient queued records from masking successful runs
 - Regression test results: `python3 scripts/validate-module-versions.py`, `./init.sh`, and `./scripts/module ci xq-common-kit` pass under the enforced policy
 - Regression test results: `python3 scripts/check-registry-version-changes.py --module xq-common-kit` passes and treats initial manifest adoption as an unchanged baseline
+- Regression test results: `./scripts/module ci xq-workflow-dashboard` passes with 8 tests; live merged commit health is 0 active, 14 successful, 0 failed
 - PR ready: yes
 - CI ready: yes
 
@@ -33,6 +35,7 @@
 - [x] Built and visually verified the isolated GitHub workflow observability dashboard
 - [x] Merged PR #21 into `main`
 - [x] Added semantic versions and changelogs to every module-local `version.yaml` and enforced generated native mirrors
+- [x] Fixed dashboard health classification for duplicate GitHub run records
 
 ## Verification Evidence
 
@@ -103,6 +106,7 @@
 - Remove the root Node workspace completely rather than keeping a stub package file
 - Make the Node modules self-contained at the TypeScript-config level and lockfile level
 - Make each module's `version.yaml` its semantic-version and changelog authority and generate allowed native mirrors
+- Prefer newer completed run records when duplicate GitHub API responses disagree on status
 - Add named change checkpoints so agents must report before state, after state, regression results, PR readiness, and CI readiness
 - Keep `operation_id` as a required domain invariant in `xq-kraken` because downstream callers will query endpoints by that key
 - Keep the dashboard local and read-only; delegate authentication to `gh`, poll server-side, and never expose credentials to browser code or committed files
@@ -114,6 +118,7 @@
 - Historical docs under `docs/MIGRATION_XQ_TOOLBOX.md` and decision history still describe older workspace models by design
 - `xq-test-utils` still force-exits Jest after passing tests, and `xq-test-infra` still emits `MaxListenersExceededWarning`; these are pre-existing quality issues, not migration failures
 - `cd-xq-scripts.yml` watches its module-local `version.yaml` and `VERSION` mirror; use the sync command before release
+- Dashboard is running locally at `http://127.0.0.1:4173` with corrected status reconciliation
 - The dashboard requires a locally authenticated GitHub CLI and only runs while `npm run dashboard` is active
 - Dashboard default refresh interval is 30 seconds; `DASHBOARD_POLL_MS` can override it, with a five-second minimum.
 - Remote `main` contains merge commit `14a2ccd`; do not synchronize the local checkout until the unrelated unstaged files are handled safely

@@ -34,11 +34,23 @@ export function mergeWorkflowRuns(workflows, recentRuns) {
   const runsByWorkflow = Map.groupBy(recentRuns, (run) => run.workflow_id);
   return workflows.map((workflow) => {
     const merged = [...(runsByWorkflow.get(workflow.id) ?? []), ...workflow.runs];
-    const unique = [...new Map(merged.map((run) => [run.id, run])).values()]
+    const uniqueById = new Map();
+    for (const run of merged) {
+      const existing = uniqueById.get(run.id);
+      if (!existing || isNewerRun(run, existing)) uniqueById.set(run.id, run);
+    }
+    const unique = [...uniqueById.values()]
       .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))
       .slice(0, 20);
     return { ...workflow, runs: unique };
   });
+}
+
+function isNewerRun(candidate, existing) {
+  const candidateUpdated = Date.parse(candidate.updated_at);
+  const existingUpdated = Date.parse(existing.updated_at);
+  if (candidateUpdated !== existingUpdated) return candidateUpdated > existingUpdated;
+  return candidate.status === "completed" && existing.status !== "completed";
 }
 
 export function reconcileWorkflows(existingWorkflows, activeWorkflows) {

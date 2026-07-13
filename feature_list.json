@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "activeFeature": "feat-008",
+  "activeFeature": "feat-009",
   "features": [
     {
       "id": "feat-001",
@@ -82,6 +82,16 @@
       ],
       "status": "done",
       "evidence": "Added a uniform `version.yaml` to all registered modules, added mirror synchronization and validation through `./scripts/module sync-version`, switched CI/CD reads, path filters, and change detection to each module's file, and verified startup plus xq-common-kit CI on 2026-07-12."
+    },
+    {
+      "id": "feat-009",
+      "name": "Accurate dashboard health classification",
+      "description": "Keep successful workflows green when duplicate GitHub API records disagree on transient status, while retaining actual failures as non-green.",
+      "dependencies": [
+        "feat-007"
+      ],
+      "status": "done",
+      "evidence": "Added duplicate-run reconciliation coverage, prefer newer/completed records in `github-client.mjs`, passed all 8 dashboard tests, and verified the live dashboard reports 0 active, 14 successful, and 0 failed workflows for merged commit 6232532 on 2026-07-13."
     }
   ]
 }
