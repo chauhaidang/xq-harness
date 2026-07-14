@@ -1,5 +1,6 @@
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Protocol
 
 
@@ -40,7 +41,7 @@ class ApiEndpoint:
 
 
 class ApiSource(Protocol):
-    def load(self, source: object) -> Mapping[str, object]: ...
+    def load(self, path: Path) -> Mapping[str, object]: ...
 
 
 class ApiExtractor(Protocol):
