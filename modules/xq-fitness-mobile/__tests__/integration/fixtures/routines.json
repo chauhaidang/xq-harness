@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "Push Pull Legs",
+    "description": "3-day split focusing on push, pull, and leg movements",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "name": "Upper Lower Split",
+    "description": "4-day split alternating upper and lower body",
+    "isActive": true,
+    "createdAt": "2024-01-02T00:00:00.000Z",
+    "updatedAt": "2024-01-02T00:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "name": "Full Body",
+    "description": "Complete body workout in one session",
+    "isActive": false,
+    "createdAt": "2024-01-03T00:00:00.000Z",
+    "updatedAt": "2024-01-03T00:00:00.000Z"
+  }
+]
+

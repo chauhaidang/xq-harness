@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "activeFeature": "feat-016",
+  "activeFeature": "feat-018",
   "features": [
     {
       "id": "feat-001",
@@ -94,9 +94,19 @@
       "evidence": "Added duplicate-run reconciliation coverage, prefer newer/completed records in `github-client.mjs`, passed all 8 dashboard tests, and verified the live dashboard reports 0 active, 14 successful, and 0 failed workflows for merged commit 6232532 on 2026-07-13."
     },
     {
+      "id": "feat-010",
+      "name": "Onboard xq-fitness-mobile",
+      "description": "Register the private Expo fitness app with build-and-unit CI, local integration testing, and local physical-device verification while excluding simulator workflows.",
+      "dependencies": [
+        "feat-008"
+      ],
+      "status": "blocked",
+      "evidence": "Registered the module with canonical 2.0.0 versioning, build-and-unit-only CI, local integration orchestration, and environment-driven physical-device commands. `./scripts/module ci xq-fitness-mobile` passed with 10 suites/75 tests; local integration passed with 10 suites/61 tests and clean teardown. Final device acceptance is blocked because CoreDevice could not detect the dedicated device; the Expo implementation is now a frozen behavior reference for feat-011."
+    },
+    {
       "id": "feat-011",
       "name": "Native offline XQ Fitness foundation",
-      "description": "Create the native SwiftUI fitness app with MVVM plus Router, a versioned local-only store, and the empty-state-to-create-routine flow.",
+      "description": "Create the native SwiftUI fitness app with MVVM plus Router, a versioned local-only store, and the empty-state-to-create-routine flow while retaining the Expo app as a frozen behavior reference.",
       "dependencies": [
         "feat-008"
       ],
@@ -151,7 +161,25 @@
         "feat-015"
       ],
       "status": "done",
-      "evidence": "TDD RED failed on-device because the visible Exercise name label did not exist. Replaced placeholder-only rows with persistent Exercise name, Sets, Repetitions, and Weight (kg) labels while preserving field identifiers, defaults, keyboards, and save behavior. PR review tightened coverage to assert the exact visible/accessibility label values and every exact Day 1–7 row. The final clean-state device suite passed 7/7 in 298.892 seconds, and module CI passed the generic build plus 17 host tests on 2026-07-14."
+      "evidence": "TDD RED failed on-device because the visible Exercise name label did not exist. Replaced placeholder-only rows with persistent Exercise name, Sets, Repetitions, and Weight (kg) labels while preserving field identifiers, defaults, keyboards, and save behavior. PR review tightened coverage to assert the exact visible/accessibility label values and every exact Day 1–7 row. The final clean-state device suite passed 7/7 in 298.892 seconds, module CI passed the generic build plus 17 host tests, and PR #24 merged into main at 1468e25579fc608e715142cec2fead885f0f0ca6 after all eight GitHub checks passed on 2026-07-14."
+    },
+    {
+      "id": "feat-017",
+      "name": "Local signed IPA deployment helper",
+      "description": "Provide a module-local script to archive, export, validate, install, and launch the native fitness app on a registered physical iPhone.",
+      "dependencies": [
+        "feat-011"
+      ],
+      "status": "done",
+      "evidence": "Added modules/ios-xq-fitness-app/scripts/build-device-ipa.sh with automatic development signing, requested hardware-UDID default 00008150-0012058A14F8401C, CoreDevice UUID override support, provisioning validation, diagnostic device-list output, installation/launch, no project regeneration that can erase Xcode signing settings, and documented overrides. Added the legacy XQ Fitness AppIcon asset and replaced numeric training-day labels with Monday through Sunday, including visible MON through SUN badges, while preserving stable numeric IDs and migrating legacy Day N names. bash -n, --help, git diff --check, direct native build, 17 host tests, and ./init.sh passed on 2026-07-15. Signed archive/export succeeded and the updated IPA installed on 00008150-0012058A14F8401C; automatic launch was denied only because the device was locked."
+    },
+    {
+      "id": "feat-018",
+      "name": "OpenAPI extractor implementation guideline",
+      "description": "Document the xq-kraken OpenAPI-to-ApiCatalog extraction boundary, model mapping, invariants, helper structure, tests, and v1 non-goals.",
+      "dependencies": [],
+      "status": "done",
+      "evidence": "Added modules/xq-kraken/docs/openapi-extractor-guideline.md with the planned extractor data flow, catalog model responsibilities, metadata/servers/paths/operations/parameters/request bodies/responses, required operationId validation, parameter precedence, raw schema preservation, separation of loading/persistence/request construction/$ref resolution, helper structure, examples, tests, verification commands, and v1 non-goals. Added the follow-up red contract test in modules/xq-kraken/tests/test_rest_source.py for loading a JSON OpenAPI file path through ApiSource."
     }
   ]
 }

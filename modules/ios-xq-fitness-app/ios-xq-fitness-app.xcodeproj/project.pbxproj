@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B4C7B1E2C8A4D9E9A7B1F20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F8F8B9A1D7A4A8E8D6C2B11 /* Assets.xcassets */; };
 		09A9E1040869850F2B04981F /* SnapshotReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585C97078D9FCA44E9030932 /* SnapshotReportView.swift */; };
 		233CAF754A961044A0BB2DD6 /* RoutineWorkspaceViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9169D72947E4C1179C4E332D /* RoutineWorkspaceViews.swift */; };
 		2369781BC821C840D655604D /* RoutineEditorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319A4D592E790944B88D7DD3 /* RoutineEditorScreen.swift */; };
@@ -38,9 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6F8F8B9A1D7A4A8E8D6C2B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		139E140454092450F032FFF4 /* RoutineEditorValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineEditorValidationTests.swift; sourceTree = "<group>"; };
 		1AC5CFED385C7ECD0B326FA1 /* FitnessViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessViews.swift; sourceTree = "<group>"; };
-		29420DCC51B3144E02698158 /* ios-xq-fitness-app.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "ios-xq-fitness-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		29420DCC51B3144E02698158 /* ios-xq-fitness-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-xq-fitness-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		319A4D592E790944B88D7DD3 /* RoutineEditorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineEditorScreen.swift; sourceTree = "<group>"; };
 		585C97078D9FCA44E9030932 /* SnapshotReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotReportView.swift; sourceTree = "<group>"; };
 		6199AB95CEFE8DEF68478D66 /* ExerciseEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEditorView.swift; sourceTree = "<group>"; };
@@ -55,7 +57,7 @@
 		A750026303923D676E44AA79 /* FitnessAccessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessAccessibility.swift; sourceTree = "<group>"; };
 		C02A9CE752D512A645BB5890 /* XQFitnessApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XQFitnessApp.swift; sourceTree = "<group>"; };
 		E32931AAAD0A588926EA82A9 /* ios-xq-fitness-appUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = "ios-xq-fitness-appUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E36F2D3B50BF1D325DE8BDA2 /* FitnessCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FitnessCore; path = FitnessCore; sourceTree = SOURCE_ROOT; };
+		E36F2D3B50BF1D325DE8BDA2 /* FitnessCore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FitnessCore; sourceTree = SOURCE_ROOT; };
 		FDF07CC7404BA8104814AA15 /* TestApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestApplication.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -91,6 +93,7 @@
 		6BBBF8767DE4AF6117ED72C4 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				6F8F8B9A1D7A4A8E8D6C2B11 /* Assets.xcassets */,
 				91E6119290A3D6271F9550FC /* AppRouter.swift */,
 				6199AB95CEFE8DEF68478D66 /* ExerciseEditorView.swift */,
 				A750026303923D676E44AA79 /* FitnessAccessibility.swift */,
@@ -165,6 +168,7 @@
 			buildPhases = (
 				E2228688CF683D4429E767EF /* Sources */,
 				4E8AE24F3CFED86450A34193 /* Frameworks */,
+				A1D4F9B20E7C4A1A8B2C3D4E /* Resources */,
 			);
 			buildRules = (
 			);
@@ -248,6 +252,17 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1D4F9B20E7C4A1A8B2C3D4E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B4C7B1E2C8A4D9E9A7B1F20 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
 		97E1B1CD9B12FB3C51D716C4 /* PBXTargetDependency */ = {
@@ -385,7 +400,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = T99X93V7Y2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -393,6 +410,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.xq.fitness.ios-xq-fitness-app";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.10;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -403,7 +421,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = T99X93V7Y2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -411,6 +431,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.xq.fitness.ios-xq-fitness-app";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.10;
 				TARGETED_DEVICE_FAMILY = 1;

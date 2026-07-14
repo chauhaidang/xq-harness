@@ -1,0 +1,39 @@
+[
+  {
+    "id": 1,
+    "routineId": 1,
+    "dayNumber": 1,
+    "dayName": "Push Day",
+    "notes": "Focus on chest and shoulders",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "sets": [
+      {
+        "id": 1,
+        "workoutDayId": 1,
+        "muscleGroupId": 1,
+        "numberOfSets": 4,
+        "notes": "Focus on progressive overload",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-01T00:00:00.000Z",
+        "muscleGroup": {
+          "id": 1,
+          "name": "Chest",
+          "description": "Pectoralis major and minor muscles",
+          "createdAt": "2024-01-01T00:00:00.000Z"
+        }
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "routineId": 1,
+    "dayNumber": 2,
+    "dayName": "Pull Day",
+    "notes": "Focus on back and biceps",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "sets": []
+  }
+]
+

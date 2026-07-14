@@ -1,0 +1,36 @@
+services:
+  xq-fitness-db:
+    image: ghcr.io/chauhaidang/xq-fitness-db:latest
+    networks:
+      - xq-network
+    ports:
+      - 5432:5432
+  xq-fitness-write-service:
+    image: ghcr.io/chauhaidang/xq-fitness-write-service:latest
+    networks:
+      - xq-network
+    ports:
+      - 8002:3000
+    environment:
+      DB_USER: xq_user
+      DB_PASSWORD: xq_password
+      DB_HOST: xq-fitness-db
+      DB_SSL: "false"
+    depends_on:
+      - xq-fitness-db
+  xq-gateway:
+    image: nginx:alpine
+    ports:
+      - 8080:80
+    volumes:
+      - ./nginx-gateway.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - xq-network
+    depends_on:
+      xq-fitness-db:
+        condition: service_started
+      xq-fitness-write-service:
+        condition: service_started
+networks:
+  xq-network:
+    driver: bridge

@@ -16,7 +16,11 @@ struct RoutineWorkspaceScreen: ScreenObject {
     }
 
     func dayName(_ number: Int) -> XCUIElement {
-        application.staticTexts["Day \(number)"]
+        application.staticTexts[weekdayName(number)]
+    }
+
+    private func weekdayName(_ number: Int) -> String {
+        ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"][number - 1]
     }
 
     func openDay(_ number: Int) -> TrainingDayScreen {

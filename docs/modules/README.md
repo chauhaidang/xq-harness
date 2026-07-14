@@ -50,6 +50,18 @@ while keeping scenario Markdown business-readable.
 
 ## Private mobile applications
 
+`xq-fitness-mobile` is a private Expo/React Native application. Its registered
+CI surface is intentionally limited to an iOS JavaScript bundle build and unit
+tests:
+
+```bash
+./scripts/module ci xq-fitness-mobile
+```
+
+Service-backed integration tests and signed physical-device verification are
+local-only commands documented in the module README. Simulator workflows are
+not supported.
+
 `ios-xq-fitness-app` is the native SwiftUI migration target. Its CI boundary is
 an unsigned generic-device build plus host-side `FitnessCore` unit tests:
 
