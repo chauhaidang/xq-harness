@@ -48,6 +48,18 @@ while keeping scenario Markdown business-readable.
 ./scripts/module ci xq-domain-test-mcp
 ```
 
+## Private mobile applications
+
+`ios-xq-fitness-app` is the native SwiftUI migration target. Its CI boundary is
+an unsigned generic-device build plus host-side `FitnessCore` unit tests:
+
+```bash
+./scripts/module ci ios-xq-fitness-app
+```
+
+Signed deployment and UI acceptance use the dedicated local iPhone only. The
+native foundation is local-storage-only and does not integrate an API.
+
 ## XQ packages (Level C — independent)
 
 Node packages run through module-local npm commands declared in `modules.yaml`.
@@ -113,14 +125,14 @@ For GitHub Actions, create a caller workflow that uses
 
 ## iOS project regeneration
 
-When `project.yml` changes:
+When an iOS module's `project.yml` changes:
 
 ```bash
-cd modules/ios-xq-finance-app
+cd modules/<ios-module>
 xcodegen generate
 ```
 
-Commit the updated `ios-xq-finance-app.xcodeproj`.
+Commit the updated `.xcodeproj`.
 
 ## iOS React Native shell adoption
 

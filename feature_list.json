@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "activeFeature": "feat-009",
+  "activeFeature": "feat-016",
   "features": [
     {
       "id": "feat-001",
@@ -92,6 +92,66 @@
       ],
       "status": "done",
       "evidence": "Added duplicate-run reconciliation coverage, prefer newer/completed records in `github-client.mjs`, passed all 8 dashboard tests, and verified the live dashboard reports 0 active, 14 successful, and 0 failed workflows for merged commit 6232532 on 2026-07-13."
+    },
+    {
+      "id": "feat-011",
+      "name": "Native offline XQ Fitness foundation",
+      "description": "Create the native SwiftUI fitness app with MVVM plus Router, a versioned local-only store, and the empty-state-to-create-routine flow.",
+      "dependencies": [
+        "feat-008"
+      ],
+      "status": "done",
+      "evidence": "Added and registered `ios-xq-fitness-app` with SwiftUI MVVM plus Router, a versioned local FitnessStore, JSON primary/recovery persistence, an in-memory adapter, empty-first routine UI, and routine creation. `./scripts/module ci ios-xq-fitness-app` passed an unsigned generic-iOS build and 9 host-side unit tests on 2026-07-13; no simulator or API surface was added."
+    },
+    {
+      "id": "feat-012",
+      "name": "Physical-device fitness E2E coverage",
+      "description": "Add consumer-owned XCUITest journeys for every behavior in the native fitness foundation and validate them locally on the connected iPhone without adding simulator or CI execution.",
+      "dependencies": [
+        "feat-011"
+      ],
+      "status": "done",
+      "evidence": "Added the consumer-owned `ios-xq-fitness-appUITests` target, XQUIHarness screen objects, guarded isolated reset, four routine-flow E2E journeys, and a local environment-driven device runner. The complete suite passed 4/4 with 0 failures on the connected iPhone 12 running iOS 26.5; `./scripts/module ci ios-xq-fitness-app` also passed the generic iOS build and 11 unit tests. CI remains build-and-unit-only, with no simulator or committed device identifier."
+    },
+    {
+      "id": "feat-013",
+      "name": "Seven-day routines and snapshot comparison",
+      "description": "Give every native routine exactly seven training days, support local exercise management within each day, and compare each new immutable snapshot with the previous snapshot using old-app-style progress indicators.",
+      "dependencies": [
+        "feat-012"
+      ],
+      "status": "done",
+      "evidence": "Added schema-v2 migration to exactly seven stable days, local add/update/delete exercise commands, immutable snapshot capture, case-insensitive highest-value aggregation, and First/Increased/Decreased/Same comparison for reps and weight. Added full SwiftUI drill-down and a fifth physical-device journey. `./scripts/module ci ios-xq-fitness-app` passed the generic build and 16 unit tests; XCResult reports 5/5 E2E tests passed on iPhone 12 / iOS 26.5."
+    },
+    {
+      "id": "feat-014",
+      "name": "Snapshot retention coverage matrix",
+      "description": "Retain only the newest two routine snapshots, prove immediate-previous comparison through host and physical-device tests, and document component-by-capability coverage with unit/UI ownership per cell.",
+      "dependencies": [
+        "feat-013"
+      ],
+      "status": "done",
+      "evidence": "TDD proved the retention boundary: the RED tracer observed A/B/C where B/C was required, then the store was changed to atomically retain only the newest two snapshots. The new host test proves B/C retention and C-versus-B reporting; the extended physical-device journey proves 10 → 20 → 15 reps yields Decreased and remains Decreased after relaunch. The component × capability matrix records unit/UI ownership and explicit gaps. `./scripts/module ci ios-xq-fitness-app` passed the generic build and all 17 host tests; XCResult reports 5 passed, 0 failed, 0 skipped on iPhone 12 / iOS 26.5."
+    },
+    {
+      "id": "feat-015",
+      "name": "UI coverage gap and clean-test isolation",
+      "description": "Cover exercise deletion through the physical-device UI and make every fitness UI test begin from a reset, verified-empty test-only store through one shared test interface.",
+      "dependencies": [
+        "feat-014"
+      ],
+      "status": "done",
+      "evidence": "Added a RED-to-GREEN physical-device tracer for exercise swipe deletion and introduced `FitnessUITestCase`, whose shared setup resets the isolated store and requires the empty routine list before every test body. Persistence journeys now explicitly relaunch while preserving data. Generic UI build-for-testing passed, module CI passed the generic build plus 17 host tests, the delete tracer passed, and the complete clean-state suite passed 6/6 with 0 failures on iPhone 12 / iOS 26.5."
+    },
+    {
+      "id": "feat-016",
+      "name": "Unambiguous exercise input labels",
+      "description": "Give every exercise input a persistent visible label and cover the labels through a clean-state physical-device UI test.",
+      "dependencies": [
+        "feat-015"
+      ],
+      "status": "done",
+      "evidence": "TDD RED failed on-device because the visible Exercise name label did not exist. Replaced placeholder-only rows with persistent Exercise name, Sets, Repetitions, and Weight (kg) labels while preserving field identifiers, defaults, keyboards, and save behavior. PR review tightened coverage to assert the exact visible/accessibility label values and every exact Day 1–7 row. The final clean-state device suite passed 7/7 in 298.892 seconds, and module CI passed the generic build plus 17 host tests on 2026-07-14."
     }
   ]
 }

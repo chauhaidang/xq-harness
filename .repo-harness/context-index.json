@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-12",
+  "updatedAt": "2026-07-14",
   "purpose": "Bounded startup context for xq-harness. Load this first, then query one feature, topic, or module at a time.",
   "startup": {
-    "activeFeature": "feat-007",
+    "activeFeature": "feat-016",
     "summaryRule": "Use summary first. Do not preload broad docs or module trees.",
     "queryCommands": [
       "node scripts/harness-context.mjs summary",
@@ -107,6 +107,14 @@
       "skill": "ios-xq-finance-app",
       "verification": "./scripts/module ci ios-xq-finance-app",
       "when": "Use for SwiftUI portfolio, model, or XCTest work."
+    },
+    {
+      "name": "ios-xq-fitness-app",
+      "path": "modules/ios-xq-fitness-app",
+      "summary": "Native SwiftUI fitness app with MVVM, router-owned navigation, and local-only versioned persistence.",
+      "skill": "none",
+      "verification": "./scripts/module ci ios-xq-fitness-app",
+      "when": "Use for the native fitness migration, routine flows, local FitnessStore behavior, or SwiftUI fitness UI."
     },
     {
       "name": "xq-ios-shell-app",

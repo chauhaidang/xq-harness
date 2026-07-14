@@ -1,0 +1,16 @@
+schema_version: 1
+version: 0.1.0
+mirrors:
+  - path: project.yml
+    format: xcodegen-marketing-version
+  - path: ios-xq-fitness-app.xcodeproj/project.pbxproj
+    format: xcodeproj-marketing-version
+changelog:
+  - version: 0.1.0
+    changes:
+      - Add the native offline fitness foundation and first routine-creation slice.
+      - Add isolated physical-device E2E coverage for the implemented routine flows.
+      - Add seven-day routines, local exercise management, and previous-snapshot progress indicators.
+      - Bound each routine to its newest two snapshots and publish component-by-capability test coverage.
+      - Cover exercise deletion on device and enforce verified clean UI-test setup before every journey.
+      - Add persistent labels to every exercise input and verify them on the physical device.
