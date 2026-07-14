@@ -1,0 +1,13 @@
+schema_version: 1
+version: 2.0.0
+mirrors:
+  - path: package.json
+    format: package-json
+  - path: package-lock.json
+    format: package-lock-json
+  - path: ios/XQFitness.xcodeproj/project.pbxproj
+    format: xcodeproj-marketing-version
+changelog:
+  - version: 2.0.0
+    changes:
+      - Baseline imported as a private Expo application with local physical-device verification.

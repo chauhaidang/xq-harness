@@ -49,16 +49,40 @@ public struct Routine: Codable, Equatable, Identifiable, Sendable {
         }
 
         return (1...7).map { number in
-            daysByNumber[number] ?? TrainingDay(
-                id: TrainingDay.stableID(routineID: routineID, number: number),
-                number: number,
-                name: "Day \(number)"
-            )
+            guard var day = daysByNumber[number] else {
+                return TrainingDay(
+                    id: TrainingDay.stableID(routineID: routineID, number: number),
+                    number: number,
+                    name: TrainingDay.weekdayName(for: number)
+                )
+            }
+
+            if day.name == "Day \(number)" {
+                day.name = TrainingDay.weekdayName(for: number)
+            }
+            return day
         }
     }
 }
 
 public struct TrainingDay: Codable, Equatable, Identifiable, Sendable {
+    public static let weekdayNames = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+    ]
+
+    public static func weekdayName(for number: Int) -> String {
+        guard weekdayNames.indices.contains(number - 1) else {
+            return "Day \(number)"
+        }
+        return weekdayNames[number - 1]
+    }
+
     public let id: UUID
     public let number: Int
     public var name: String

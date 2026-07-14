@@ -1,0 +1,39 @@
+export const mockMuscleGroups = [
+  {
+    id: 1,
+    name: 'Chest',
+    description: 'Pectoralis major and minor muscles',
+    createdAt: '2024-01-01T00:00:00.000Z',
+  },
+  {
+    id: 2,
+    name: 'Back',
+    description: 'Latissimus dorsi, rhomboids, and trapezius',
+    createdAt: '2024-01-01T00:00:00.000Z',
+  },
+  {
+    id: 3,
+    name: 'Shoulders',
+    description: 'Deltoids and rotator cuff muscles',
+    createdAt: '2024-01-01T00:00:00.000Z',
+  },
+  {
+    id: 4,
+    name: 'Arms',
+    description: 'Biceps, triceps, and forearms',
+    createdAt: '2024-01-01T00:00:00.000Z',
+  },
+  {
+    id: 5,
+    name: 'Legs',
+    description: 'Quadriceps, hamstrings, glutes, and calves',
+    createdAt: '2024-01-01T00:00:00.000Z',
+  },
+  {
+    id: 6,
+    name: 'Core',
+    description: 'Abdominals and obliques',
+    createdAt: '2024-01-01T00:00:00.000Z',
+  },
+];
+

@@ -93,8 +93,8 @@ private struct TrainingDayRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Text("\(day.number)")
-                .font(.headline.monospacedDigit())
+            Text(day.name.prefix(3).uppercased())
+                .font(.caption.bold())
                 .foregroundStyle(.white)
                 .frame(width: 34, height: 34)
                 .background(.blue.gradient, in: Circle())

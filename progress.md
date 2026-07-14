@@ -2,26 +2,163 @@
 
 ## Current State
 
-**Last Updated:** 2026-07-14 07:42 +07
+**Last Updated:** 2026-07-15 00:35 +07
 **Session ID:** current-thread  
-**Active Feature:** feat-016 - Unambiguous exercise input labels
+**Active Feature:** feat-018 - OpenAPI extractor implementation guideline
+
+## 2026-07-15 RestApiSource Contract Test Session
+
+### Before State
+
+- `src/xq_kraken/model/rest.py` contains a placeholder `RestApiSource` with an
+  incomplete `load` method.
+- No test covered loading an OpenAPI document from a file path through the
+  `ApiSource` protocol shape.
+- The checkout contains unrelated existing changes; those paths are preserved.
+
+### After State
+
+- Added `modules/xq-kraken/tests/test_rest_source.py`.
+- The test writes a JSON OpenAPI document to a temporary file, passes its
+  `Path` through an `ApiSource`-typed helper, and asserts the loaded mapping is
+  unchanged.
+- No production implementation was added; the test is intentionally a red
+  contract test for the next implementation slice.
+
+### Regression Test Results
+
+- `./init.sh` from the monorepo root - pass.
+- `node scripts/harness-context.mjs summary` - pass.
+- `python -m py_compile tests/test_rest_source.py` - pass.
+- `git diff --check` - pass.
+- `PYTHONPATH=src/xq_kraken python -m unittest discover -s tests -p 'test_rest_source.py'` - fails as expected because `RestApiSource.load` is currently syntactically incomplete.
+- `./scripts/module test xq-kraken` - unavailable because `xq-kraken` is not registered in `modules.yaml`.
+
+### PR Ready
+
+- Status: no; the new test is reviewable, but the covered production class is not implemented.
+
+### CI Ready
+
+- Status: no for this test slice; the focused test must pass after `RestApiSource.load` is implemented.
+
+## 2026-07-15 OpenAPI Extractor Guideline Session
+
+### Before State
+
+- `modules/xq-kraken` had an explicit `API_CATALOG_CONTRACT.md`, an
+  implementation handoff, and RED tests describing the future extractor,
+  repository, ingestion, and request-builder seams.
+- No extractor implementation was requested or added in this session.
+- The checkout contained unrelated existing changes; those paths were
+  preserved.
+
+### After State
+
+- Added `modules/xq-kraken/docs/openapi-extractor-guideline.md`.
+- The guideline documents the OpenAPI document → `ApiCatalog` flow, catalog
+  model responsibilities, metadata, servers, paths, operations, parameters,
+  request bodies, responses, required `operationId`, parameter precedence, raw
+  schema preservation, separated responsibilities, private helpers, examples,
+  test cases, verification commands, and v1 non-goals.
+- No xq-kraken source implementation was added or changed by this session.
+
+### Regression Test Results
+
+- `pwd` - pass; work started in `modules/xq-kraken`.
+- `./init.sh` - pass from the monorepo root.
+- `node scripts/harness-context.mjs summary` - pass.
+- `node scripts/harness-context.mjs feature active` - pass; prior active
+  feature `feat-017` was already done.
+- `git diff --check` - pass after adding the guideline.
+- Scoped standards/spec self-review - pass; the guideline stays within the
+  requested documentation-only scope and all requested topics are represented
+  by explicit sections or examples.
+- Documentation fixture/structure inspection - pass; examples and commands
+  were checked against `API_CATALOG_CONTRACT.md`,
+  `OPENAPI_CATALOG_HANDOFF.md`, and the xq-kraken tests.
+- The xq-kraken RED test suite was not run because this was explicitly a
+  documentation-only change and the handoff states those tests are expected
+  to remain RED until a later implementation slice.
+
+### PR Ready
+
+- Status: yes for the documentation-only scope.
+- Reason: the new guideline is isolated, reviewable, and does not alter source
+  behavior or the unrelated dirty paths.
+
+### CI Ready
+
+- Status: yes for the documentation-only scope.
+- Reason: repository startup verification and whitespace validation passed;
+  implementation tests remain a later xq-kraken feature concern.
+
+## 2026-07-14 Local IPA Packaging Session
+
+### Before State
+
+- `ios-xq-fitness-app` had an unsigned generic-device CI build and a physical-device UI-test runner, but no module-local IPA archive/export/install helper.
+- The requested device is `00008150-0012058A14F8401C`; signing requires a locally available Apple development team and provisioning profile.
+- Unrelated dirty checkout paths were preserved.
+
+### After State
+
+- Added `modules/ios-xq-fitness-app/scripts/build-device-ipa.sh`.
+- The script defaults to hardware UDID `00008150-0012058A14F8401C`, archives with automatic development signing, exports an IPA, validates the device in the provisioning profile, installs it with CoreDevice, and launches it by default.
+- `INSTALL_TO_DEVICE=0`, `LAUNCH_ON_DEVICE=0`, `IOS_DEVICE_ID`, `IOS_PROVISIONING_DEVICE_ID`, archive, and export paths are supported overrides; `IOS_DEVICE_ID` may be a CoreDevice UUID.
+- Removed `xcodegen generate` from the deployment path so the script preserves signing configured in the existing Xcode project; `DEVELOPMENT_TEAM` is now an optional override.
+
+### Regression Test Results
+
+- `bash -n modules/ios-xq-fitness-app/scripts/build-device-ipa.sh` - pass.
+- `modules/ios-xq-fitness-app/scripts/build-device-ipa.sh --help` - pass.
+- `git diff --check` - pass.
+- `./scripts/module ci ios-xq-fitness-app` - pass; unsigned generic iOS build and 17/17 host tests.
+- `./init.sh` - pass.
+- Updated device targeting after CoreDevice reported David as `588EB7AC-5A43-4674-921B-634E209B39FA`; syntax, help, and startup checks pass.
+- Removed signing-destructive project regeneration; syntax/help/startup checks pass after the fix.
+- Signed archive attempt for David - failed before compilation: Xcode reported `No Account for Team "Y57FXM29C3"` and no development provisioning profile for `com.xq.fitness.ios-xq-fitness-app`.
+- Successful signed build/deploy after clearing the stale `DEVELOPMENT_TEAM` shell override: archive and export passed, the profile included `00008150-0012058A14F8401C`, and CoreDevice installed/launched the app. IPA: `modules/ios-xq-fitness-app/build/ipa/ios-xq-fitness-app.ipa`.
+- Signed archive/export/install was not run because it requires the user's Apple team/account provisioning state; the script performs device/profile checks before installation.
+- A signed archive was attempted on 2026-07-14 and remains blocked by missing Xcode account/profile credentials; device install was not reached.
+- Final signed archive/export/install/launch passed on 2026-07-15 using Xcode 26.0.1 and device `00008150-0012058A14F8401C`.
+- Legacy logo deployment: signed archive/export passed, the updated IPA installed successfully on `00008150-0012058A14F8401C`, and launch was denied because the device was locked. Unlock the phone and launch manually or rerun the script.
+- Weekday labels: new and legacy routines now display Monday through Sunday; stable numeric day IDs/order remain unchanged, and UI/unit coverage was updated.
+- Weekday regression checks: direct unsigned native build passed with `actool` compiling `App/Assets.xcassets`; `./scripts/module test ios-xq-fitness-app` passed all 17 host tests; `git diff --check` and JSON validation passed.
+
+### PR Ready
+
+- Status: yes for this scoped helper; docs and module-local script are reviewable and unrelated dirty files remain untouched.
+
+### CI Ready
+
+- Status: yes; CI remains unsigned build plus host tests, and the signed device workflow is explicitly local-only.
 
 ## Change Checkpoints
 
 ### Before State
 
-- Exercise name, sets, reps, and weight use `TextField` titles as placeholders rather than persistent visible labels.
-- Sets, reps, and weight have default values, so their placeholder titles are hidden as soon as the editor appears.
-- The physical-device journeys enter values by accessibility identifier but do not assert that a user can identify each field visually.
+- Draft PR #24 was mergeable but `UNSTABLE` because `CI ios-xq-fitness-app / build-and-unit-test` failed before compilation.
+- The workflow combined the floating `macos-latest` runner with pinned Xcode 16.2; the allocated image could select Xcode but reported that its required iOS 18.2 platform was unavailable.
+- Seven other PR checks passed, and local native build, 17 host tests, and 7 physical-device journeys were already green.
+- Unrelated Expo, finance TypeScript, release-script, and shared-document changes remained dirty locally and were explicitly outside the native PR.
 
 ### After State
 
-- The editor permanently shows Exercise name, Sets, Repetitions, and Weight (kg) above their respective inputs.
-- A clean-state physical-device test asserts all four visible labels before entering exercise data.
-- Existing stable field identifiers, defaults, keyboards, validation, and save behavior remain unchanged.
+- Native CI now uses the deterministic `macos-15` plus Xcode 16.4 pairing and still runs only `./scripts/module ci ios-xq-fitness-app`.
+- Local generic-device build and all 17 host tests pass; simulator and physical-device UI execution remain local-only.
+- GitHub reran all eight PR checks successfully, and the local observability dashboard showed eight `signal-success` results when filtered to `codex/ios-fitness-native-onboarding`.
+- PR #24 was squash-merged into `main` at `1468e25579fc608e715142cec2fead885f0f0ca6`; unrelated dirty paths were not committed or merged.
 
 ### Regression Test Results
 
+- Initial GitHub native CI - failed before compilation with exit 70 because the Xcode 16.2 selection lacked the usable iOS 18.2 platform on the allocated `macos-latest` image.
+- `./scripts/module ci ios-xq-fitness-app` after the CI repair - pass; unsigned generic iOS build and 17/17 host tests passed.
+- Workflow YAML parse plus `git diff --check` - pass.
+- Parallel standards/spec review of `feaee62...0342051` - pass; zero findings on both axes and no unrelated committed changes.
+- GitHub PR checks for `0342051` - pass; all 8 completed successfully, including native `build-and-unit-test` in 1m45s.
+- Local XQ Workflow Observatory - pass; branch-filtered view contained exactly 8 visible workflow signals, all with `signal-success`, and no active or failed signal.
+- GitHub merge confirmation - pass; PR #24 is `MERGED` at squash commit `1468e25579fc608e715142cec2fead885f0f0ca6`.
 - RED visible-label device tracer - failed as intended because `fitness.exercise-editor.name-label` did not appear.
 - GREEN visible-label device tracer - pass; 1 passed, 0 failed in 33.198 seconds on iPhone 12 / iOS 26.5.
 - Complete clean-state physical-device suite - pass; XCResult reports 7 passed, 0 failed, 0 skipped in 278.173 seconds.
@@ -48,19 +185,25 @@
 - `./init.sh` - pass after native module registration and version validation.
 - Scoped URL/network scan - pass; no HTTP URL, `URLSession`, WebSocket, or Network framework use exists in the native module.
 - Parallel standards/spec review - complete; persistence, schema-safety, optional-notes, production-namespace coverage, CI pinning, documentation, and lifecycle findings were resolved.
+- `./scripts/module ci xq-fitness-mobile` - pass; clean npm install, successful Expo iOS Hermes export, 10 unit suites and 75 tests passed.
+- `npm run test:integration:local` - pass; 10 integration suites and 61 tests passed, report generated, logs collected, and all containers/network removed.
+- `bash -n modules/xq-fitness-mobile/device.sh modules/xq-fitness-mobile/build-device.sh modules/xq-fitness-mobile/scripts/run-integration-tests.sh` - pass.
+- `node scripts/harness-context.mjs module xq-fitness-mobile` - pass.
 - `./init.sh` - pass after registration and version synchronization.
 - Final standards/spec re-review - pass; all findings resolved.
-- Native physical-device acceptance - pass; the signed app and consumer XCUITest runner installed and all seven current journeys completed on the dedicated iPhone.
+- Native physical-device acceptance - pass; the signed app and consumer XCUITest runner installed and all seven current journeys completed on the dedicated iPhone. Expo reference-app device acceptance remains blocked as recorded in `feat-010`.
+- Dependency audit observation - npm reports 42 inherited vulnerabilities (1 low, 17 moderate, 24 high) in the Expo 49 dependency tree; not changed automatically because fixes may be breaking.
 
 ### PR Ready
 
 - Status: yes
-- Reason: the native app is documented, compiled, host-tested, independently reviewed, and verified through the complete isolated physical-device suite.
+- Reason: the native-only scope was documented, compiled, host-tested, independently reviewed, verified through the complete isolated physical-device suite, repaired against the hosted CI environment, and merged with all gates green.
+- Merged PR: https://github.com/chauhaidang/xq-harness/pull/24 at squash commit `1468e25579fc608e715142cec2fead885f0f0ca6`.
 
 ### CI Ready
 
 - Status: yes
-- Reason: the exact registered build-and-unit-only command passed without a simulator; device E2E remains intentionally local-only.
+- Reason: the exact registered build-and-unit-only command passed locally and on GitHub's pinned `macos-15`/Xcode 16.4 environment; device E2E remains intentionally local-only.
 
 ## Status
 
@@ -78,6 +221,9 @@
 - [x] Redesigned the dashboard as a Fleet Grid heatmap and merged PR #21 into `main`
 - [x] Moved semantic versions and changelogs into each module's `version.yaml` and generated declared native mirrors
 - [x] Fixed dashboard duplicate-run reconciliation so completed successful runs remain green
+- [x] Registered and documented `xq-fitness-mobile` with canonical versioning and build-and-unit-only CI
+- [x] Added and verified local integration orchestration with complete cleanup
+- [x] Added environment-driven physical-device doctor/build/install/launch commands and removed simulator workflows
 - [x] Added the native offline `ios-xq-fitness-app` foundation with MVVM plus Router
 - [x] Added versioned primary/recovery JSON persistence and 11 host-side unit tests
 - [x] Added generic-device build plus unit-test-only native CI with Xcode 16.2 pinned
@@ -102,6 +248,7 @@
 ## Blockers / Risks
 
 - [ ] Free Apple development profiles limit concurrently installed development apps; a stale finance UI-test runner was removed from the device while preserving the finance app and its data.
+- [ ] Expo 49 dependencies currently report 42 npm audit findings; upgrading Expo/React Native is intentionally a separate compatibility task.
 - [ ] Topic staleness: `.repo-harness/context-index.json` and topic Markdown can drift from repo reality if not updated after process changes
 - [ ] Coverage gaps: a future task may need a missing topic, especially for new modules or release workflows
 - [ ] Local checkout is behind remote `main` after PR #21 because unrelated unstaged files must be preserved before synchronizing
@@ -213,3 +360,19 @@ directory after confirming `gh auth status`, then open `http://127.0.0.1:4173`.
 The active semver policy is module-local: update `modules/<module>/version.yaml`,
 prepend its changelog entry, run `./scripts/module sync-version <module>`, and
 rely on `./init.sh` or `./scripts/module ...` to catch drift.
+
+## 2026-07-15 Weekday Badge Follow-up
+
+- Before state: the weekday names were present in the data model, but the routine workspace still displayed numeric `1`–`7` badges.
+- After state: the routine workspace displays three-letter weekday badges (`MON` through `SUN`) alongside the full weekday names.
+- Regression results: direct native Xcode build passed; `./scripts/module test ios-xq-fitness-app` passed all 17 tests.
+- PR ready: yes for this scoped UI change; unrelated dirty files were preserved.
+- CI ready: yes for the verified native build and host tests.
+
+## 2026-07-15 Signing Script Follow-up
+
+- Before state: the IPA helper accepted an optional team and required care to avoid stale environment overrides.
+- After state: the helper defaults to working project team `T99X93V7Y2`, accepts `DEVELOPMENT_TEAM` overrides, passes the team explicitly to archive/export, and never runs `xcodegen`.
+- Regression results: script syntax/help and `git diff --check` passed; archive/export and provisioning validation passed with the default team. CoreDevice installation stalled and was stopped after the IPA was produced.
+- PR ready: scoped changes are reviewable, but unrelated dirty worktree files must remain excluded from the PR.
+- CI ready: native build/test verification remains valid; signed deployment is local-only.

@@ -14,7 +14,10 @@ final class SevenDaySnapshotTests: FitnessUITestCase {
         for number in 1...7 {
             workspace.day(number).requireExistence()
             workspace.dayName(number).requireExistence()
-            XCTAssertEqual(workspace.dayName(number).label, "Day \(number)")
+            XCTAssertEqual(
+                workspace.dayName(number).label,
+                ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"][number - 1]
+            )
         }
 
         var day = workspace.openDay(1)

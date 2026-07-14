@@ -71,7 +71,7 @@ final class FitnessStoreTests: XCTestCase {
         let days = try XCTUnwrap(store.snapshot.routines.first?.days)
         XCTAssertEqual(days.count, 7)
         XCTAssertEqual(days.map(\.number), Array(1...7))
-        XCTAssertEqual(days.map(\.name), (1...7).map { "Day \($0)" })
+        XCTAssertEqual(days.map(\.name), TrainingDay.weekdayNames)
         XCTAssertEqual(Set(days.map(\.id)).count, 7)
         XCTAssertEqual(days, Routine(id: routineID, name: "Seven Day Plan", notes: nil).days)
     }
@@ -94,6 +94,7 @@ final class FitnessStoreTests: XCTestCase {
 
         XCTAssertEqual(store.snapshot.schemaVersion, FitnessSnapshot.currentSchemaVersion)
         XCTAssertEqual(store.snapshot.routines.first?.days.count, 7)
+        XCTAssertEqual(store.snapshot.routines.first?.days.map(\.name), TrainingDay.weekdayNames)
         XCTAssertTrue(store.snapshot.routines.first?.snapshots.isEmpty == true)
     }
 

@@ -16,6 +16,7 @@
 /.github/workflows/ci-xq-ios-ui-test-framework.yml @chauhaidang/xq-harness-maintainers
 /.github/workflows/cd-xq-ios-ui-test-framework.yml @chauhaidang/xq-harness-maintainers
 /.github/workflows/ci-xq-workflow-dashboard.yml @chauhaidang/xq-harness-maintainers
+/.github/workflows/ci-xq-fitness-mobile.yml @chauhaidang/xq-harness-maintainers
 /.github/workflows/ci-ios-xq-fitness-app.yml @chauhaidang/xq-harness-maintainers
 
 # Module source ownership (optional — replace with real teams)
@@ -26,4 +27,5 @@
 /modules/xq-scripts/                            @chauhaidang/xq-harness-maintainers
 /modules/xq-ios-ui-test-framework/              @chauhaidang/xq-harness-maintainers
 /modules/xq-workflow-dashboard/                  @chauhaidang/xq-harness-maintainers
+/modules/xq-fitness-mobile/                      @chauhaidang/xq-harness-maintainers
 /modules/ios-xq-fitness-app/                     @chauhaidang/xq-harness-maintainers

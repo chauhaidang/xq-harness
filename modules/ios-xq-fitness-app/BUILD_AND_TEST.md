@@ -49,3 +49,21 @@ seven-day exercise drill-down and a three-capture immediate-previous comparison
 that is rechecked after relaunch. Coverage ownership and open gaps are tracked
 in `../../docs/product/ios-xq-fitness-app-test-coverage.md`.
 The module has no API, containers, hosted services, or simulator gate.
+
+## Signed IPA deployment
+
+To archive, export, validate, install, and launch the app on the paired
+physical device:
+
+```bash
+IOS_PROVISIONING_DEVICE_ID=<David-hardware-udid> \
+modules/ios-xq-fitness-app/scripts/build-device-ipa.sh
+```
+
+The command defaults to hardware device `00008150-0012058A14F8401C`. Set
+`INSTALL_TO_DEVICE=0` for an IPA-only export or set `IOS_DEVICE_ID` to another
+hardware UDID/CoreDevice identifier. `IOS_PROVISIONING_DEVICE_ID` defaults to
+the target ID and must be registered in the development profile. The script
+defaults to working team `T99X93V7Y2`; provide `DEVELOPMENT_TEAM` to override
+it. It uses the checked-in Xcode project directly and never runs `xcodegen`.
+This is a local-only workflow; CI remains unsigned.

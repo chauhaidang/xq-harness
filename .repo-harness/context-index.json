@@ -93,12 +93,28 @@
       "when": "Use when changing shipped skill bundles or consumer install behavior."
     },
     {
+      "name": "xq-scripts",
+      "path": "modules/xq-scripts",
+      "summary": "Versioned shell scripts distributed as GitHub Release tarballs.",
+      "skill": "none",
+      "verification": "./scripts/module ci xq-scripts",
+      "when": "Use for release versioning, install scripts, or tarball packaging work."
+    },
+    {
       "name": "xq-workflow-dashboard",
       "path": "modules/xq-workflow-dashboard",
       "summary": "Local live observability dashboard for GitHub workflow health and history.",
       "skill": "none",
       "verification": "./scripts/module ci xq-workflow-dashboard",
       "when": "Use for local workflow monitoring, Actions telemetry collection, or dashboard UI work."
+    },
+    {
+      "name": "xq-fitness-mobile",
+      "path": "modules/xq-fitness-mobile",
+      "summary": "Private Expo/React Native fitness app with build-and-unit CI plus local integration and physical-device verification.",
+      "skill": "none",
+      "verification": "./scripts/module ci xq-fitness-mobile",
+      "when": "Use for fitness mobile UI, API integration, Jest coverage, or local iOS device builds."
     },
     {
       "name": "ios-xq-finance-app",

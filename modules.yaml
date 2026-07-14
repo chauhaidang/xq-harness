@@ -167,6 +167,21 @@ modules:
       build: npm run build
       test: npm test
 
+  xq-fitness-mobile:
+    path: modules/xq-fitness-mobile
+    language: node
+    test_all: false
+    toolchain:
+      node: ">=22"
+      npm: "11"
+      expo: "49"
+      xcode: "16 (local device only)"
+      cocoapods: local-device-only
+    commands:
+      install: npm ci --include=dev
+      build: npm run build:check
+      test: npm run test:unit
+
   xq-scripts:
     path: modules/xq-scripts
     language: shell

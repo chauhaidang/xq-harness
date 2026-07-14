@@ -1,0 +1,25 @@
+name: CI xq-fitness-mobile
+
+on:
+  pull_request:
+    paths: &paths
+      - modules/xq-fitness-mobile/**
+      - modules.yaml
+      - scripts/module
+      - scripts/check-registry-version-changes.py
+      - scripts/validate-module-versions.py
+      - .github/workflows/ci-xq-fitness-mobile.yml
+      - .github/workflows/module-ci-node.yml
+  push:
+    branches: [main]
+    paths: *paths
+
+concurrency:
+  group: ci-xq-fitness-mobile-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: ./.github/workflows/module-ci-node.yml
+    with:
+      module: xq-fitness-mobile

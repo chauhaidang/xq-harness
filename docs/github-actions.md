@@ -116,6 +116,7 @@ Validate caller/callee permission parity locally:
 | `xq-scripts` | — | `cd-xq-scripts.yml` | Tarball release |
 | `xq-ios-ui-test-framework` | `ci-xq-ios-ui-test-framework.yml` | `cd-xq-ios-ui-test-framework.yml` | Swift package; subtree Git release |
 | `xq-workflow-dashboard` | `ci-xq-workflow-dashboard.yml` | — | Local-only live Actions observability dashboard |
+| `xq-fitness-mobile` | `ci-xq-fitness-mobile.yml` | — | Private app; CI builds the Expo iOS bundle and runs unit tests only |
 | `ios-xq-fitness-app` | `ci-ios-xq-fitness-app.yml` | — | Native app; CI performs an unsigned generic-iOS build and host-side unit tests only |
 
 The iOS UI framework uses a dedicated macOS workflow rather than the Node
