@@ -1,0 +1,5 @@
+FitnessCore/.build/
+build/
+DerivedData/
+*.xcuserstate
+*.xcuserdata/

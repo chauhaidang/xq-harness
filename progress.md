@@ -2,47 +2,65 @@
 
 ## Current State
 
-**Last Updated:** 2026-07-13 08:13 +07
+**Last Updated:** 2026-07-14 07:42 +07
 **Session ID:** current-thread  
-**Active Feature:** feat-009 - Accurate dashboard health classification
+**Active Feature:** feat-016 - Unambiguous exercise input labels
 
 ## Change Checkpoints
 
 ### Before State
 
-- The repo documentation already claimed `modules.yaml` was the single version authority, but modules still carried independent semantic-version definitions in `package.json`, `pyproject.toml`, Xcode files, and plain `VERSION` files without one enforced rule.
-- Release automation for publishable Node modules still keyed version-change detection off `package.json`, while the tarball flow keyed off `VERSION`, so the registry and release callers were not aligned.
-- `xq-scripts` still had placeholder registry version `0.0.0` in `modules.yaml` even though its real released version was `1.0.2` in `modules/xq-scripts/VERSION`.
-- Onboarding docs did not require a module to declare which native files were allowed to mirror the registry version.
+- Exercise name, sets, reps, and weight use `TextField` titles as placeholders rather than persistent visible labels.
+- Sets, reps, and weight have default values, so their placeholder titles are hidden as soon as the editor appears.
+- The physical-device journeys enter values by accessibility identifier but do not assert that a user can identify each field visually.
 
 ### After State
 
-- Every registered module now owns a `version.yaml` containing its current semantic version, newest-first changelog, and native mirror declarations.
-- `modules.yaml` is limited to module execution metadata rather than duplicating release state.
-- `scripts/validate-module-versions.py` validates the release schema and native mirrors, while `./scripts/module sync-version <module>` generates package, lockfile, Python, Xcode, and plain version mirrors.
-- `./scripts/module ...` and `./init.sh` fail fast when release definitions are missing or mirrors drift.
-- CI/CD workflows read and compare only the selected module's `version.yaml`; initial adoption is a non-publishing baseline.
-- Active onboarding and Actions docs describe the manifest-first release workflow.
+- The editor permanently shows Exercise name, Sets, Repetitions, and Weight (kg) above their respective inputs.
+- A clean-state physical-device test asserts all four visible labels before entering exercise data.
+- Existing stable field identifiers, defaults, keyboards, validation, and save behavior remain unchanged.
 
 ### Regression Test Results
 
-- `python3 scripts/validate-module-versions.py` - pass
-- `python3 scripts/validate-module-versions.py --sync` - pass
-- `python3 scripts/check-registry-version-changes.py --module xq-common-kit` - pass; reports `version_changed: false` for initial manifest adoption
-- `./init.sh` - pass
-- `./scripts/module ci xq-common-kit` - pass
-- `./scripts/module ci xq-workflow-dashboard` - pass; 8 tests passed
-- Live dashboard after restart - pass; merged commit `6232532` reports 0 active, 14 successful, 0 failed
+- RED visible-label device tracer - failed as intended because `fitness.exercise-editor.name-label` did not appear.
+- GREEN visible-label device tracer - pass; 1 passed, 0 failed in 33.198 seconds on iPhone 12 / iOS 26.5.
+- Complete clean-state physical-device suite - pass; XCResult reports 7 passed, 0 failed, 0 skipped in 278.173 seconds.
+- Generic UI `build-for-testing` - pass after the labeled Form change.
+- `./scripts/module ci ios-xq-fitness-app` - pass; unsigned generic iOS build and all 17 host tests passed. No E2E test runs in CI.
+- Final PR device suite after review fixes - pass; exact field labels, matching accessibility labels, and exact Day 1–7 rows are covered; XCResult reports 7 passed, 0 failed, 0 skipped in 298.892 seconds.
+- Final PR module CI on 2026-07-14 - pass; unsigned generic iOS build and 17/17 host tests.
+- Two-axis PR review - initial native findings resolved: removed the committed team identifier, added the required module README, matched the weight accessibility label, and strengthened exact-label and all-seven-day assertions.
+- Final four-field accessibility tracer - pass in 33.649 seconds; all visible and field-level labels match exactly.
+- Final two-axis native-only re-review - pass; 0 Standards blockers and 0 Spec blockers.
+- RED generic UI build - failed as intended because `TrainingDayScreen` did not expose delete or empty-state behavior.
+- GREEN generic UI `build-for-testing` - pass after adding the minimal screen interface and shared clean-state test interface.
+- Exercise-delete physical-device tracer - pass; 1 passed, 0 failed in 41.707 seconds on iPhone 12 / iOS 26.5.
+- Complete clean-state physical-device suite - pass; XCResult reports 6 passed, 0 failed, 0 skipped in 252.485 seconds.
+- `./scripts/module ci ios-xq-fitness-app` - pass; unsigned generic iOS build and all 17 host tests passed. No E2E test runs in CI.
+- RED filtered retention tracer - failed as intended because actual retained IDs were A/B/C while the contract required B/C.
+- GREEN filtered retention tracer - pass after bounding retention at the store command seam.
+- `./scripts/module ci ios-xq-fitness-app` - pass; XcodeGen generation, unsigned `generic/platform=iOS` build, and 17 `FitnessCore` unit tests passed. No E2E test runs in CI.
+- Generic `build-for-testing` for `ios-xq-fitness-app-ui-tests` - pass; all app and XCUITest sources compile without a simulator.
+- Three-snapshot retention tracer - pass on iPhone 12 / iOS 26.5 in 118.001 seconds; it covers seven day rows, exercise add/edit, First/Increased/Decreased indicators, and relaunch persistence.
+- Complete physical-device suite - pass; XCResult reports 5 passed, 0 failed, 0 skipped in 209.645 seconds.
+- `swift package dump-package --package-path modules/ios-xq-fitness-app/FitnessCore` - pass.
+- `./scripts/module info ios-xq-fitness-app` and `node scripts/harness-context.mjs module ios-xq-fitness-app` - pass.
+- `./init.sh` - pass after native module registration and version validation.
+- Scoped URL/network scan - pass; no HTTP URL, `URLSession`, WebSocket, or Network framework use exists in the native module.
+- Parallel standards/spec review - complete; persistence, schema-safety, optional-notes, production-namespace coverage, CI pinning, documentation, and lifecycle findings were resolved.
+- `./init.sh` - pass after registration and version synchronization.
+- Final standards/spec re-review - pass; all findings resolved.
+- Native physical-device acceptance - pass; the signed app and consumer XCUITest runner installed and all seven current journeys completed on the dedicated iPhone.
 
 ### PR Ready
 
 - Status: yes
-- Reason: the version-policy diff is scoped, documented, and backed by local startup plus representative module verification.
+- Reason: the native app is documented, compiled, host-tested, independently reviewed, and verified through the complete isolated physical-device suite.
 
 ### CI Ready
 
 - Status: yes
-- Reason: module-local manifest validation, synchronization, and version-change detection pass locally, and representative Node module CI still succeeds.
+- Reason: the exact registered build-and-unit-only command passed without a simulator; device E2E remains intentionally local-only.
 
 ## Status
 
@@ -60,19 +78,30 @@
 - [x] Redesigned the dashboard as a Fleet Grid heatmap and merged PR #21 into `main`
 - [x] Moved semantic versions and changelogs into each module's `version.yaml` and generated declared native mirrors
 - [x] Fixed dashboard duplicate-run reconciliation so completed successful runs remain green
+- [x] Added the native offline `ios-xq-fitness-app` foundation with MVVM plus Router
+- [x] Added versioned primary/recovery JSON persistence and 11 host-side unit tests
+- [x] Added generic-device build plus unit-test-only native CI with Xcode 16.2 pinned
+- [x] Added and passed four consumer-owned XCUITest journeys on the dedicated iPhone
+- [x] Added schema-v2 seven-day routines, local exercise CRUD, and immutable snapshot comparison
+- [x] Added and passed a fifth device journey for drill-down and previous-snapshot indicators
+- [x] Bounded snapshot retention to the newest two captures and proved C-versus-B comparison after relaunch
+- [x] Added the component × capability coverage matrix with unit/UI ownership and named gaps
+- [x] Closed the exercise-delete UI gap and enforced verified clean state before every device test
+- [x] Added and physically verified persistent labels for every exercise input
 
 ### What's In Progress
 
-- [ ] No active implementation work remains; future releases add one manifest entry and run the mirror sync command
+- [ ] Select the next native slice: routine lifecycle controls, custom day labels, or richer snapshot history
 
 ### What's Next
 
-1. Require `version.yaml` for the next module onboarding
-2. Update the module version, prepend its changelog entry, and run `./scripts/module sync-version <module>`
-3. Keep the local checkout aligned with remote `main` when it is safe to handle the unrelated unstaged files
+1. Decide whether the next priority is routine rename/delete, custom day labels, or browsing older snapshot comparisons.
+2. Extend schema versioning and `FitnessStore` commands for the selected slice.
+3. Extend local physical-device E2E alongside each future user-visible slice; keep CI build-and-unit-only.
 
 ## Blockers / Risks
 
+- [ ] Free Apple development profiles limit concurrently installed development apps; a stale finance UI-test runner was removed from the device while preserving the finance app and its data.
 - [ ] Topic staleness: `.repo-harness/context-index.json` and topic Markdown can drift from repo reality if not updated after process changes
 - [ ] Coverage gaps: a future task may need a missing topic, especially for new modules or release workflows
 - [ ] Local checkout is behind remote `main` after PR #21 because unrelated unstaged files must be preserved before synchronizing

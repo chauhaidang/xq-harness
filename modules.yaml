@@ -34,6 +34,24 @@ modules:
         -destination 'platform=iOS Simulator,name=iPhone 16'
         test
 
+  ios-xq-fitness-app:
+    path: modules/ios-xq-fitness-app
+    language: ios
+    test_all: false
+    toolchain:
+      swift: "5.10+"
+      xcode: "16"
+      xcodegen: required
+    commands:
+      install: xcodegen generate
+      build: >
+        xcodebuild -project ios-xq-fitness-app.xcodeproj
+        -scheme ios-xq-fitness-app
+        -destination 'generic/platform=iOS'
+        CODE_SIGNING_ALLOWED=NO
+        build
+      test: swift test --package-path FitnessCore
+
   xq-ios-shell-app:
     path: modules/xq-ios-shell-app
     language: ios

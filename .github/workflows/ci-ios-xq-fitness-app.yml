@@ -1,0 +1,33 @@
+name: CI ios-xq-fitness-app
+
+on:
+  pull_request:
+    paths: &paths
+      - modules/ios-xq-fitness-app/**
+      - modules.yaml
+      - scripts/module
+      - scripts/validate-module-versions.py
+      - .github/workflows/ci-ios-xq-fitness-app.yml
+  push:
+    branches: [main]
+    paths: *paths
+
+concurrency:
+  group: ci-ios-xq-fitness-app-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-unit-test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "16.4"
+
+      - name: Install module tools
+        run: brew install xcodegen yq
+
+      - name: Build and unit test
+        run: ./scripts/module ci ios-xq-fitness-app
