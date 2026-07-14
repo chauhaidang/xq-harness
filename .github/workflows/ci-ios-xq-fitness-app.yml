@@ -18,13 +18,13 @@ concurrency:
 
 jobs:
   build-and-unit-test:
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "16.2"
+          xcode-version: "16.4"
 
       - name: Install module tools
         run: brew install xcodegen yq
