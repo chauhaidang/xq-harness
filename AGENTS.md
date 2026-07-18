@@ -10,25 +10,20 @@ Before writing code:
 
 1. Confirm working directory with `pwd`
 2. Read this file completely
-3. Run `./init.sh`
-4. Run `node scripts/harness-context.mjs summary`
-5. Read `feature_list.json` and `progress.md`
-6. Query only the needed detail:
-   - `node scripts/harness-context.mjs topic <topic-id>`
-   - `node scripts/harness-context.mjs module <module-name>`
-   - `node scripts/harness-context.mjs feature <feature-id|active>`
-   - `node scripts/harness-context.mjs search <term>`
-7. Restate Situation, Task, Action, and expected Result before edits
+3. Read `progress.md` and `session-handoff.md`
+4. Use `rg` or `rg --files` to locate only the files relevant to the task
+5. Read the relevant module or process documentation
+6. Restate Situation, Task, Action, and expected Result before edits
 
-Do not preload broad docs or module trees unless the harness query tells you
-they are relevant to the current task.
+Do not preload broad docs or module trees unless they are relevant to the
+current task.
 
 ## Working Rules
 
-- **One feature at a time**: Pick exactly one active or next feature from `feature_list.json`
-- **Query before loading**: Use the harness query script before opening broad docs
+- **One workstream at a time**: Keep the current scope explicit in `progress.md`
+- **Targeted loading**: Locate and read only the module and documentation needed for the task
 - **Verification required**: Do not claim done without running the relevant checks
-- **Update artifacts**: Before ending a session, update `progress.md`, `feature_list.json`, and `session-handoff.md`
+- **Update artifacts**: Before ending a session, update `progress.md` and `session-handoff.md`
 - **Touch one module at a time**: Use `./scripts/module` for install, build, test, and CI
 - **Minimal diffs**: Match existing patterns; do not refactor unrelated code
 - **No secrets in git**: Never commit tokens, `.env` contents, or credentials
@@ -41,6 +36,20 @@ Project-scoped custom agents live in `.codex/agents/`. Read
 may spawn one role, a group of complementary roles, or multiple instances of a
 role. Assign disjoint module and file ownership before parallel edits; keep
 subagent nesting disabled and consolidate all results in the root thread.
+
+## Agent skills
+
+### Issue tracker
+
+Issues and PRDs are tracked in this repository's GitHub Issues. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Triage uses the five canonical labels mapped directly to their default names. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Domain documentation uses a multi-context layout organized around independently scoped modules. See `docs/agents/domain.md`.
 
 ## Change State Model
 
@@ -61,53 +70,44 @@ Minimum expectations:
 
 ## Required Artifacts
 
-- `feature_list.json` — source of truth for feature status and evidence
 - `progress.md` — current state, decisions, verification, next step
 - `session-handoff.md` — fast resume file for the next session
-- `.repo-harness/context-index.json` — bounded context index
-- `.repo-harness/topics/*.md` — on-demand detail
-- `scripts/harness-context.mjs` — query entrypoint
-- `init.sh` — startup and verification path
 
 ## Definition of Done
 
-A feature is done only when all of the following are true:
+Work is done only when all of the following are true:
 
 - [ ] Target behavior is implemented
 - [ ] Required verification actually ran
-- [ ] Evidence is written into `feature_list.json` or `progress.md`
+- [ ] Evidence is written into `progress.md`
 - [ ] Session artifacts are updated for the next agent
-- [ ] The repository still starts cleanly from `./init.sh`
+- [ ] The relevant documented verification commands pass
 
 ## End of Session
 
 Before ending a session:
 
 1. Update `progress.md`
-2. Update `feature_list.json`
-3. Update `session-handoff.md`
-4. Record Before state, After state, regression results, PR-ready state, and CI-ready state
-5. Record unresolved blockers or risks
-6. Re-run relevant verification
+2. Update `session-handoff.md`
+3. Record Before state, After state, regression results, PR-ready state, and CI-ready state
+4. Record unresolved blockers or risks
+5. Re-run the relevant documented verification commands
 
 ## Verification Commands
-
-```bash
-./init.sh
-```
 
 Common task checks:
 
 - `./scripts/module list`
+- `python3 scripts/validate-module-versions.py`
 - `./scripts/module ci <module>`
 - `make test-all`
-- `node scripts/harness-context.mjs summary`
+- `git diff --check`
 
 ## Escalation
 
 If you encounter:
 
-- **Module ambiguity**: query `node scripts/harness-context.mjs module <name>` before reading module docs
-- **Architecture decisions**: query `node scripts/harness-context.mjs topic architecture-decisions`
-- **Process uncertainty**: query `node scripts/harness-context.mjs topic module-workflow`
-- **Scope ambiguity**: re-read `feature_list.json` and `progress.md`, then ask the user
+- **Module ambiguity**: run `./scripts/module info <name>` before reading module docs
+- **Architecture decisions**: locate the relevant ADR with `rg --files docs modules`
+- **Process uncertainty**: inspect `./scripts/module` and the relevant workflow documentation
+- **Scope ambiguity**: re-read `progress.md` and `session-handoff.md`, then ask the user

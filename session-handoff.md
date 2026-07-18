@@ -1,5 +1,37 @@
 # Session Handoff
 
+## 2026-07-18 Feature List Removal
+
+- Removed `feature_list.json`; do not restore it unless the repository chooses
+  to reintroduce a separate machine-readable feature registry.
+- Current scope, state, and verification evidence now live in `progress.md`.
+- Resume instructions and immediate blockers remain in this file.
+- Direct module-list, version-policy, absence, and diff checks pass.
+
+## 2026-07-18 Startup Harness Simplification
+
+- Removed tracked `init.sh`; `.repo-harness/context-index.json` was already
+  absent and remains removed.
+- `AGENTS.md` now starts with targeted `rg` discovery and documents direct
+  verification commands instead of an indexed context query or init script.
+- `./scripts/module list`, module-version validation, and `git diff --check`
+  pass.
+- Do not restore either retired artifact unless the repository explicitly
+  chooses to reintroduce that startup model.
+
+## 2026-07-18 Engineering Skills Setup
+
+- Configured engineering skills to use GitHub Issues, the default
+  `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, and
+  `wontfix` labels, and module-oriented multi-context domain docs.
+- Consumer guidance lives in `docs/agents/issue-tracker.md`,
+  `docs/agents/triage-labels.md`, and `docs/agents/domain.md`; `AGENTS.md`
+  contains the discovery block.
+- Focused checks passed. The obsolete indexed startup gate was removed in the
+  following harness-simplification slice.
+- Re-run this setup skill only to switch issue trackers or restart the
+  configuration. Otherwise, edit `docs/agents/*.md` directly.
+
 ## Current Objective
 
 - Feature: `feat-022` — agent-native iOS UI test CLI.
@@ -159,11 +191,11 @@ partitioning, and edit-ownership rules. The root agent remains responsible for
 all orchestration and harness tracking. `agents.max_threads` is configured to
 8 with depth 1, but runtime/account limits may impose a lower concurrency cap.
 The TOML and JSON files parse, Codex strict configuration loading succeeds,
-`git diff --check` passes, and `./init.sh` passes. Codex Doctor separately
+module-version validation and `git diff --check` pass. Codex Doctor separately
 reports pre-existing local state-database and provider-reachability failures.
 
 1. Free at least 1 GB of local disk without deleting source or app data.
-2. Run `node scripts/harness-context.mjs feature feat-022` and
+2. Read the current iOS UI test CLI state in `progress.md`, then run
    `./scripts/module ci xq-ios-ui-test-framework`.
 3. Run the equivalent installed-Settings JSON scenario; verify screenshot,
    fail-fast diagnostics, stop, scenario report, and final XCResult artifacts.
@@ -171,7 +203,7 @@ reports pre-existing local state-database and provider-reachability failures.
    an unlocked physical iPhone with `--team T99X93V7Y2`; audit logs for no tested-app
    install or uninstall.
 5. If both pass, mark feat-022 done and PR ready, update all three harness
-   artifacts, and rerun `./init.sh`.
+   artifacts, then rerun the direct checks documented in `AGENTS.md`.
 
 ## Remaining Risks
 
