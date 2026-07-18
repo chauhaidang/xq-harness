@@ -200,7 +200,7 @@ This keeps I/O concerns separate from parsing concerns.
 
 ## File Ownership Suggestion
 
-- `model/api_catalog.py`: domain models and public protocols
+- `kraken/api_catalog.py`: domain models and public protocols
 - future source adapter module: OpenAPI loading implementations
 - future extractor module: OpenAPI-to-domain transformation
 - future service module: orchestration

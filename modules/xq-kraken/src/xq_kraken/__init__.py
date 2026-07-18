@@ -1,1 +1,0 @@
-"""XQ Kraken Python package."""

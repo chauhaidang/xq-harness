@@ -1,3 +1,5 @@
+"""Stable domain contract for xq-kraken."""
+
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -39,14 +41,16 @@ class ApiEndpoint:
     request_body: ApiRequestBody | None = None
     responses: tuple[ApiResponse, ...] = ()
 
+@dataclass(frozen=True)
+class ApiParameter:
+    pass
+
 
 class ApiSource(Protocol):
     def load(self, path: Path) -> Mapping[str, object]: ...
 
-
 class ApiExtractor(Protocol):
     def extract(self, source: Mapping[str, object]) -> ApiCatalog: ...
-
 
 class ApiCatalogProvider(Protocol):
     def get_catalog(self, source: object) -> ApiCatalog: ...
