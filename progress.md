@@ -6,6 +6,111 @@
 **Session ID:** current-thread  
 **Active Feature:** feat-022 - Agent-native iOS UI test CLI
 
+## 2026-07-18 Feature List Removal
+
+### Before State
+
+- `feature_list.json` duplicated current scope and evidence already maintained
+  in `progress.md` and `session-handoff.md`.
+- `AGENTS.md` required the JSON file during startup, scope selection, session
+  updates, completion evidence, verification, and escalation.
+
+### After State
+
+- Removed tracked `feature_list.json`.
+- `progress.md` is the source of current status and verification evidence;
+  `session-handoff.md` remains the fast resume artifact.
+- Updated all live workflow instructions so no active process requires the
+  deleted JSON file.
+
+### Regression Test Results
+
+- Absence check for `feature_list.json` — pass.
+- `./scripts/module list` — pass.
+- `python3 scripts/validate-module-versions.py` — pass.
+- `git diff --check` — pass.
+
+### PR Ready
+
+- Status: yes for the scoped harness simplification; unrelated dirty module
+  work must remain excluded.
+
+### CI Ready
+
+- Status: yes for the documentation/state change. Module-specific CI remains
+  owned by the current iOS UI test CLI workstream.
+
+## 2026-07-18 Obsolete Indexed Startup Harness Removal
+
+### Before State
+
+- `.repo-harness/context-index.json` was already absent, leaving the indexed
+  context query and `init.sh` startup path unusable.
+- `AGENTS.md` still required both artifacts before any task and treated the
+  init script as the repository-wide completion gate.
+
+### After State
+
+- Removed tracked `init.sh`; the already-absent context index remains removed.
+- Replaced live indexed-startup instructions with targeted `rg` discovery and
+  explicit module, version-policy, JSON, and diff verification commands.
+- Historical records of checks that genuinely ran in older sessions remain
+  unchanged.
+
+### Regression Test Results
+
+- `./scripts/module list` — pass.
+- `python3 scripts/validate-module-versions.py` — pass.
+- `git diff --check` — pass.
+
+### PR Ready
+
+- Status: yes for the scoped harness simplification; unrelated dirty module
+  work must remain excluded.
+
+### CI Ready
+
+- Status: yes for the harness change. Module-specific CI remains owned by the
+  active feat-022 work.
+
+## 2026-07-18 Engineering Skills Repository Setup
+
+### Before State
+
+- `AGENTS.md` had no engineering-skill configuration, and `docs/agents/` did
+  not exist.
+- The repository had a GitHub remote and the `triage` skill installed, but no
+  documented issue-tracker workflow, canonical triage-label mapping, or domain
+  documentation layout.
+- The now-retired indexed startup harness was incomplete before this change;
+  that separate lifecycle issue was resolved by the subsequent simplification.
+
+### After State
+
+- `AGENTS.md` points engineering skills to the repository's GitHub Issues, the
+  five default triage labels, and a multi-context domain documentation layout.
+- Added `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, and
+  `docs/agents/domain.md` with the approved consumer rules.
+- The unrelated active feat-022 implementation and existing module changes
+  remain untouched.
+
+### Regression Test Results
+
+- Focused configuration content checks — pass.
+- `git diff --check` — pass.
+- Direct JSON and diff validation — pass; the new documentation introduced no
+  executable behavior.
+
+### PR Ready
+
+- Status: yes for the scoped engineering-skills setup; unrelated dirty module
+  work must remain excluded.
+
+### CI Ready
+
+- Status: yes for the documentation-only setup under the direct verification
+  workflow introduced by the subsequent harness simplification.
+
 ## 2026-07-18 xq-kraken Dynamic Client Workshop Completion
 
 ### Before State
