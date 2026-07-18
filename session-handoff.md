@@ -1,5 +1,17 @@
 # Session Handoff
 
+## 2026-07-18 Matt Pocock Skills Consolidation
+
+- Removed `.agents/skills/harness-creator/`; do not restore it unless explicitly
+  requested.
+- `.agents/` is ignored by Git, so this deletion is local workspace state; a
+  skill installer or workspace bootstrap could recreate it later.
+- Use `/ask-matt` as the router for Matt Pocock engineering workflows.
+- GitHub issue tracking, default triage labels, and multi-context domain docs
+  remain configured under `docs/agents/`.
+- `.codex/agents/` is absent in the synced workspace, so stale project-team
+  routing was removed from `AGENTS.md`.
+
 ## 2026-07-18 Feature List Removal
 
 - Removed `feature_list.json`; do not restore it unless the repository chooses
@@ -185,14 +197,8 @@
 
 ## Resume Instructions
 
-The project now has seven reusable custom Codex roles in `.codex/agents/`.
-Use `.codex/TEAM.md` for role selection, group sequencing, multiple-instance
-partitioning, and edit-ownership rules. The root agent remains responsible for
-all orchestration and harness tracking. `agents.max_threads` is configured to
-8 with depth 1, but runtime/account limits may impose a lower concurrency cap.
-The TOML and JSON files parse, Codex strict configuration loading succeeds,
-module-version validation and `git diff --check` pass. Codex Doctor separately
-reports pre-existing local state-database and provider-reachability failures.
+Use `/ask-matt` to select the appropriate engineering flow. Repository-specific
+tracker, triage-label, and domain-doc rules live under `docs/agents/`.
 
 1. Free at least 1 GB of local disk without deleting source or app data.
 2. Read the current iOS UI test CLI state in `progress.md`, then run
@@ -202,8 +208,8 @@ reports pre-existing local state-database and provider-reachability failures.
 4. Sign back into the Apple account in Xcode, then repeat the core journey on
    an unlocked physical iPhone with `--team T99X93V7Y2`; audit logs for no tested-app
    install or uninstall.
-5. If both pass, mark feat-022 done and PR ready, update all three harness
-   artifacts, then rerun the direct checks documented in `AGENTS.md`.
+5. If both pass, mark the workstream done and PR ready, update `progress.md` and
+   this handoff, then rerun the direct checks documented in `AGENTS.md`.
 
 ## Remaining Risks
 

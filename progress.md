@@ -6,6 +6,42 @@
 **Session ID:** current-thread  
 **Active Feature:** feat-022 - Agent-native iOS UI test CLI
 
+## 2026-07-18 Matt Pocock Skills Consolidation
+
+### Before State
+
+- The project-local `harness-creator` skill remained installed even though its
+  generated index, init script, and feature-list workflow had been retired.
+- The Matt Pocock engineering suite and its GitHub, triage-label, and
+  multi-context domain-doc configuration were already present.
+
+### After State
+
+- Removed all 25 project-local files under `.agents/skills/harness-creator/`.
+- Added concise `AGENTS.md` routing through `/ask-matt`; the existing
+  `/setup-matt-pocock-skills` configuration remains the repository precondition.
+- Removed stale `.codex/agents/` routing because that directory is absent in the
+  synced workspace; preserved the Matt Pocock skills and all unrelated module
+  worktree changes.
+
+### Regression Test Results
+
+- Harness-creator absence and Matt Pocock skill-presence checks — pass.
+- `./scripts/module list` — pass.
+- `python3 scripts/validate-module-versions.py` — pass.
+- `git diff --check` — pass.
+
+### PR Ready
+
+- Status: yes for the tracked routing update; the skill directory is ignored by
+  Git, so its removal is local workspace state rather than a commit diff.
+
+### CI Ready
+
+- Status: yes for this documentation/skill change. No product module behavior
+  changed. A fresh workspace must install the desired Matt Pocock skills
+  separately because `.agents/` is ignored by Git.
+
 ## 2026-07-18 Feature List Removal
 
 ### Before State
