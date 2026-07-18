@@ -34,6 +34,14 @@ they are relevant to the current task.
 - **No secrets in git**: Never commit tokens, `.env` contents, or credentials
 - **Commits and pushes**: Only when the user asks
 
+## Project Agent Team
+
+Project-scoped custom agents live in `.codex/agents/`. Read
+`.codex/TEAM.md` before delegating work. The root agent owns orchestration and
+may spawn one role, a group of complementary roles, or multiple instances of a
+role. Assign disjoint module and file ownership before parallel edits; keep
+subagent nesting disabled and consolidate all results in the root thread.
+
 ## Change State Model
 
 Every change session should explicitly capture these states in `progress.md`

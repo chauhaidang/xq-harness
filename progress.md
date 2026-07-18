@@ -2,9 +2,502 @@
 
 ## Current State
 
-**Last Updated:** 2026-07-15 00:35 +07
+**Last Updated:** 2026-07-16
 **Session ID:** current-thread  
-**Active Feature:** feat-018 - OpenAPI extractor implementation guideline
+**Active Feature:** feat-022 - Agent-native iOS UI test CLI
+
+## 2026-07-18 xq-kraken Dynamic Client Workshop Completion
+
+### Before State
+
+- Checkpoints 0–2 passed; `describe()` did not consistently enforce the
+  allowlist and `invoke()` was absent.
+- The workshop's functional checkpoints for validation, invocation, and result
+  handling could not complete.
+
+### After State
+
+- `KrakenDynamicClient` now merges parameters by OpenAPI identity with
+  operation-level precedence, enforces one visibility guard, validates inputs
+  before transport through aiopenapi3-generated Pydantic types, invokes the
+  selected operation, and normalizes results/errors into Kraken DTOs.
+- Focused regression tests cover precedence, visibility, validation before
+  transport, and transport-error mapping. The workshop text now matches the
+  completed dynamic-client behavior.
+
+### Regression Test Results
+
+- `env UV_CACHE_DIR=/private/tmp/xq-kraken-uv-cache uv run python -m unittest tests.test_dynamic_client -v`
+  from `modules/xq-kraken` — pass; 13 tests.
+- `env UV_CACHE_DIR=/private/tmp/xq-kraken-uv-cache uv run behave workshop/features/checkpoints.feature`
+  from `modules/xq-kraken` — pass; 8 scenarios / 8 steps.
+
+### PR Ready
+
+- Status: yes for the xq-kraken workshop completion; unrelated active feat-022
+  work remains outside scope.
+
+### CI Ready
+
+- Status: yes for the verified xq-kraken workshop behavior.
+
+## 2026-07-17 xq-kraken aiopenapi3 Cheat Sheet
+
+### Before State
+
+- The dynamic-client workshop explained the OpenAPI-backed flow, but learners
+  lacked a compact reference distinguishing the raw YAML mapping from
+  aiopenapi3's typed runtime object.
+
+### After State
+
+- Added `modules/xq-kraken/aiopenapi3-cheat-sheet.md` and linked it from the
+  module README. It documents the raw mapping fields used for catalog/schema
+  output, the private typed root, operation lookup, loaders, and `$ref` rules.
+
+### Regression Test Results
+
+- `uv run python -m unittest discover -s tests -p 'test_workshop_assets.py' -v`
+  from `modules/xq-kraken` — pass; 3 tests.
+- `git diff --check` — pass before the focused test command.
+
+### PR Ready
+
+- Status: yes for the narrow documentation addition; unrelated xq-kraken and
+  active feat-022 changes remain outside its scope.
+
+### CI Ready
+
+- Status: yes for the documentation addition; no runtime behavior changed.
+
+## 2026-07-16 Project-Scoped Codex Agent Team
+
+### Before State
+
+- The repository had shared `AGENTS.md` and reusable skills, but no
+  project-scoped custom agent definitions or team orchestration guide.
+- The active feat-022 work and unrelated Kraken changes were already dirty and
+  had to remain untouched.
+
+### After State
+
+- Added `product_owner`, `solution_designer`, `ui_designer`, `backend_dev`,
+  `frontend_dev`, `sdet`, and `devops` custom agents under `.codex/agents/`.
+- Added role boundaries, multiple-instance nicknames, independent/group
+  patterns, root-owned coordination, disjoint edit ownership, and one-level
+  nesting in `.codex/TEAM.md` and `.codex/config.toml`.
+- Kept feat-022 as the active feature and recorded the isolated team setup as
+  completed feat-023.
+
+### Regression Test Results
+
+- `yq -p=toml` parsed `.codex/config.toml` and all seven custom agent files.
+- `python3 -m json.tool feature_list.json` - pass.
+- `codex --strict-config doctor --summary --no-color --ascii` - project config
+  loaded; unrelated local state-database and network health failures remain.
+- `git diff --check` - pass.
+- `./init.sh` - pass.
+
+### PR Ready
+
+- Status: yes for feat-023; the new team files and narrow harness guidance are
+  reviewable, while unrelated pre-existing changes remain outside this feature.
+
+### CI Ready
+
+- Status: yes; repository startup and syntax validation pass, and no product
+  module behavior changed.
+
+## 2026-07-16 Simulator Acceptance and XCTestrun Fix
+
+### Before State
+
+- The final simulator acceptance failed because the protected per-session
+  `.xctestrun` was copied into the session evidence directory while its
+  `__TESTROOT__` paths remained relative to the cached build-products directory.
+- The host volume also had less than 150 MiB free, which prevented Xcode runner
+  installation and ordinary Swift index generation.
+
+### After State
+
+- Added a regression-covered xctestrun location rule: the protected session
+  file remains beside the generated build product and is removed on every
+  daemon exit path.
+- Cleaned only disposable module compiler artifacts, failed session evidence,
+  and generic-runner caches; source and tested-app data were preserved.
+- The installed Settings app completed the simulator agent loop on iPhone 16
+  `61112FCA-8781-4A4C-AB6C-42007DDF483B`: session start, 26-element map, exact
+  search-field find, tap, clear, type, value-contains assertion, screenshot,
+  and session stop all passed. Stopping left Settings running.
+- Evidence is retained in session `c3d61550-29c3-4899-a47e-f799936ed622`, with
+  XCResult, Xcode log, redacted command transcript, and screenshot artifacts.
+
+### Regression Test Results
+
+- Focused TDD tracer — RED because `SessionXCTestrunLocation` did not exist,
+  then GREEN after the build-relative path implementation.
+- `swift test --disable-index-store` — pass; 24 tests, 0 failures.
+- `./scripts/module ci xq-ios-ui-test-framework` — attempted but blocked during
+  Swift index generation by `ENOSPC`; the equivalent complete test suite passed
+  with index storage disabled after cache cleanup.
+- Live simulator acceptance — pass for start/map/find/tap/clear/type/assert/
+  screenshot/stop against already-installed `com.apple.Preferences`.
+
+### PR Ready
+
+- Status: no. The simulator path is now acceptance-proven, but the equivalent
+  JSON scenario and physical-device journey remain final feature gates.
+
+### CI Ready
+
+- Status: yes for code and tests: all 24 Swift tests pass. The standard module
+  wrapper remains locally blocked only by host disk pressure while generating
+  nonessential index data.
+
+## 2026-07-16 Physical-Device Acceptance Retry
+
+### Before State
+
+- Physical installed-app acceptance was outstanding after the previous host
+  volume reached 100% capacity.
+- Two iPhones and two valid Apple Development identities were locally visible;
+  the handoff incorrectly treated `Y57FXM29C3` from the certificate label as
+  the development team.
+
+### After State
+
+- Retried `session start` against the already-installed Settings app on device
+  `00008150-0012058A14F8401C`; no tested-app install, uninstall, or UI command
+  occurred because generic-runner provisioning failed first.
+- Certificate inspection established the actual organizational-unit team as
+  `T99X93V7Y2`. A second retry used that explicit team and failed consistently:
+  Xcode reports a missing `Xcode-Token`, no configured account, and no cached
+  profile for `com.chauhaidang.xq-ui-test-host.xctrunner`.
+- Both failed daemons cleaned up successfully; `session status --json` reports
+  `stopped`.
+
+### Regression Test Results
+
+- `./init.sh` — pass before the retry.
+- `devices --kind physical --json` — pass; two connected physical iPhones.
+- Signing identity check — two valid identities; certificate OU/team is
+  `T99X93V7Y2`.
+- Physical generic-host `build-for-testing` — blocked with Xcode exit 65 before
+  test execution because account credentials/profile creation are unavailable.
+
+### PR Ready
+
+- Status: no. Physical acceptance still requires signing back into the Apple
+  account in Xcode so managed provisioning can create the generic-runner profile.
+
+### CI Ready
+
+- Status: yes; this retry changed only harness evidence and exposed an external
+  signing-account blocker rather than a compile or protocol regression.
+
+## 2026-07-15 Agent-Native iOS UI Test CLI Session
+
+### Before State
+
+- `xq-ui-test` exposes only `preflight`, physical `devices`, and the legacy
+  signed-IPA `run` command.
+- The module has no persistent automation session, simulator destination,
+  element map/reference protocol, JSON scenario runner, generic XCUITest host,
+  or packaged agent skill.
+- Existing xq-kraken worktree changes are unrelated and must remain untouched.
+
+### Intended After State
+
+- Keep the legacy commands compatible while adding terminal-only interactive
+  XCUITest sessions for installed apps on simulators and physical iPhones.
+- Add versioned JSON envelopes, refs/selectors, core actions/assertions,
+  fail-fast scenarios, evidence capture, and a bundled installable agent skill.
+- Add focused tests, architectural/product documentation, and harness evidence;
+  record any simulator or device acceptance that cannot run locally.
+
+### After State
+
+- Preserved legacy `preflight`, physical-only `devices`, and signed-IPA `run`;
+  added explicit simulator/physical/all discovery and the full installed-app
+  session command surface.
+- Added a mode-0600 daemon protocol with one-user session state, idle expiry,
+  typed selectors/references, public-attribute element maps, stale/ambiguity
+  errors, actions, waits/assertions, screenshots, transcripts, and XCResult.
+- Added the targetless generic XCTest host. Its cache key includes CLI protocol,
+  Xcode, SDK, destination kind, and team; it uses `build-for-testing`, creates a
+  protected per-session `.xctestrun`, then runs `test-without-building`.
+- Added schema-v1 fail-fast JSON scenarios with named environment resolution,
+  redaction, failure screenshots, completed step results, cleanup, and a JSON
+  scenario report.
+- Added and validated the bundled `xq-ui-test` Codex skill plus project/user
+  installation, ADR 0013, product/architecture docs, and the feature story.
+- The live simulator journey proved session start/status, map, exact find, tap,
+  type, and assertion against the already-installed Settings app without an app
+  install/uninstall. The later final xctestrun acceptance build was prevented
+  from writing its xctestrun because the host disk reached 100% capacity.
+
+### Regression Test Results
+
+- `./scripts/module ci xq-ios-ui-test-framework` — pass; build plus 23 Swift
+  tests, 0 failures.
+- Generic host `xcodebuild ... build-for-testing` — pass (`TEST BUILD SUCCEEDED`)
+  after the final host source changes.
+- `quick_validate.py` for bundled `xq-ui-test` skill — pass.
+- Fresh-agent skill forward test — completed; exact matching, clear-before-type,
+  cleanup ownership, and aggregate-scenario guidance were incorporated.
+- Two-axis review — findings addressed for step results/reports, graceful
+  XCResult finalization, ambiguity candidates, cache/xctestrun architecture,
+  launch-environment redaction, and documented process ownership.
+- `git diff --check` for the scoped feature — pass.
+- Final `./init.sh` — pass.
+- Final simulator xctestrun journey — blocked by `ENOSPC` while Xcode wrote the
+  generated `.xctestrun`; earlier direct-host live command journey passed.
+- Physical installed-app acceptance — not run; requires freeing disk before
+  signing the generic runner with local team `Y57FXM29C3` and using an unlocked
+  connected iPhone.
+
+### PR Ready
+
+- Status: no. The diff is scoped and reviewed, but the final simulator scenario
+  and physical-device acceptance evidence remain outstanding because the local
+  volume has insufficient free space.
+
+### CI Ready
+
+- Status: yes. Required module CI and the independently built generic host pass;
+  device acceptance is a release/evidence blocker rather than a compile/test
+  blocker.
+
+## 2026-07-15 InvocationRequest Contract Fix
+
+### Before State
+
+- Checkpoint 0 constructed `InvocationRequest` with only an operation ID, as
+  documented by the workshop contract.
+- The staged learner DTO required `parameters` and `request_body`, so the
+  checkpoint errored before invoking the fake client.
+
+### After State
+
+- `InvocationRequest.parameters` is a read-only mapping with an empty default.
+- The optional payload field is consistently named `body` and defaults to
+  `None`, matching later checkpoints and the dynamic-client guide.
+- The public DTOs in `kraken/models.py` are frozen, and result headers expose a
+  read-only mapping type.
+
+## 2026-07-15 Guided xq-kraken Checkpoint 1
+
+### Before State
+
+- Checkpoint 0 defined the stable client seam, but no dynamic OpenAPI adapter
+  existed; checkpoint 1 failed with `ModuleNotFoundError`.
+
+### After State
+
+- Added `kraken.dynamic_client.KrakenDynamicClient.from_file`.
+- It loads the owned YAML document, requires unique non-empty `operationId`
+  values for every HTTP operation, builds a private synchronous aiopenapi3
+  parser with the supplied base URL, and exposes deterministic allowlisted
+  summaries through `search`.
+- Parser-specific mutable JSON typing is confined to the adapter seam.
+
+### Regression Test Results
+
+- Checkpoint 0 Behave scenario - pass.
+- Checkpoint 1 Behave scenarios - pass; 3 scenarios.
+- BasedPyright - pass; 0 errors, warnings, or notes.
+- `git diff --check` - pass.
+
+### Next Checkpoint
+
+- Implement checkpoint 2: transform the indexed raw operation into an
+  `OperationDescription`, including inherited parameters, request bodies, and
+  responses.
+
+## 2026-07-16 xq-kraken Workshop Documentation Consolidation
+
+- Replaced temporary `feedback.md` and the obsolete
+  `DYNAMIC_CLIENT_GUIDE.md` with `modules/xq-kraken/workshop.md`.
+- The new guide teaches the KISS concrete-facade design: one client, one DTO
+  vocabulary, private aiopenapi3 usage, allowlist policy, and Behave checks.
+- README and the workshop asset guard now point to the consolidated guide.
+- `python -m unittest discover -s tests -p 'test_*.py' -v` passed 6 tests;
+  `git diff --check` and `./init.sh` passed.
+
+### Regression Test Results
+
+- `.venv/bin/behave workshop/features/checkpoints.feature --tags=checkpoint0`
+  - pass; 1 scenario and 1 step.
+- `.venv/bin/python -m unittest discover -s tests -p 'test_*.py' -v` - pass;
+  3 structural tests.
+- `.venv/bin/python -m py_compile kraken/models.py workshop/checkpoint_0.py` -
+  pass.
+- `git diff --check -- kraken/models.py` - pass.
+
+### PR Ready
+
+- Status: yes for this focused contract correction.
+
+### CI Ready
+
+- Status: no for the full learner implementation; later checkpoints and
+  BasedPyright remain outside this focused checkpoint-0 fix.
+
+## 2026-07-15 Behave Functional Test Session
+
+### Before State
+
+- Pytest executed functional adapter checks and opt-in workshop checkpoints.
+- Functional behavior lived primarily in Python test functions rather than
+  caller-readable Gherkin scenarios.
+
+### After State
+
+- `features/xq_kraken.feature` is the default functional suite: JSON/YAML file
+  loading, pinned dynamic invocation, and pre-transport validation.
+- `workshop/features/checkpoints.feature` exposes checkpoints 0-5 as eight
+  tagged scenarios; unfinished exercises remain outside the default suite.
+- Behave 1.3.3 replaces pytest in `pyproject.toml` and `uv.lock`; unittest is
+  retained only for three structural workshop/package checks.
+
+### Regression Test Results
+
+- `.venv/bin/behave features` - pass; 1 feature, 4 scenarios, 14 steps.
+- `.venv/bin/behave --dry-run workshop/features/checkpoints.feature` - pass;
+  8 scenarios and 8 steps resolve without ambiguity.
+- `.venv/bin/python -m unittest discover -s tests -p 'test_*.py' -v` - pass;
+  3 structural tests.
+- `uv build` - pass.
+- `.venv/bin/basedpyright` - blocked by separately staged incomplete learner
+  file `kraken/client.py` (`class KrakenClient(Protocol):` has no body).
+
+### PR Ready
+
+- Status: yes for the Behave migration; the changes are scoped and verified.
+
+### CI Ready
+
+- Status: no until the independently staged `kraken/client.py` is completed or
+  removed; the Behave and unittest gates themselves are green.
+
+## 2026-07-15 Contract-First Workshop Session
+
+### Before State
+
+- Checkpoint 1 introduced the concrete `KrakenDynamicClient` before the full
+  caller-facing DTO, error, and interface vocabulary existed.
+- Later checkpoints added contract types only when the adapter needed them,
+  making the library implementation drive the learning order.
+- Checkpoint tests called the concrete adapter directly.
+
+### After State
+
+- Checkpoint 0 now defines frozen DTOs, stable exceptions, and the three-method
+  `KrakenClient` Protocol before any OpenAPI or transport implementation.
+- An in-memory fake demonstrates structural substitutability and lets callers
+  complete search → describe → invoke using only the interface.
+- Checkpoints 1-5 construct `KrakenDynamicClient` as the concrete adapter but
+  exercise behavior through `KrakenClient`.
+- The guide records interface invariants, error modes, Protocol-versus-ABC
+  reasoning, and the rule that adapter details must not reshape the interface.
+
+### Regression Test Results
+
+- `.venv/bin/pytest -q` - pass; 7 normal tests.
+- Explicit collection of checkpoint 0 through checkpoint 5 - pass; 8 learner
+  assertions collected.
+- `.venv/bin/basedpyright` - pass; 0 errors, warnings, or notes.
+- `uv build` - pass; sdist and wheel build successfully.
+- `./init.sh` and `git diff --check` - pass after the workshop uplift.
+
+### PR Ready
+
+- Status: yes.
+- Reason: the change is confined to xq-kraken workshop material, its guards,
+  documentation, and harness evidence, with no production behavior change.
+
+### CI Ready
+
+- Status: yes for this unregistered module.
+- Reason: normal tests, type checking, packaging, and root startup are green;
+  unfinished checkpoints remain opt-in by design.
+
+## 2026-07-15 xq-kraken Package Refactor Session
+
+### Before State
+
+- Runtime modules, tests, workshop checkpoints, and the owned OpenAPI fixture
+  all lived at the xq-kraken module root after the flat-layout spike.
+- Production modules were imported as unrelated top-level modules such as
+  `api_catalog` and `file_api_source`, and the wheel shipped those loose files.
+- The root also contained an unused generated PyCharm `main.py` sample.
+
+### After State
+
+- Runtime code lives in the public `kraken` import package and uses package-
+  relative imports; `kraken.__init__` exposes the current public contract.
+- Ordinary tests and the project-owned fixture live under `tests`, while the
+  intentionally opt-in learning checkpoints live under `workshop`.
+- Hatch explicitly builds `kraken`; pytest and BasedPyright use the new
+  boundaries, documentation commands and links match them, and the unused
+  PyCharm sample was removed.
+
+### Regression Test Results
+
+- `.venv/bin/pytest -q` - pass; 7 normal tests.
+- `.venv/bin/basedpyright` - pass; 0 errors, warnings, or notes.
+- Explicit collection of `workshop/checkpoint_1.py` through
+  `workshop/checkpoint_5.py` - pass; 7 learner assertions collected.
+- `uv build` - pass; sdist and wheel built, and the wheel contains the
+  `kraken` package rather than loose top-level modules.
+- `./init.sh` and `git diff --check` - pass after the refactor.
+
+### PR Ready
+
+- Status: yes.
+- Reason: the refactor is scoped to xq-kraken structure, imports, packaging,
+  tests, workshop paths, and their documentation; all maintained references
+  were audited and verification is green.
+
+### CI Ready
+
+- Status: yes for this unregistered module.
+- Reason: locked module-local tests, type checking, and builds pass, and root
+  startup remains green.
+
+## 2026-07-15 Flat xq-kraken Layout Session
+
+### Before State
+
+- Maintained files were split across `src/xq_kraken/model`, `src/xq_kraken/adapters`, `tests`, `docs`, and `workshop`.
+- Tests, documentation links, workshop commands, BasedPyright, pytest, and Hatch wheel configuration depended on those nested paths.
+- Generated environments, caches, build output, and IDE metadata were present but are not maintained project files.
+
+### After State
+
+- Every maintained Python, Markdown, TOML, YAML, and lock file now lives directly under `modules/xq-kraken`.
+- Imports, workshop commands, contract/handoff paths, future implementation filenames, pytest discovery, BasedPyright scope, and wheel inputs use the flat layout.
+- Empty package markers were removed; `api_catalog.py` and `file_api_source.py` ship as flat wheel modules.
+- A regression test prevents maintained files from returning to the legacy `src`, `tests`, `docs`, or `workshop` directories.
+- `.venv`, `dist`, caches, and IDE metadata remain generated/tool-owned exceptions to the flat layout.
+
+### Regression Test Results
+
+- `.venv/bin/pytest -q` - pass; flat discovery runs 7 tests.
+- `.venv/bin/basedpyright` - pass; 0 errors and 0 warnings.
+- `uv build` - pass; sdist and wheel build, and the wheel contains the two flat production modules.
+- Explicit checkpoint collection - pass; 7 learner assertions collect from root-level checkpoint files.
+- `./init.sh` and `git diff --check` - pass after the path migration.
+
+### PR Ready
+
+- Status: yes.
+- Reason: the migration is path-only except for import/type narrowing required by the new flat verification scope, and all maintained references were updated.
+
+### CI Ready
+
+- Status: yes for this unregistered module.
+- Reason: the module-local locked tests, type check, and package build pass; repository startup remains green.
 
 ## 2026-07-15 RestApiSource Contract Test Session
 
@@ -18,7 +511,8 @@
 
 ### After State
 
-- Added `modules/xq-kraken/tests/test_rest_source.py`.
+- Added `modules/xq-kraken/tests/test_rest_source.py` (later moved into the
+  conventional test boundary).
 - The test writes a JSON OpenAPI document to a temporary file, passes its
   `Path` through an `ApiSource`-typed helper, and asserts the loaded mapping is
   unchanged.
@@ -29,9 +523,9 @@
 
 - `./init.sh` from the monorepo root - pass.
 - `node scripts/harness-context.mjs summary` - pass.
-- `python -m py_compile tests/test_rest_source.py` - pass.
+- `python -m py_compile test_rest_source.py` - pass.
 - `git diff --check` - pass.
-- `PYTHONPATH=src/xq_kraken python -m unittest discover -s tests -p 'test_rest_source.py'` - fails as expected because `RestApiSource.load` is currently syntactically incomplete.
+- The original nested-path source test was intentionally red before `FileApiSource.load` was implemented; the current flat test passes.
 - `./scripts/module test xq-kraken` - unavailable because `xq-kraken` is not registered in `modules.yaml`.
 
 ### PR Ready
@@ -55,7 +549,7 @@
 
 ### After State
 
-- Added `modules/xq-kraken/docs/openapi-extractor-guideline.md`.
+- Added `modules/xq-kraken/openapi-extractor-guideline.md`.
 - The guideline documents the OpenAPI document → `ApiCatalog` flow, catalog
   model responsibilities, metadata, servers, paths, operations, parameters,
   request bodies, responses, required `operationId`, parameter precedence, raw
@@ -316,7 +810,7 @@
 - `README.md`, `CATALOGUE.md`, `docs/github-actions.md`, `docs/modules/*.md`, `modules/xq-octopus/*`, and skill docs - rewrote active guidance to the isolated npm model
 - `AGENTS.md` - added explicit change-state checkpoints and end-of-session expectations
 - `.repo-harness/topics/agent-workflow.md` - added required checkpoint details for change sessions
-- `modules/xq-kraken/model/api_catalog.py` - replaced mutable, merged payload types with immutable request/response domain models and kept `operation_id` required
+- `modules/xq-kraken/kraken/api_catalog.py` - replaced mutable, merged payload types with immutable request/response domain models and kept `operation_id` required
 - `modules/xq-kraken/API_CATALOG_CONTRACT.md` - aligned the written contract with the required `operation_id` invariant
 - `modules/xq-workflow-dashboard` - added the isolated collector, schema, static UI, tests, local docs, and lockfile
 - `modules/xq-workflow-dashboard/src/github-client.mjs` and `test/dashboard-data.test.mjs` - reconciled duplicate run status and added regression coverage

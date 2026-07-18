@@ -2,20 +2,75 @@
 
 ## Current Objective
 
-- Feature: `feat-018` — OpenAPI extractor implementation guideline
-- Follow-up test: `modules/xq-kraken/tests/test_rest_source.py` now defines the
-  file-path `ApiSource` contract for `RestApiSource`; it is intentionally red
-  until `RestApiSource.load` is implemented.
-- Status: implemented and verified as documentation-only.
-- Added `modules/xq-kraken/docs/openapi-extractor-guideline.md`.
-- The guideline is grounded in `API_CATALOG_CONTRACT.md`,
-  `OPENAPI_CATALOG_HANDOFF.md`, and the existing xq-kraken test fixtures. It
-  covers extraction flow, catalog models, parameter precedence, required
-  `operationId`, raw schemas, responsibility boundaries, helper structure,
-  examples, tests, verification, and v1 non-goals.
-- No xq-kraken source implementation was added.
+- Feature: `feat-022` — agent-native iOS UI test CLI.
+- Status: implementation, 24-test Swift suite, and interactive simulator
+  acceptance complete; JSON-scenario evidence and physical provisioning remain.
+- TDD fixed the generated xctestrun portability bug by keeping each protected
+  session file beside its cached build products and deleting it on daemon exit.
+- Installed Settings passed start/map/find/tap/clear/type/assert/screenshot/stop
+  on iPhone 16 simulator `61112FCA-8781-4A4C-AB6C-42007DDF483B`. Evidence is in
+  session `c3d61550-29c3-4899-a47e-f799936ed622`; screenshot copy is
+  `/private/tmp/xq-settings-simulator.png`.
+- Physical retry on 2026-07-16 reached Xcode signing with device
+  `00008150-0012058A14F8401C` but failed before test execution: the Apple account
+  is missing its Xcode token and no profile exists for the generic runner.
+- The correct explicit development team is `T99X93V7Y2` (certificate OU), not
+  `Y57FXM29C3` from the certificate display label.
+- Resume by freeing at least 1 GB without deleting source or tested-app data,
+  running the JSON scenario journey, signing back into the Apple account in
+  Xcode, then running the physical Settings journey.
+- Required passing evidence already recorded: 24-test Swift suite, independent
+  generic-host build-for-testing, skill validator, forward test, and two-axis
+  review. Earlier simulator commands passed start/map/find/tap/type/assert.
+- Do not modify the unrelated staged/unstaged xq-kraken work.
 
 ## Previous Objective
+
+- Feature: `feat-021` — Behave functional tests for xq-kraken.
+- Status: complete and locally verified.
+- Default functional coverage uses Behave: 4 scenarios and 14 steps pass.
+- Tagged workshop checkpoints use Behave and all 8 scenarios dry-run cleanly.
+- Three unittest structural checks and package build pass; pytest is removed.
+- Checkpoint 0 now passes after `InvocationRequest` was aligned with the guide:
+  empty parameters default, optional `body`, and frozen public DTOs.
+- BasedPyright is blocked by the separately staged incomplete learner file
+  `kraken/client.py`; it was preserved rather than overwritten.
+- Checkpoint 1 is complete: the private aiopenapi3 adapter loads/indexes the
+  owned document, validates operation IDs, and returns allowlisted summaries.
+- The workshop is complete as of 2026-07-18: the full Behave checkpoint suite
+  passes 8 scenarios/8 steps and `tests.test_dynamic_client` passes 13 tests.
+- The current KISS-oriented guide is `modules/xq-kraken/workshop.md`; temporary
+  `feedback.md` and obsolete `DYNAMIC_CLIENT_GUIDE.md` were removed.
+- The guide is now beginner-oriented: it explains vocabulary, file roles,
+  checkpoint-1 implementation steps, later checkpoints, Behave commands,
+  common failures, and final verification.
+- It also documents the LLM's progressive payload workflow: compact search,
+  one-operation describe, invoke envelopes, repairable validation errors, and
+  strict output-size rules so Kraken is not OpenAPI rendered as JSON.
+- The workshop now retains `KrakenClient` as the single small extension seam
+  for a future dynamic implementation, while documenting factory ownership,
+  shared allowlist behavior, and compatibility rules that prevent protocol
+  sprawl.
+- `modules/xq-kraken/aiopenapi3-cheat-sheet.md` is the compact reference for
+  the dynamic-client learning flow: keep the raw OpenAPI mapping for catalog
+  and LLM schemas; keep aiopenapi3's private typed runtime object for request
+  validation, serialization, and transport. The focused workshop structural
+  tests pass (3 tests) as of 2026-07-17.
+
+## Earlier Objective
+
+- Feature: `feat-019` — conventional xq-kraken package layout.
+- Runtime code uses the `kraken` import package, ordinary tests and the owned
+  fixture live under `tests`, and guided checkpoints live under `workshop`.
+
+## Older Objective
+
+- Feature: `feat-018` — OpenAPI extractor implementation guideline.
+- Guideline: `modules/xq-kraken/openapi-extractor-guideline.md`.
+- Source contract test: `modules/xq-kraken/tests/test_rest_source.py`.
+- The source now loads both JSON and YAML documents successfully.
+
+## Historical Objective
 
 - Feature: `feat-017` — local signed IPA deployment helper
 - Status: implemented and verified.
@@ -98,13 +153,25 @@
 
 ## Resume Instructions
 
-1. Start with `node scripts/harness-context.mjs module ios-xq-fitness-app`.
-2. For a signed device build, provide `DEVELOPMENT_TEAM` and run
-   `modules/ios-xq-fitness-app/scripts/build-device-ipa.sh`.
-3. For product work, read `docs/product/ios-xq-fitness-app-test-coverage.md`
-   and select one named GAP as the next feature slice.
-4. Keep domain invariants and persistence in host tests; use physical-device UI
-   tests for navigation, controls, visible reporting, and relaunch behavior.
+The project now has seven reusable custom Codex roles in `.codex/agents/`.
+Use `.codex/TEAM.md` for role selection, group sequencing, multiple-instance
+partitioning, and edit-ownership rules. The root agent remains responsible for
+all orchestration and harness tracking. `agents.max_threads` is configured to
+8 with depth 1, but runtime/account limits may impose a lower concurrency cap.
+The TOML and JSON files parse, Codex strict configuration loading succeeds,
+`git diff --check` passes, and `./init.sh` passes. Codex Doctor separately
+reports pre-existing local state-database and provider-reachability failures.
+
+1. Free at least 1 GB of local disk without deleting source or app data.
+2. Run `node scripts/harness-context.mjs feature feat-022` and
+   `./scripts/module ci xq-ios-ui-test-framework`.
+3. Run the equivalent installed-Settings JSON scenario; verify screenshot,
+   fail-fast diagnostics, stop, scenario report, and final XCResult artifacts.
+4. Sign back into the Apple account in Xcode, then repeat the core journey on
+   an unlocked physical iPhone with `--team T99X93V7Y2`; audit logs for no tested-app
+   install or uninstall.
+5. If both pass, mark feat-022 done and PR ready, update all three harness
+   artifacts, and rerun `./init.sh`.
 
 ## Remaining Risks
 
