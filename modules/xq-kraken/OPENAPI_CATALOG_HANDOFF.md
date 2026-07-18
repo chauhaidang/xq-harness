@@ -3,9 +3,9 @@
 ## Current state
 
 The module contains the existing immutable catalog contract in
-`model/api_catalog.py` and the BDD-style executable specifications in
-`tests/`. The repository, extractor, ingestion service, and request builder
-are intentionally not implemented.
+`kraken/api_catalog.py` and Gherkin executable specifications under `features`.
+The repository, extractor, ingestion service, and request builder are
+intentionally not implemented.
 
 The existing contract requires:
 
@@ -17,14 +17,14 @@ The existing contract requires:
 
 ## Recommended implementation seams
 
-Add these modules without coupling the domain model to SQLite:
+Add these modules to `kraken` without coupling the domain model to SQLite:
 
 ```text
-extraction/openapi_catalog_extractor.py
-persistence/catalog_repository.py
-persistence/sqlite_catalog_repository.py
-ingestion/catalog_ingestion.py
-request_construction/request_builder.py
+openapi_catalog_extractor.py
+catalog_repository.py
+sqlite_catalog_repository.py
+catalog_ingestion.py
+request_builder.py
 ```
 
 ### Repository interface
@@ -103,7 +103,7 @@ Required behavior:
 
 ## Tests
 
-The tests in `tests/` are intentionally RED until the implementation exists.
+Future functional specifications belong under `features` and use Behave.
 They cover:
 
 - catalog persistence and reload
@@ -117,8 +117,7 @@ They cover:
 Run them with Python 3.14 through `uv`:
 
 ```bash
-UV_CACHE_DIR=/tmp/xq-kraken-uv-cache \
-  uv run python -m unittest discover -s tests -v
+UV_CACHE_DIR=/tmp/xq-kraken-uv-cache uv run behave features
 ```
 
 Do not add request execution, client SDK generation, full `$ref` normalization,

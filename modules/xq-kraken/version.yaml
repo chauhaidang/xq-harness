@@ -1,0 +1,12 @@
+schema_version: 1
+version: 0.1.0
+mirrors:
+  - path: pyproject.toml
+    format: pyproject-project-version
+changelog:
+  - version: 0.1.0
+    changes:
+      - Added the dynamic OpenAPI client workshop guideline and executable checkpoint exercises.
+      - Organized runtime code under the `kraken` import package, tests and owned fixtures under `tests`, and guided exercises under `workshop`.
+      - Uplifted the dynamic-client workshop to define DTOs, errors, and the `KrakenClient` protocol before implementing the OpenAPI adapter.
+      - Replaced pytest functional checks and checkpoint execution with Behave/Gherkin while retaining unittest for structural tests.

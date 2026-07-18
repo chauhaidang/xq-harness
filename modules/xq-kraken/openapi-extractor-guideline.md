@@ -1,5 +1,8 @@
 # OpenAPI Extractor Implementation Guideline
 
+Runtime modules use the `kraken` import package, with executable specifications
+under `tests`.
+
 This document defines the v1 shape of the OpenAPI extractor planned for
 `xq-kraken`. It is an implementation guide, not a source-code implementation.
 The extractor turns one already-loaded OpenAPI document into an immutable
@@ -414,10 +417,7 @@ suite:
 
 ```bash
 cd modules/xq-kraken
-UV_CACHE_DIR=/tmp/xq-kraken-uv-cache uv run python -m unittest \
-  tests.test_openapi_extractor -v
-UV_CACHE_DIR=/tmp/xq-kraken-uv-cache uv run python -m unittest \
-  discover -s tests -v
+UV_CACHE_DIR=/tmp/xq-kraken-uv-cache uv run behave features
 ```
 
 From the repository root, also run the startup verification and a whitespace

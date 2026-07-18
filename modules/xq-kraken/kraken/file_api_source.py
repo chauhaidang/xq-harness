@@ -4,7 +4,7 @@ import json
 
 import yaml
 
-from model.api_catalog import ApiSource
+from .api_catalog import ApiSource
 
 class FileApiSource(ApiSource):
     def load(self, path: Path) -> Mapping[str, object]:
@@ -21,6 +21,4 @@ class FileApiSource(ApiSource):
                 raise ValueError("Unsupported api spec content! It is not a map")
 
             return document
-
-
 
