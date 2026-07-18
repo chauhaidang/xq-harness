@@ -22,7 +22,7 @@ current task.
 - **One workstream at a time**: Keep the current scope explicit in the task, issue, or spec
 - **Targeted loading**: Locate and read only the module and documentation needed for the task
 - **Verification required**: Do not claim done without running the relevant checks
-- **Touch one module at a time**: Use `./scripts/module` for install, build, test, and CI
+- **Touch one module at a time**: Use `./scripts/module` for install, build, test, and CI of registered modules
 - **Minimal diffs**: Match existing patterns; do not refactor unrelated code
 - **No secrets in git**: Never commit tokens, `.env` contents, or credentials
 - **Commits and pushes**: Only when the user asks
@@ -31,7 +31,7 @@ current task.
 
 ### Engineering workflows
 
-Use `/ask-matt` to select the appropriate Matt Pocock engineering flow for planning, implementation, triage, QA, review, and codebase health. The repository setup is already complete; rerun `/setup-matt-pocock-skills` only to change the issue tracker, triage labels, or domain-doc layout.
+Start with `/grill-with-docs` for a bounded idea or `/wayfinder` for a large, foggy effort. Follow the resulting Matt Pocock flow from the clarified decisions.
 
 ### Issue tracker
 
@@ -44,6 +44,10 @@ Triage uses the five canonical labels mapped directly to their default names. Se
 ### Domain docs
 
 Domain documentation uses a multi-context layout organized around independently scoped modules. See `docs/agents/domain.md`.
+
+### Project agents
+
+Six project-scoped agents cover UI/UX design, solution design, backend engineering, mobile engineering, SDET, and QA. Read `.codex/TEAM.md` before delegating; keep role ownership disjoint, nesting disabled, and final orchestration in the root thread.
 
 ## Definition of Done
 
