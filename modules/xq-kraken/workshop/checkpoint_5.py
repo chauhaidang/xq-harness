@@ -60,7 +60,6 @@ def test_search_describe_validate_and_invoke_form_one_flow() -> None:
     from kraken.client import KrakenClient
     from kraken.dynamic_client import KrakenDynamicClient
     from kraken.errors import (
-        InvocationHttpError,
         InvocationResponseError,
         InvocationTransportError,
         InvocationValidationError,
@@ -90,7 +89,9 @@ def test_search_describe_validate_and_invoke_form_one_flow() -> None:
             )
         assert handler.received_bodies == []
 
-        with raises(InvocationHttpError):
+        # The 503 is not documented by the owned OpenAPI operation, so it is a
+        # response-contract failure rather than an inspectable API result.
+        with raises(InvocationResponseError):
             client.invoke(
                 InvocationRequest(
                     operation_id=summary.operation_id,

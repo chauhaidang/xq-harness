@@ -1,11 +1,15 @@
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Any
+from unittest.mock import patch
 
+import httpx
 import yaml
 
 from kraken.dynamic_client import KrakenDynamicClient
 from kraken.errors import (
+    InvocationResponseError,
     InvocationTransportError,
     InvocationValidationError,
     OperationNotAllowedError,
@@ -19,6 +23,141 @@ SPEC_PATH = MODULE_ROOT / "tests" / "fixtures" / "widgets-openapi.yaml"
 
 
 class DynamicClientTest(unittest.TestCase):
+    def test_missing_openapi_document_is_a_caller_input_error(self) -> None:
+        with self.assertRaisesRegex(ValueError, "Unable to load OpenAPI document"):
+            KrakenDynamicClient.from_file(
+                spec_path=MODULE_ROOT / "tests" / "fixtures" / "missing.yaml",
+                base_url="http://127.0.0.1:8765",
+                allowed_operation_ids=None,
+            )
+
+    def test_maps_a_schema_invalid_documented_response_to_a_response_contract_error(self) -> None:
+        document = {
+            "openapi": "3.0.3",
+            "info": {"title": "Errors", "version": "1.0.0"},
+            "paths": {
+                "/invalid": {
+                    "get": {
+                        "operationId": "getInvalid",
+                        "responses": {
+                            "400": {
+                                "description": "Invalid",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "required": ["error"],
+                                            "properties": {"error": {"type": "string"}},
+                                        }
+                                    }
+                                },
+                            }
+                        },
+                    }
+                }
+            },
+        }
+
+        def respond(request: httpx.Request) -> httpx.Response:
+            return httpx.Response(400, json={"error": 42}, request=request)
+
+        def client_factory(**kwargs: Any) -> httpx.Client:
+            return httpx.Client(transport=httpx.MockTransport(respond), **kwargs)
+
+        with TemporaryDirectory() as directory:
+            spec_path = Path(directory) / "errors.yaml"
+            spec_path.write_text(yaml.safe_dump(document), encoding="utf-8")
+            with patch("kraken.dynamic_client._HttpxClient", client_factory):
+                client = KrakenDynamicClient.from_file(
+                    spec_path=spec_path,
+                    base_url="http://example.test",
+                    allowed_operation_ids={"getInvalid"},
+                )
+
+                with self.assertRaises(InvocationResponseError):
+                    client.invoke(InvocationRequest(operation_id="getInvalid"))
+
+    def test_maps_an_undocumented_response_to_a_response_contract_error(self) -> None:
+        document = {
+            "openapi": "3.0.3",
+            "info": {"title": "Errors", "version": "1.0.0"},
+            "paths": {
+                "/unexpected": {
+                    "get": {
+                        "operationId": "getUnexpected",
+                        "responses": {"200": {"description": "Success"}},
+                    }
+                }
+            },
+        }
+
+        def respond(request: httpx.Request) -> httpx.Response:
+            return httpx.Response(418, request=request)
+
+        def client_factory(**kwargs: Any) -> httpx.Client:
+            return httpx.Client(transport=httpx.MockTransport(respond), **kwargs)
+
+        with TemporaryDirectory() as directory:
+            spec_path = Path(directory) / "errors.yaml"
+            spec_path.write_text(yaml.safe_dump(document), encoding="utf-8")
+            with patch("kraken.dynamic_client._HttpxClient", client_factory):
+                client = KrakenDynamicClient.from_file(
+                    spec_path=spec_path,
+                    base_url="http://example.test",
+                    allowed_operation_ids={"getUnexpected"},
+                )
+
+                with self.assertRaises(InvocationResponseError):
+                    client.invoke(InvocationRequest(operation_id="getUnexpected"))
+
+    def test_returns_a_documented_schema_valid_non_success_response(self) -> None:
+        document = {
+            "openapi": "3.0.3",
+            "info": {"title": "Errors", "version": "1.0.0"},
+            "paths": {
+                "/missing": {
+                    "get": {
+                        "operationId": "getMissing",
+                        "responses": {
+                            "404": {
+                                "description": "Missing",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "required": ["error"],
+                                            "properties": {"error": {"type": "string"}},
+                                        }
+                                    }
+                                },
+                            }
+                        },
+                    }
+                }
+            },
+        }
+
+        def respond(request: httpx.Request) -> httpx.Response:
+            return httpx.Response(404, json={"error": "not found"}, request=request)
+
+        def client_factory(**kwargs: Any) -> httpx.Client:
+            return httpx.Client(transport=httpx.MockTransport(respond), **kwargs)
+
+        with TemporaryDirectory() as directory:
+            spec_path = Path(directory) / "errors.yaml"
+            spec_path.write_text(yaml.safe_dump(document), encoding="utf-8")
+            with patch("kraken.dynamic_client._HttpxClient", client_factory):
+                client = KrakenDynamicClient.from_file(
+                    spec_path=spec_path,
+                    base_url="http://example.test",
+                    allowed_operation_ids={"getMissing"},
+                )
+
+                result = client.invoke(InvocationRequest(operation_id="getMissing"))
+
+        self.assertEqual(result.status_code, 404)
+        self.assertEqual(result.data, {"error": "not found"})
+
     def test_describes_an_operation_for_a_caller(self) -> None:
         client = KrakenDynamicClient.from_file(
             spec_path=SPEC_PATH,
