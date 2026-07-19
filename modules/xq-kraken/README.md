@@ -39,14 +39,18 @@ apis:
 Canonical output is JSON:
 
 ```text
+kraken execution start
+kraken scenario start
 kraken search widget
 kraken describe @o1
 kraken invoke @o1 --input request.json
 kraken resolve @r1 --pointer /id
 kraken refs status
+kraken execution finish
 ```
 
-Use `--pretty` for an indented view, `--session` to isolate concurrent agent
-work, and `--no-state` on invocation to suppress response retention. Operation
-and response handles are stored in per-user application state, never beside the
-configuration file.
+Use `--pretty` for an indented view and `--no-state` on invocation to suppress
+response retention. Runtime handles are stored in `./.kraken/execution.sqlite`
+beside the exact working-directory `kraken.yaml`; `kraken execution finish`
+removes that local state. Scenario-bound commands may omit `--scenario` only
+when exactly one scenario is open.

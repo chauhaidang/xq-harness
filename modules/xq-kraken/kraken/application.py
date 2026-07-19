@@ -17,25 +17,26 @@ from .errors import (
     OperationNotAllowedError,
     OperationNotFoundError,
 )
-from .matching import MISSING, is_partial_match, resolve_json_pointer
-from .models import InvocationRequest, InvocationResult, JsonValue, OperationDescription
-from .reference_store import (
+from .execution import (
+    ActiveExecution,
+    ExecutionError,
+    ExecutionFingerprint,
+    ExecutionFingerprinter,
+    ExecutionRuntime,
     ReferenceKind,
     ReferenceRecord,
-    ReferenceStore,
-    ReferenceStoreError,
-    canonical_context,
-    default_session_name,
+    ScenarioHandle,
     parse_reference,
-    reference_store_path,
 )
+from .matching import MISSING, is_partial_match, resolve_json_pointer
+from .models import InvocationRequest, InvocationResult, JsonValue, OperationDescription
 
 
 @dataclass(frozen=True)
 class CommandOptions:
     command: str
     config: Path | None = None
-    session: str | None = None
+    scenario: str | None = None
     pretty: bool = False
     api: str | None = None
     spec: Path | None = None
@@ -44,6 +45,8 @@ class CommandOptions:
     target: str | None = None
     input_data: Mapping[str, JsonValue] | None = None
     no_state: bool = False
+    execution_action: str | None = None
+    scenario_action: str | None = None
     refs_action: str | None = None
     pointer: str = ""
 
@@ -82,7 +85,14 @@ class KrakenApplication:
             config_path = options.config or self._cwd / "kraken.yaml"
             config = load_config(config_path)
             self._validate_overrides(options)
-            store = self._store(config, options)
+            runtime = ExecutionRuntime(config.path)
+            fingerprint = self._fingerprint(config)
+            if options.command == "execution":
+                return self._execution(runtime, fingerprint, options)
+            if options.command == "scenario":
+                active = self._active(runtime, fingerprint)
+                return self._scenario(active, options)
+            store = self._scenario_store(runtime, fingerprint, options)
             if options.command == "search":
                 return self._search(config, store, options)
             if options.command == "describe":
@@ -133,7 +143,7 @@ class KrakenApplication:
                 exit_code=6,
                 details={"operation_id": error.operation_id},
             ) from error
-        except ReferenceStoreError as error:
+        except ExecutionError as error:
             details = {"reference": error.reference} if error.reference is not None else {}
             raise ApplicationError(error.kind, str(error), exit_code=8, details=details) from error
         except ValueError as error:
@@ -150,27 +160,89 @@ class KrakenApplication:
                 exit_code=2,
             )
 
-    def _store(self, config: KrakenConfig, options: CommandOptions) -> ReferenceStore:
-        session = (
-            options.session
-            or self._environ.get("KRAKEN_SESSION")
-            or default_session_name(config.path)
-        )
-        context = canonical_context(
+    @staticmethod
+    def _fingerprint(config: KrakenConfig) -> ExecutionFingerprint:
+        return ExecutionFingerprinter.from_files(
             config.path,
-            spec_override=options.spec,
-            base_url_override=options.base_url,
+            {name: definition.spec_path for name, definition in config.apis.items()},
         )
-        return ReferenceStore(
-            reference_store_path(session, environ=self._environ),
-            session,
-            context,
-        )
+
+    @staticmethod
+    def _active(runtime: ExecutionRuntime, fingerprint: ExecutionFingerprint) -> ActiveExecution:
+        active = runtime.active(fingerprint)
+        if active is None:
+            raise ApplicationError("execution_required", "An active execution is required", exit_code=8)
+        return active
+
+    def _scenario_store(
+        self,
+        runtime: ExecutionRuntime,
+        fingerprint: ExecutionFingerprint,
+        options: CommandOptions,
+    ) -> ScenarioHandle:
+        return self._active(runtime, fingerprint).select(options.scenario)
+
+    @staticmethod
+    def _execution(
+        runtime: ExecutionRuntime,
+        fingerprint: ExecutionFingerprint,
+        options: CommandOptions,
+    ) -> CommandOutcome:
+        action = options.execution_action
+        if action == "start":
+            active = runtime.start(fingerprint)
+            return CommandOutcome(
+                0,
+                "stdout",
+                {
+                    "ok": True,
+                    "execution": "@e1",
+                    "state": "active",
+                    "config_path": str(active.record.config_path),
+                    "store_path": str(runtime.store_path),
+                },
+            )
+        if action == "status":
+            active = runtime.active(fingerprint)
+            if active is None:
+                raise ApplicationError("execution_required", "An active execution is required", exit_code=8)
+            return CommandOutcome(0, "stdout", {"ok": True, **active.status()})
+        if action == "finish":
+            active = runtime.active()
+            if active is None:
+                raise ApplicationError("execution_required", "An active execution is required", exit_code=8)
+            scenario_count = active.scenario_count()
+            active.finish()
+            return CommandOutcome(0, "stdout", {"ok": True, "removed": True, "closed_scenarios": scenario_count})
+        if action == "cleanup":
+            runtime.cleanup()
+            return CommandOutcome(0, "stdout", {"ok": True, "removed": True})
+        raise ApplicationError("invalid_input", "Unknown execution action", exit_code=2)
+
+    @staticmethod
+    def _scenario(active: ActiveExecution, options: CommandOptions) -> CommandOutcome:
+        action = options.scenario_action
+        target = options.target
+        if action == "start":
+            scenario = active.open_scenario()
+            return CommandOutcome(0, "stdout", {"ok": True, "scenario": scenario.ref, "status": scenario.record.status})
+        if action == "status":
+            if target is None:
+                return CommandOutcome(0, "stdout", {"ok": True, **active.status()})
+            scenario = active.select(target)
+            return CommandOutcome(0, "stdout", {"ok": True, "scenario": scenario.ref, "status": scenario.record.status})
+        if action == "close":
+            if target is None:
+                raise ApplicationError("invalid_input", "Scenario alias is required", exit_code=2)
+            scenario = active.select(target)
+            scenario.close()
+            return CommandOutcome(0, "stdout", {"ok": True, "scenario": target, "status": "closed"})
+        raise ApplicationError("invalid_input", "Unknown scenario action", exit_code=2)
 
     def _search(
         self,
         config: KrakenConfig,
-        store: ReferenceStore,
+        store: ScenarioHandle,
         options: CommandOptions,
     ) -> CommandOutcome:
         query = options.query if options.query is not None else ""
@@ -194,7 +266,7 @@ class KrakenApplication:
     def _describe(
         self,
         config: KrakenConfig,
-        store: ReferenceStore,
+        store: ScenarioHandle,
         options: CommandOptions,
     ) -> CommandOutcome:
         target = self._required_target(options)
@@ -228,7 +300,7 @@ class KrakenApplication:
     def _invoke(
         self,
         config: KrakenConfig,
-        store: ReferenceStore,
+        store: ScenarioHandle,
         options: CommandOptions,
     ) -> CommandOutcome:
         target = self._required_target(options)
@@ -304,7 +376,7 @@ class KrakenApplication:
             }
         return CommandOutcome(0, "stdout", payload)
 
-    def _refs(self, store: ReferenceStore, options: CommandOptions) -> CommandOutcome:
+    def _refs(self, store: ScenarioHandle, options: CommandOptions) -> CommandOutcome:
         action = options.refs_action
         if action == "list":
             references = [_reference_payload(record) for record in store.list()]
@@ -316,8 +388,7 @@ class KrakenApplication:
                 "stdout",
                 {
                     "ok": True,
-                    "session": status.session,
-                    "context": status.context,
+                    "scenario": status.scenario,
                     "counts": {
                         "operations": status.active_operations,
                         "responses": status.active_responses,
@@ -338,7 +409,7 @@ class KrakenApplication:
     def _resolve(
         self,
         config: KrakenConfig,
-        store: ReferenceStore,
+        store: ScenarioHandle,
         options: CommandOptions,
     ) -> CommandOutcome:
         target = self._required_target(options)
@@ -378,6 +449,17 @@ class KrakenApplication:
                     exit_code=8,
                     details={"reference": target, "pointer": options.pointer},
                 )
+            return CommandOutcome(
+                0,
+                "stdout",
+                {
+                    "ok": True,
+                    "ref": record.ref,
+                    "api": record.api,
+                    "operation_id": record.operation_id,
+                    "value": selected,
+                },
+            )
         return CommandOutcome(
             0,
             "stdout",
@@ -395,7 +477,7 @@ class KrakenApplication:
     def _operation_target(
         self,
         config: KrakenConfig,
-        store: ReferenceStore,
+        store: ScenarioHandle,
         options: CommandOptions,
         target: str,
     ) -> tuple[ApiDefinition, str, str | None]:
@@ -494,7 +576,7 @@ class KrakenApplication:
             raise ApplicationError("invalid_input", "assertions.body must be an object", exit_code=2)
         return cast(int | None, status), cast(Mapping[str, JsonValue], body)
 
-    def _resolve_expressions(self, value: JsonValue, store: ReferenceStore) -> JsonValue:
+    def _resolve_expressions(self, value: JsonValue, store: ScenarioHandle) -> JsonValue:
         if isinstance(value, list):
             return [self._resolve_expressions(item, store) for item in value]
         if isinstance(value, dict):

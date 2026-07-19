@@ -22,7 +22,7 @@ class _StructuredArgumentParser(argparse.ArgumentParser):
 def _common_parser() -> _StructuredArgumentParser:
     parser = _StructuredArgumentParser(add_help=False)
     parser.add_argument("--config", type=Path, default=argparse.SUPPRESS)
-    parser.add_argument("--session", default=argparse.SUPPRESS)
+    parser.add_argument("--scenario", default=argparse.SUPPRESS)
     parser.add_argument("--pretty", action="store_true", default=argparse.SUPPRESS)
     parser.add_argument("--api", default=argparse.SUPPRESS)
     parser.add_argument("--spec", type=Path, default=argparse.SUPPRESS)
@@ -38,6 +38,13 @@ def _parser() -> argparse.ArgumentParser:
         parents=[common],
     )
     commands = parser.add_subparsers(dest="command", required=True)
+
+    execution = commands.add_parser("execution", parents=[common], help="Manage local execution state")
+    execution.add_argument("execution_action", choices=("start", "status", "finish", "cleanup"))
+
+    scenario = commands.add_parser("scenario", parents=[common], help="Manage scenario sessions")
+    scenario.add_argument("scenario_action", choices=("start", "status", "close"))
+    scenario.add_argument("target", nargs="?")
 
     search = commands.add_parser("search", parents=[common], help="Search operations")
     search.add_argument("query")
@@ -74,7 +81,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         options = CommandOptions(
             command=namespace.command,
             config=getattr(namespace, "config", None),
-            session=getattr(namespace, "session", None),
+            scenario=getattr(namespace, "scenario", None),
             pretty=getattr(namespace, "pretty", False),
             api=getattr(namespace, "api", None),
             spec=getattr(namespace, "spec", None),
@@ -83,6 +90,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             target=getattr(namespace, "target", None),
             input_data=input_data,
             no_state=getattr(namespace, "no_state", False),
+            execution_action=getattr(namespace, "execution_action", None),
+            scenario_action=getattr(namespace, "scenario_action", None),
             refs_action=getattr(namespace, "refs_action", None),
             pointer=getattr(namespace, "pointer", ""),
         )

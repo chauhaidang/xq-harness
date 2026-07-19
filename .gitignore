@@ -42,6 +42,9 @@ modules/xq-**/.features-gen/
 .harness/state.db-*
 .harness/artifacts/
 
+# Kraken local execution state
+.kraken/
+
 # Local-only archive
 archive/
 archive/xq-toolbox-workspace/node_modules/

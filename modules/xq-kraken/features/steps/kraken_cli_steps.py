@@ -192,13 +192,22 @@ def isolated_cli_workspace(context: Any) -> None:
     }
     context.config_path = context.workspace / "kraken.yaml"
     context.config_path.write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
-    context.state_home = context.workspace / "state"
-    context.session = "gate-a"
     context.processes = []
+    _start_execution_and_scenario(context)
 
 
 @given("an isolated installed Kraken CLI with a local widgets API")
 def isolated_widgets_cli(context: Any) -> None:
+    _setup_widgets_cli_workspace(context)
+    _start_execution_and_scenario(context)
+
+
+@given("an isolated installed Kraken CLI workspace with a local widgets API")
+def isolated_widgets_cli_workspace(context: Any) -> None:
+    _setup_widgets_cli_workspace(context)
+
+
+def _setup_widgets_cli_workspace(context: Any) -> None:
     context.workspace = Path(tempfile.mkdtemp(prefix="kraken-cli-scenario-"))
     context.kraken_server = _FixtureServer()
     spec_path = context.workspace / "widgets.yaml"
@@ -213,8 +222,6 @@ def isolated_widgets_cli(context: Any) -> None:
         ),
         encoding="utf-8",
     )
-    context.state_home = context.workspace / "state"
-    context.session = "acceptance"
     context.processes = []
 
 
@@ -229,14 +236,9 @@ def _run(
         for key, value in os.environ.items()
         if key not in {"KRAKEN_CONFIG", "KRAKEN_SESSION", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY"}
     }
-    environment["XDG_STATE_HOME"] = str(context.state_home)
     environment["PYTHONPATH"] = context.kraken_dependency_path
     command = [
         str(context.kraken_executable),
-        "--config",
-        str(context.config_path),
-        "--session",
-        context.session,
         *arguments,
     ]
     try:
@@ -254,6 +256,13 @@ def _run(
         raise AssertionError(f"installed Kraken executable is missing: {context.kraken_executable}") from error
     context.processes.append({"argv": command, "result": result})
     return result
+
+
+def _start_execution_and_scenario(context: Any) -> None:
+    execution = _run(context, "execution", "start")
+    _assert_exit(execution, 0)
+    scenario = _run(context, "scenario", "start")
+    _assert_exit(scenario, 0)
 
 
 @when('I search for "{query}" in an installed Kraken process')
@@ -337,6 +346,89 @@ def describe_override_reference(context: Any) -> None:
     assert payload["ref"] == context.override_ref
     assert payload["api"] == "alpha"
     assert result.stderr == ""
+
+
+@when("I complete an execution flow using operation and response aliases")
+def complete_execution_flow(context: Any) -> None:
+    context.execution_start = _run(context, "execution", "start")
+    _assert_exit(context.execution_start, 0)
+    context.scenario_start = _run(context, "scenario", "start")
+    _assert_exit(context.scenario_start, 0)
+
+    search = _run(context, "search", "createWidget")
+    _assert_exit(search, 0)
+    context.flow_operation_ref = json.loads(search.stdout)["results"][0]["ref"]
+
+    context.flow_describe = _run(context, "describe", context.flow_operation_ref)
+    _assert_exit(context.flow_describe, 0)
+
+    input_path = _write_input(
+        context,
+        "flow-create.json",
+        {"body": {"name": "Keyboard", "quantity": 2}},
+    )
+    context.flow_invoke = _run(context, "invoke", context.flow_operation_ref, "--input", str(input_path))
+    _assert_exit(context.flow_invoke, 0)
+    context.flow_response_ref = json.loads(context.flow_invoke.stdout)["response_ref"]
+
+    context.flow_resolve = _run(context, "resolve", context.flow_response_ref, "--pointer", "/id")
+    _assert_exit(context.flow_resolve, 0)
+    context.execution_finish = _run(context, "execution", "finish")
+    _assert_exit(context.execution_finish, 0)
+
+
+@then("the execution flow succeeds and removes local state")
+def execution_flow_succeeds_and_finishes(context: Any) -> None:
+    execution = json.loads(context.execution_start.stdout)
+    assert execution["ok"] is True, execution
+    assert execution["execution"] == "@e1", execution
+    assert execution["state"] == "active", execution
+    assert execution["config_path"] == str(context.config_path.resolve()), execution
+    assert execution["store_path"] == str((context.workspace / ".kraken" / "execution.sqlite").resolve()), execution
+    scenario = json.loads(context.scenario_start.stdout)
+    assert scenario == {
+        "ok": True,
+        "scenario": "@s1",
+        "status": "open",
+    }, scenario
+    assert context.flow_operation_ref == "@o1", context.flow_operation_ref
+
+    description = json.loads(context.flow_describe.stdout)
+    assert description["ok"] is True, description
+    assert description["ref"] == "@o1", description
+    assert description["api"] == "widgets", description
+    assert description["operation_id"] == "createWidget", description
+
+    invocation = json.loads(context.flow_invoke.stdout)
+    assert invocation["ok"] is True, invocation
+    assert invocation["ref"] == "@o1", invocation
+    assert invocation["response_ref"] == "@r1", invocation
+    assert invocation["data"]["id"] == "widget-123", invocation
+
+    resolved = json.loads(context.flow_resolve.stdout)
+    assert resolved == {
+        "ok": True,
+        "ref": "@r1",
+        "api": "widgets",
+        "operation_id": "createWidget",
+        "value": "widget-123",
+    }, resolved
+    finish = json.loads(context.execution_finish.stdout)
+    assert finish == {
+        "ok": True,
+        "removed": True,
+        "closed_scenarios": 1,
+    }, finish
+    assert not (context.workspace / ".kraken" / "execution.sqlite").exists(), context.workspace
+    for process in (
+        context.execution_start,
+        context.scenario_start,
+        context.flow_describe,
+        context.flow_invoke,
+        context.flow_resolve,
+        context.execution_finish,
+    ):
+        assert process.stderr == "", process
 
 
 def _write_input(context: Any, name: str, payload: dict[str, Any]) -> Path:
@@ -438,7 +530,7 @@ def invalid_body_is_pretransport(context: Any) -> None:
     assert context.kraken_server.requests == []
 
 
-@when("I discover an operation reference and clear the reference session")
+@when("I discover an operation reference and clear the selected scenario state")
 def discover_then_clear(context: Any) -> None:
     search = _run(context, "search", "createWidget")
     _assert_exit(search, 0)
@@ -497,13 +589,11 @@ def invoke_newly_disallowed_reference(context: Any) -> None:
     context.config_path.write_text(yaml.safe_dump(config), encoding="utf-8")
 
 
-@then("the unavailable operation sends no request and its reference stays tombstoned")
-def disallowed_reference_is_tombstoned(context: Any) -> None:
-    _assert_exit(context.invalidated_result, 3)
+@then("the changed configuration fails before transport")
+def changed_configuration_is_pretransport(context: Any) -> None:
+    _assert_exit(context.invalidated_result, 8)
     assert context.kraken_server.requests == []
-    resolved = _run(context, "resolve", context.invalidated_ref)
-    _assert_exit(resolved, 8)
-    assert json.loads(resolved.stderr)["error"]["kind"] == "reference_target_removed"
+    assert json.loads(context.invalidated_result.stderr)["error"]["kind"] == "execution_config_changed"
 
 
 @when("I invoke a discovered operation after its contract removes it")
@@ -529,13 +619,11 @@ def invoke_removed_reference(context: Any) -> None:
     context.spec_path.write_text(yaml.safe_dump(document), encoding="utf-8")
 
 
-@then("the removed target sends no request and its reference stays tombstoned")
-def removed_reference_is_tombstoned(context: Any) -> None:
+@then("the changed specification fails before transport")
+def changed_specification_is_pretransport(context: Any) -> None:
     _assert_exit(context.invalidated_result, 8)
-    assert json.loads(context.invalidated_result.stderr)["error"]["kind"] == "reference_target_removed"
+    assert json.loads(context.invalidated_result.stderr)["error"]["kind"] == "execution_config_changed"
     assert context.kraken_server.requests == []
-    resolved = _run(context, "resolve", context.invalidated_ref)
-    _assert_exit(resolved, 8)
 
 
 @when("I create a widget and invoke getWidget using its response reference")

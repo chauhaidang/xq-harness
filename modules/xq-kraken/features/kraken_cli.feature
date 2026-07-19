@@ -14,6 +14,11 @@ Feature: Kraken installed command-line interface
     When I search one API with explicit contract and base URL overrides
     Then I can describe its reference with the same overrides and no API option
 
+  Scenario: Execution flow supports discover, invoke, resolve, and finish
+    Given an isolated installed Kraken CLI workspace with a local widgets API
+    When I complete an execution flow using operation and response aliases
+    Then the execution flow succeeds and removes local state
+
   Scenario: Documented responses support focused assertions
     Given an isolated installed Kraken CLI with a local widgets API
     When I invoke getWidget for a missing widget with matching assertions
@@ -28,20 +33,20 @@ Feature: Kraken installed command-line interface
 
   Scenario: Cleared operation references stay unusable and are not recycled
     Given an isolated installed Kraken CLI with a local widgets API
-    When I discover an operation reference and clear the reference session
+    When I discover an operation reference and clear the selected scenario state
     Then resolving the cleared operation reference fails as removed
     When I discover the operation again
     Then the new operation reference has a higher number
 
-  Scenario: A newly disallowed operation reference is permanently invalidated
+  Scenario: Config changes fail before transport
     Given an isolated installed Kraken CLI with a local widgets API
     When I invoke a discovered operation after its allowlist hides it
-    Then the unavailable operation sends no request and its reference stays tombstoned
+    Then the changed configuration fails before transport
 
-  Scenario: A removed operation reference is permanently invalidated
+  Scenario: Spec changes fail before transport
     Given an isolated installed Kraken CLI with a local widgets API
     When I invoke a discovered operation after its contract removes it
-    Then the removed target sends no request and its reference stays tombstoned
+    Then the changed specification fails before transport
 
   Scenario: A response reference supplies a typed parameter to a later process
     Given an isolated installed Kraken CLI with a local widgets API

@@ -29,7 +29,7 @@ Kraken uses separate typed namespaces:
 - `@oN` identifies an operation
 - `@rN` identifies one immutable normalized invocation result
 
-Reference numbers increase monotonically within a reference session. Kraken
+Reference numbers increase monotonically within a scenario session. Kraken
 never silently rebinds a reference to a different target and never recycles a
 cleared or expired number.
 
@@ -82,31 +82,56 @@ explicit operation ID requires `--api` even if it is currently unique across
 the configuration. This keeps stateless behavior independent of incidental
 cross-spec uniqueness.
 
-### Reference sessions
+### Executions and scenario sessions
 
-References persist across ordinary CLI processes in a local reference session.
-The default session is scoped to the canonical configuration-file path. A
-caller may isolate concurrent work with `--session <name>` or the
-`KRAKEN_SESSION` environment variable; the explicit flag takes precedence.
+References persist across ordinary CLI processes in a local execution. An
+execution is the top-level run context for one LLM or human testing run and may
+contain multiple scenario sessions. Each scenario session isolates operation
+references and response snapshots for exactly one backend test scenario.
 
-The effective configuration context includes:
+Kraken resolves the active execution only from the exact process working
+directory:
+
+- `./kraken.yaml`
+- `./.kraken/execution.sqlite`
+
+Kraken does not search parent directories and does not use global or
+environment-based execution lookup. If `kraken.yaml` or the active execution
+store is missing, stateful commands fail before HTTP transport.
+
+`kraken execution start` creates `./.kraken/execution.sqlite` beside the exact
+`kraken.yaml` in the current directory and returns execution alias `@e1`.
+Only one execution may be active for that directory. If the execution store
+already exists, start fails with `execution_already_active`; Kraken does not
+join, replace, or multiplex executions implicitly.
+
+`kraken scenario start` creates typed scenario aliases such as `@s1` inside the
+active execution. Scenario-bound commands may omit `--scenario` only when
+exactly one scenario session is open. If zero or multiple scenarios are open,
+they must identify the scenario explicitly. Scenario identities are never
+reused after close.
+
+The execution is bound to:
 
 - canonical configuration path
-- selected command-line specification override, when present
-- selected command-line base-URL override, when present
+- fingerprint of `kraken.yaml`
+- fingerprint of every referenced OpenAPI specification
 
-References cannot resolve across configuration contexts. A mismatch fails
-explicitly instead of looking up the same ordinal in another context.
-
-Local state lives in the platform's per-user application-state directory. On
-systems that define `XDG_STATE_HOME`, Kraken stores it below
-`$XDG_STATE_HOME/kraken`. State is not written beside `kraken.yaml` and must not
-be committed to the project.
+References cannot resolve across executions or scenario sessions. Configuration
+or specification changes during an active execution fail explicitly with
+`execution_config_changed` before reference resolution or HTTP transport.
 
 The store uses SQLite with user-only file permissions. SQLite provides atomic
-reference allocation and safe convergence when multiple CLI processes search
-or invoke concurrently. Allocation and target creation occur in one
-transaction, and canonical operation identity is unique within a context.
+reference allocation and safe convergence when multiple CLI processes operate
+inside the same active execution. Allocation and target creation occur in one
+transaction, and canonical operation identity is unique within a scenario
+session.
+
+`kraken execution finish` is authoritative teardown: it closes any still-open
+scenario sessions and removes the local SQLite file. If a process crashes and
+leaves an execution store behind, a later start reports `execution_stale` after
+the inactivity TTL and requires explicit `kraken execution cleanup` before a
+new execution can start.
 
 ### Reference validity
 
@@ -116,10 +141,11 @@ An operation reference is revalidated when used:
 - its operation ID must still exist in that API's current specification
 - the operation must still be visible under the current allowlist
 
-A specification-content change does not renumber an operation that retains the
-same operation ID. A removed or newly disallowed operation invalidates its
-reference. An invalidated reference remains a tombstone and is never assigned
-to another operation.
+Because an execution is bound to configuration and specification fingerprints,
+specification-content changes fail at execution validation before operation
+reference revalidation. Within an unchanged execution, a removed or newly
+disallowed operation invalidates its reference. An invalidated reference
+remains a tombstone and is never assigned to another operation.
 
 ### Response references and input substitution
 
@@ -173,7 +199,7 @@ Their JSON bodies may contain sensitive data, so the implementation must:
 - avoid persisting request bodies
 
 Response snapshots expire 24 hours after creation. Retained canonical response
-snapshots are capped at 50 MiB per reference session, measured as UTF-8 JSON
+snapshots are capped at 50 MiB per scenario session, measured as UTF-8 JSON
 bytes. Before insertion, Kraken removes expired responses and then evicts the
 oldest unexpired responses until the new snapshot fits. A single oversized
 response is not retained; its invocation still succeeds and reports
@@ -185,6 +211,13 @@ response is not retained; its invocation still succeeds and reports
 The stateful layer provides:
 
 ```text
+kraken execution start
+kraken execution status
+kraken execution finish
+kraken execution cleanup
+kraken scenario start
+kraken scenario status @s1
+kraken scenario close @s1
 kraken refs list
 kraken refs status
 kraken refs gc
@@ -193,8 +226,8 @@ kraken resolve @o1
 kraken resolve @r1 --pointer /id
 ```
 
-`refs clear` tombstones active references and deletes retained response data;
-it does not reset the monotonic counters.
+`refs clear` tombstones active references and deletes retained response data
+inside the selected scenario session; it does not reset the monotonic counters.
 
 ### Failures
 
@@ -215,11 +248,25 @@ exit code `3` and does not disclose the hidden operation contract.
 
 Reference failures occur before HTTP transport.
 
+Execution and scenario validation failures use structured error kinds:
+
+- `execution_required`
+- `execution_already_active`
+- `execution_stale`
+- `execution_config_changed`
+- `scenario_required`
+- `scenario_ambiguous`
+- `unknown_scenario`
+- `scenario_closed`
+
+Execution and scenario failures occur before reference resolution and HTTP
+transport.
+
 ## Delivery sequence
 
 The behavior is delivered in two slices:
 
-1. Operation references: persistent session store, cross-API search,
+1. Operation references: local execution store, scenario sessions, cross-API search,
    non-rebinding allocation, describe/invoke resolution, revalidation, and
    recovery errors.
 2. Response references: immutable response persistence, explicit JSON Pointer
@@ -238,6 +285,10 @@ response data.
   IDs.
 - Non-rebinding allocation prevents a valid-looking reference from silently
   targeting a different operation.
+- One active execution per exact `kraken.yaml` directory keeps ordinary command
+  invocations ergonomic without global state or repeated execution flags.
+- Scenario sessions isolate parallel backend scenarios inside one execution
+  while sharing one local SQLite file for that run.
 - Local persistence introduces concurrency, cleanup, privacy, corruption, and
   migration responsibilities.
 - Response chaining becomes deterministic without string coercion or manual
@@ -254,6 +305,13 @@ Rejected because an old reference could silently target a different operation.
 Rejected because operation and response handles have different validity,
 retention, privacy, and input constraints. Typed prefixes make mistakes easier
 to diagnose.
+
+### Require `--execution` or `KRAKEN_EXECUTION` on every command
+
+Rejected because it makes ordinary agent and human workflows too verbose. The
+execution store already lives beside the exact `kraken.yaml`, so the current
+working directory is a deterministic locator without parent-directory search or
+global lookup.
 
 ### Implicitly substitute any string beginning with `@`
 
@@ -275,3 +333,9 @@ machinery.
 
 Rejected because runtime state should not mutate or be committed with
 `kraken.yaml`.
+
+### Store execution state in a per-user application directory
+
+Rejected because it requires explicit execution locators or hidden global
+lookup. Storing the active execution beside the exact local configuration keeps
+the command surface compact while preserving one-active-execution isolation.

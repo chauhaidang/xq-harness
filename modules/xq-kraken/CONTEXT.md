@@ -78,11 +78,24 @@ selected with JSON Pointer. Body expectations use partial semantic matching.
 A requested response assertion that did not match. Assertion failure output
 contains unmatched fields rather than the complete response payload.
 
-### Reference session
+### Scenario session
 
-A named, local state scope in which Kraken allocates short references. The
-session is bound to one canonical configuration context and persists across
-ordinary CLI processes.
+The isolated local state scope for exactly one backend test scenario. A
+scenario session ties commands together across ordinary CLI processes without
+sharing operation references or response snapshots with another scenario.
+It belongs to an execution and is isolated from every other scenario session
+inside that execution. After the scenario ends, the session is closed
+irreversibly and its identity is never reused.
+
+### Execution
+
+The top-level local run context for one LLM or human testing run. An execution
+may contain multiple scenario sessions and stores their local state in one
+SQLite file beside the exact `kraken.yaml` in the current working directory.
+It is bound to a fingerprint of `kraken.yaml` and every referenced OpenAPI
+spec; commands fail immediately if that fingerprint changes while the execution
+is active. Only one execution may be active for a `kraken.yaml` directory.
+Finishing the execution removes the SQLite file and all scenario state.
 
 ### Operation reference
 
@@ -106,6 +119,10 @@ policy.
 - Operation discovery must apply the same allowlist as description and
   invocation.
 - A reference must never silently change targets or be recycled within its
-  reference session.
+  scenario session.
+- Every stateful command belongs to exactly one scenario session inside exactly
+  one execution; Kraken has no shared or global session context.
+- Kraken resolves execution state only from the exact current working directory:
+  `./kraken.yaml` and its adjacent local execution store.
 - Explicit API names and operation IDs remain the stateless public interface;
   references are an automation convenience.
