@@ -9,6 +9,7 @@ on:
       - scripts/check-registry-version-changes.py
       - scripts/validate-module-versions.py
       - .github/workflows/ci-xq-kraken.yml
+      - .github/workflows/cd-xq-kraken.yml
       - .github/workflows/module-ci-python.yml
 
 concurrency:
