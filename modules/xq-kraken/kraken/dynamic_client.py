@@ -1,7 +1,7 @@
 """Synchronous OpenAPI adapter for the Kraken client interface."""
 
 import copy
-from collections.abc import Mapping
+from collections.abc import Mapping, Set
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, cast
@@ -14,7 +14,6 @@ from pydantic import BaseModel, ValidationError
 
 from .api_catalog import ApiRequestBody, ApiResponse
 from .errors import (
-    InvocationHttpError,
     InvocationResponseError,
     InvocationTransportError,
     InvocationValidationError,
@@ -31,6 +30,7 @@ from .models import (
 )
 
 _HTTP_METHODS = frozenset({"delete", "get", "head", "options", "patch", "post", "put", "trace"})
+_HttpxClient = httpx.Client
 
 
 @dataclass(frozen=True)
@@ -60,9 +60,12 @@ class KrakenDynamicClient:
         *,
         spec_path: Path,
         base_url: str,
-        allowed_operation_ids: set[str],
+        allowed_operation_ids: Set[str] | None,
     ) -> "KrakenDynamicClient":
-        loaded_document = yaml.safe_load(spec_path.read_text(encoding="utf-8"))
+        try:
+            loaded_document = yaml.safe_load(spec_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeError, yaml.YAMLError) as error:
+            raise ValueError(f"Unable to load OpenAPI document: {spec_path}") from error
         if not isinstance(loaded_document, dict):
             raise ValueError("OpenAPI document must be a mapping")
         document = loaded_document
@@ -73,10 +76,15 @@ class KrakenDynamicClient:
         api = OpenAPI(
             spec_path.resolve().as_uri(),
             cast(Any, transport_document),
-            session_factory=httpx.Client,
+            session_factory=_HttpxClient,
             use_operation_tags=False,
         )
-        return cls(api, operations, frozenset(allowed_operation_ids))
+        # Kraken classifies responses by their OpenAPI contract, not by status
+        # class. aiopenapi3 has already selected and validated the documented
+        # response before this status hook runs, so disable its 4xx/5xx raises.
+        api.raise_on_http_status = []
+        allowed = operations.keys() if allowed_operation_ids is None else allowed_operation_ids
+        return cls(api, operations, frozenset(allowed))
 
     def search(self, query: str) -> tuple[OperationSummary, ...]:
         normalized_query = query.casefold()
@@ -128,21 +136,15 @@ class KrakenDynamicClient:
                 "Unable to reach the API",
             ) from error
         except HTTPStatusError as error:
-            raise InvocationHttpError(
+            raise InvocationResponseError(
                 request.operation_id,
-                f"API returned HTTP {error.http_status}",
+                f"API returned undocumented HTTP {error.http_status}",
             ) from error
         except ResponseError as error:
             raise InvocationResponseError(
                 request.operation_id,
                 "API response does not match its OpenAPI contract",
             ) from error
-
-        if not 200 <= response.status_code < 300:
-            raise InvocationHttpError(
-                request.operation_id,
-                f"API returned HTTP {response.status_code}",
-            )
 
         try:
             normalized_data = _to_json_value(data)

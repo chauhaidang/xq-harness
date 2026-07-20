@@ -483,6 +483,8 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiopenapi3" },
+    { name = "httpx" },
+    { name = "pydantic" },
     { name = "pyyaml" },
 ]
 
@@ -495,6 +497,8 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "aiopenapi3", specifier = "==0.10.0" },
+    { name = "httpx", specifier = ">=0.28,<0.29" },
+    { name = "pydantic", specifier = ">=2.13,<3" },
     { name = "pyyaml", specifier = ">=6.0.2,<7" },
 ]
 

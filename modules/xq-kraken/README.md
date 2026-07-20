@@ -4,6 +4,9 @@
 interface stays independent of the transport library.
 
 - [API catalog contract](API_CATALOG_CONTRACT.md)
+- [Domain context and glossary](CONTEXT.md)
+- [Operation-centric CLI decision](docs/adr/0001-operation-centric-cli.md)
+- [Stateful CLI reference decision](docs/adr/0002-stateful-cli-references.md)
 - [Workshop](workshop.md)
 - [aiopenapi3 cheat sheet](aiopenapi3-cheat-sheet.md)
 
@@ -20,3 +23,34 @@ on write-service or any other module's OpenAPI document.
 ```python
 from kraken import FileApiSource
 ```
+
+## CLI
+
+The installed `kraken` command discovers `kraken.yaml` in the working directory
+or accepts `--config`. Configuration may name several local OpenAPI documents:
+
+```yaml
+apis:
+  widgets:
+    spec: ./openapi/widgets.yaml
+    base_url: http://127.0.0.1:8080
+```
+
+Canonical output is JSON:
+
+```text
+kraken execution start
+kraken scenario start
+kraken search widget
+kraken describe @o1
+kraken invoke @o1 --input request.json
+kraken resolve @r1 --pointer /id
+kraken refs status
+kraken execution finish
+```
+
+Use `--pretty` for an indented view and `--no-state` on invocation to suppress
+response retention. Runtime handles are stored in `./.kraken/execution.sqlite`
+beside the exact working-directory `kraken.yaml`; `kraken execution finish`
+removes that local state. Scenario-bound commands may omit `--scenario` only
+when exactly one scenario is open.

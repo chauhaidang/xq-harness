@@ -6,6 +6,10 @@ class KrakenError(Exception):
         super().__init__(message or operation_id)
 
 
+class ConfigurationError(Exception):
+    """Raised when local Kraken configuration cannot be loaded safely."""
+
+
 class OperationNotFoundError(KrakenError):
     """Raised when an operation is not found."""
     ...
