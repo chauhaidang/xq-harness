@@ -1,0 +1,23 @@
+name: CI xq-kraken
+
+on:
+  pull_request:
+    paths:
+      - modules/xq-kraken/**
+      - modules.yaml
+      - scripts/module
+      - scripts/check-registry-version-changes.py
+      - scripts/validate-module-versions.py
+      - .github/workflows/ci-xq-kraken.yml
+      - .github/workflows/module-ci-python.yml
+
+concurrency:
+  group: ci-xq-kraken-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: ./.github/workflows/module-ci-python.yml
+    with:
+      module: xq-kraken
+      python_version: "3.14"
