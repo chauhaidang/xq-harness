@@ -25,6 +25,17 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["kraken"]
 
+[tool.hatch.build.targets.wheel.force-include]
+"skills/xq-kraken" = "skills/xq-kraken"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/kraken",
+  "/skills",
+  "/README.md",
+  "/pyproject.toml",
+]
+
 [tool.uv]
 package = true
 

@@ -8,6 +8,8 @@ interface stays independent of the transport library.
 - [Operation-centric CLI decision](docs/adr/0001-operation-centric-cli.md)
 - [Stateful CLI reference decision](docs/adr/0002-stateful-cli-references.md)
 - [Workshop](workshop.md)
+- [Demo presentation](demo.html)
+- [Agent skill](skills/xq-kraken/SKILL.md)
 - [aiopenapi3 cheat sheet](aiopenapi3-cheat-sheet.md)
 
 The workshop follows a KISS design: one concrete `KrakenDynamicClient` facade
