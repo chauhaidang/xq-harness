@@ -1,0 +1,4 @@
+interface:
+  display_name: "XQ Kraken"
+  short_description: "Run validated OpenAPI-backed API workflows"
+  default_prompt: "Use $xq-kraken to discover, describe, and safely invoke an OpenAPI operation."
