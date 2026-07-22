@@ -192,5 +192,4 @@ class PostgresDatabaseHelper {
     }
 }
 exports.PostgresDatabaseHelper = PostgresDatabaseHelper;
-/** @deprecated Use PostgresDatabaseHelper instead */
 exports.DatabaseHelper = PostgresDatabaseHelper;

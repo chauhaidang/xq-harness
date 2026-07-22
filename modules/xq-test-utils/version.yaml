@@ -1,11 +1,11 @@
 schema_version: 1
-version: 0.1.0
+version: 0.1.1
 mirrors:
   - path: package.json
     format: package-json
   - path: package-lock.json
     format: package-lock-json
 changelog:
-  - version: 0.1.0
+  - version: 0.1.1
     changes:
-      - Baseline imported into the module release manifest.
+      - Preserve DatabaseHelper as both a constructor and a TypeScript type alias.

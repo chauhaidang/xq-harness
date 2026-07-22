@@ -26,7 +26,7 @@ printf '%s\n' \
   '@chauhaidang:registry=https://npm.pkg.github.com' \
   '//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}' \
   > .npmrc
-npm install --save-dev @chauhaidang/xq-harness-test-utils@0.1.0
+npm install --save-dev @chauhaidang/xq-harness-test-utils@0.1.1
 ```
 
 Consumers, including monorepo modules, install an immutable published version.

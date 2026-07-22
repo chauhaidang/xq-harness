@@ -45,4 +45,4 @@ export declare class PostgresDatabaseHelper implements IDatabaseHelper {
     healthCheck(requiredTables?: string[]): Promise<HealthCheckResult>;
 }
 /** @deprecated Use PostgresDatabaseHelper instead */
-export declare const DatabaseHelper: typeof PostgresDatabaseHelper;
+export { PostgresDatabaseHelper as DatabaseHelper };
