@@ -1,0 +1,117 @@
+name: CI XQ Fitness write-service audit
+
+on:
+  pull_request:
+    paths: &paths
+      - prototypes/xq-fitness-write-service-audit/**
+      - docs/migrations/xq-fitness-write-service-audit-baseline.md
+      - .github/workflows/ci-xq-fitness-write-service-audit.yml
+  push:
+    branches: [main]
+    paths: *paths
+  workflow_dispatch:
+
+concurrency:
+  group: ci-xq-fitness-write-service-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    defaults:
+      run:
+        working-directory: prototypes/xq-fitness-write-service-audit
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          package-manager-cache: false
+
+      - name: Pin npm and configure registries
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm install --global npm@11.16.0
+          npm_config_file="$RUNNER_TEMP/xq-fitness-audit.npmrc"
+          printf '%s\n' \
+            'registry=https://registry.npmjs.org/' \
+            '@chauhaidang:registry=https://npm.pkg.github.com/' \
+            '//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}' \
+            'always-auth=true' > "$npm_config_file"
+          echo "NPM_CONFIG_USERCONFIG=$npm_config_file" >> "$GITHUB_ENV"
+          node --version
+          npm --version
+
+      - name: Generate or use the candidate lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ ! -f package-lock.json ]]; then
+            npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          fi
+          mkdir -p evidence
+          sha256sum package-lock.json | tee evidence/lockfile.sha256
+          printf 'node=%s\nnpm=%s\nregistry=%s\ncommit=%s\ntimestamp=%s\n' \
+            "$(node --version)" \
+            "$(npm --version)" \
+            "$(npm config get registry)" \
+            "$GITHUB_SHA" \
+            "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            > evidence/run-metadata.txt
+
+      - name: Verify clean dependency trees and capture deprecations
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -o pipefail
+          npm ci --omit=dev --ignore-scripts --no-audit --no-fund 2>&1 | tee evidence/install-production.log
+          npm ls --omit=dev --all --json > evidence/tree-production.json
+          npm ci --ignore-scripts --no-audit --no-fund 2>&1 | tee evidence/install-development.log
+          npm ls --all --json > evidence/tree-development.json
+
+      - name: Query production and development advisories
+        id: queries
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          npm audit --package-lock-only --omit=dev --json > evidence/audit-production.json
+          production_status=$?
+          npm audit --package-lock-only --json > evidence/audit-development.json
+          development_status=$?
+          npm audit --package-lock-only --omit=dev --audit-level=moderate > evidence/audit-production.txt
+          production_text_status=$?
+          npm audit --package-lock-only --audit-level=high > evidence/audit-development.txt
+          development_text_status=$?
+          set -e
+          printf 'production_json=%s\ndevelopment_json=%s\nproduction_text=%s\ndevelopment_text=%s\n' \
+            "$production_status" "$development_status" \
+            "$production_text_status" "$development_text_status" \
+            > evidence/audit-exit-status.txt
+
+      - name: Apply zero-undispositioned-finding policy
+        id: policy
+        continue-on-error: true
+        run: node audit-policy.mjs evidence
+
+      - name: Upload sanitized audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xq-fitness-write-service-audit
+          path: |
+            prototypes/xq-fitness-write-service-audit/evidence/**
+            prototypes/xq-fitness-write-service-audit/package-lock.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce audit policy
+        if: always()
+        env:
+          POLICY_OUTCOME: ${{ steps.policy.outcome }}
+        run: test "$POLICY_OUTCOME" = success
