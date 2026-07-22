@@ -58,6 +58,13 @@ Four prerequisite tickets govern import acceptance and production cutover:
 | [Choose the write-service dependency-audit baseline](https://github.com/chauhaidang/xq-harness/issues/44) | Production and development findings are separated; required fixes and any time-bounded exceptions have owners and expiry dates. | None |
 | [Re-run the write-service image and component acceptance matrix](https://github.com/chauhaidang/xq-harness/issues/43) | A clean Node 22 image and the full component suite pass against exact published `xq-infra` and immutable database/service images. | The two package-release prerequisites above |
 
+Recorded package-release evidence:
+
+| Package | Release | Tarball SHA-1 | Publish evidence | Clean Node 22 consumer evidence |
+| --- | --- | --- | --- | --- |
+| `@chauhaidang/xq-harness-test-utils` | `0.1.0` | `f02473ee1b5aa544780948cbeeda4465622922bd` | [GitHub Actions run 29926863661](https://github.com/chauhaidang/xq-harness/actions/runs/29926863661) | [GitHub Actions run 29927203258](https://github.com/chauhaidang/xq-harness/actions/runs/29927203258) |
+| `@chauhaidang/xq-harness-test-infra` (`xq-infra`) | `0.1.2` | `7eac12c279fa737f35fce643bc8f3f84035fcc92` | [GitHub Actions run 29926867060](https://github.com/chauhaidang/xq-harness/actions/runs/29926867060) | [GitHub Actions run 29927207258](https://github.com/chauhaidang/xq-harness/actions/runs/29927207258) |
+
 The first three may proceed in parallel. The acceptance-matrix prerequisite
 starts only after both package releases are installable. Curated source import,
 production cutover, standalone automation retirement, and any claim that
@@ -585,8 +592,8 @@ human-approved response to destructive corruption.
 
 ## Residual risks and unresolved evidence
 
-- The four prerequisite tickets are open at specification time; their exact
-  released versions/digests and approved audit baseline must be recorded before
+- The package-release prerequisites are complete. The audit disposition and
+  image/component acceptance matrix remain open and must be approved before
   import acceptance and cutover.
 - The actual monorepo import date/commit cannot be recorded until slice 1 lands.
 - Live Neon schemas, ledgers, roles, counts, restore windows, and the live
