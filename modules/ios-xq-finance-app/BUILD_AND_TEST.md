@@ -10,7 +10,6 @@ This module is a SwiftUI iOS app with an XCTest bundle.
 - App bundle ID: `com.xq.finance.ios-xq-finance-app`
 - Test bundle ID: `com.xq.finance.ios-xq-finance-appTests`
 - UI-test scheme: `ios-xq-finance-app-ui-tests`
-- UI-test configuration: `modules/ios-xq-finance-app/xq-ui-tests.json`
 - Minimum iOS deployment target: `17.0`
 
 ## Preferred Device Workflow
@@ -71,23 +70,20 @@ depends on the Keychain fallback path.
 
 ## Isolated UI Journey
 
-Install `xcbeautify 3.2.1`, archive and export the app with the commands at the
-end of this file, then run the consumer-owned lifecycle suite through the local
-framework package:
+Run the app-owned UI-test suite directly through its Xcode scheme:
 
 ```bash
-XQ_FINANCE_IPA="$PWD/modules/ios-xq-finance-app/build/ipa/ios-xq-finance-app.ipa" \
-swift run --package-path modules/xq-ios-ui-test-framework xq-ui-test run \
-  --config modules/ios-xq-finance-app/xq-ui-tests.json \
-  --device <device-id> \
-  --suite ios-xq-finance-appUITests/PortfolioLifecycleTests
+xcodebuild \
+  -project modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj \
+  -scheme ios-xq-finance-app-ui-tests \
+  -destination "platform=iOS,id=<device-id>" \
+  test
 ```
 
 The suite uses `--xq-ui-testing` and `--xq-ui-testing-reset`. Its Application
 Support directory and Keychain service are distinct from normal app storage,
-and reset removes only that UI-test namespace. Results are written beneath
-`modules/ios-xq-finance-app/build/ui-test-results/` as `result.xcresult`,
-`junit.xml`, raw logs, metadata, and retained screenshots inside XCResult.
+and reset removes only that UI-test namespace. XCTest retains failure
+screenshots and accessibility hierarchies inside the generated XCResult.
 
 ## Signing Requirements
 

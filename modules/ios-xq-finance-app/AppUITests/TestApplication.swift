@@ -1,4 +1,3 @@
-import XQUIHarness
 
 enum TestApplication {
     static let descriptor = ApplicationDescriptor(

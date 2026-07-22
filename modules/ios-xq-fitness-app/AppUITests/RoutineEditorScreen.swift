@@ -1,5 +1,4 @@
 import XCTest
-import XQUIHarness
 
 @MainActor
 struct RoutineEditorScreen: ScreenObject {
