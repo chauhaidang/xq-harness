@@ -1,16 +1,16 @@
 # XQ Fitness write-service dependency-audit baseline
 
-Status: **STOP — not approved for import acceptance**
+Status: **GO after PR #57 merges — approved dependency baseline for curated import**
 
 Issue: [#44, Choose the write-service dependency-audit baseline](https://github.com/chauhaidang/xq-harness/issues/44)
 
 Evidence date: 2026-07-22
 
 This document defines the dependency vulnerability and deprecation gate for the
-archived XQ Fitness write service. It does not approve a vulnerability by
-absence of evidence. Import acceptance remains blocked until the target
-monorepo lockfile has current production and full-development audit reports and
-every reported item has the disposition required below.
+archived XQ Fitness write service. The corrected, committed audit candidate now
+has current production and full-development reports from an authorized GitHub
+Actions runner. Issue #44 closes when PR #57 merges the reviewed lock and gate;
+issue #46 must not start before that merge.
 
 ## Evidence inspected
 
@@ -30,19 +30,31 @@ repository.
 | Install scripts | One development-only entry, `unrs-resolver@1.12.2`, declares an install script |
 | Lock provenance | 601 entries lack both `resolved` and `integrity`; all six direct runtime entries are in that set. The local generated-client entry is also intentionally non-registry. |
 
-The archived manifest also contains three deterministic-install concerns that
-must be corrected or explicitly proven by the onboarding work:
+### Authorized target-candidate evidence
 
-- `@chauhaidang/xq-test-utils@1.0.2` is the old internal package name. The
-  migration contract requires the exact published
-  `@chauhaidang/xq-harness-test-utils` release from #41.
-- `ts-node` is declared as `latest`. Although the archived lock currently
-  selects `10.9.2`, a lock refresh is not bounded by the manifest.
+| Evidence | Result |
+| --- | --- |
+| Candidate | `prototypes/xq-fitness-write-service-audit`; private and non-publishable; 6 production and 25 development declarations |
+| Committed lock | npm lockfile v3; 728 package entries; SHA-256 `c952d018bba8aa9246037b31f96ef619502faced8b78a61c8e3493d99ed11233` |
+| Toolchain and endpoint | Node `v22.23.1`, npm `11.16.0`, `https://registry.npmjs.org/` |
+| Final audit | [GitHub Actions run 29933182931](https://github.com/chauhaidang/xq-harness/actions/runs/29933182931), 2026-07-22; production and development each report zero info, low, moderate, high, or critical findings |
+| Remediation proof | Initial run 29932789837 found development-only `jest-junit@16.0.0` and transitive `uuid@8.3.2` moderate findings; exact `jest-junit@17.0.0` resolves to fixed `uuid@14` and run 29933001852 returned zero findings before the lock was committed |
+| Clean trees | Production and full-development `npm ci --ignore-scripts` and `npm ls --all` passed using GitHub Packages for exact internal releases and npm for public packages |
+| Deprecations | Development-only warnings are owned by [#58](https://github.com/chauhaidang/xq-harness/issues/58), target 2026-10-20; no warning has a current advisory or prevents the verified Node 22 build, lint, unit, generated-client, or component gates |
+| Exceptions | None |
+
+The archived manifest contained three deterministic-install concerns. The audit
+candidate resolves them as follows:
+
+- `@chauhaidang/xq-test-utils@1.0.2` is replaced by exact published
+  `@chauhaidang/xq-harness-test-utils@0.1.1` from #41.
+- Mutable `ts-node@latest` is replaced by exact `ts-node@10.9.2`.
 - `xq-fitness-write-client` is a development-only
   `file:./generated-clients/write-service` dependency. This local edge is
-  acceptable only for the ignored, unpublished generated client when the clean
-  checkout bootstrap deterministically creates it before `npm ci`. It must not
-  resolve to another repository or a hand-maintained artifact.
+  retained only as a private package stub containing the dependency contract
+  deterministically produced by OpenAPI Generator `7.17.0`; issue #49 must
+  generate the ignored client before `npm ci` and must not resolve this edge to
+  another repository or hand-maintained artifact.
 
 The standalone `.npmrc` was not imported or displayed. Its key names confirm
 that it contains package-registry authentication configuration, so it remains
@@ -206,27 +218,23 @@ production response data.
 
 ## Current disposition
 
-The archive cannot receive an approved audit baseline yet:
+The corrected candidate satisfies the dependency gate:
 
-1. A current npm advisory response was not obtained. The user explicitly
-   authorized the query on 2026-07-22, but the execution environment still
-   rejected transmission of the private archived dependency graph to npm's
-   external advisory service. The required commands must run in an authorized
-   CI environment or be run manually, with sanitized results attached to #44.
-2. Consequently there is no evidence-backed list of current production or
-   development vulnerabilities and no finding can be declared fixed or
-   excepted.
-3. The old internal test-utils name, mutable `ts-node` declaration, generated
-   local-client bootstrap, and missing registry integrity metadata require
-   resolution or deterministic clean-install evidence in the curated target
-   lockfile.
-4. The archive contains no approved exception records.
+1. The final production and full-development advisory reports are current,
+   retained, and bound to the committed lockfile hash above.
+2. Both scopes contain zero findings at every severity, so no vulnerability
+   exception or security approval is required.
+3. The only findings from the first authorized run were remediated by upgrading
+   the direct reporter dependency; the intermediate and committed-lock reruns
+   both prove the vulnerable `uuid@8.3.2` path is gone.
+4. Clean production and development dependency trees pass on the required
+   Node/npm line with valid registry provenance and exact internal packages.
+5. Development-only deprecations have the named owner, evidence, scope,
+   verification, and 90-day removal target recorded in #58. They meet none of
+   the immediate blocking conditions in the deprecation policy.
 
-**Import-blocking decision:** keep #44 open and stop #46/import acceptance until
-the corrected target manifest and lockfile pass the required Node 22/npm 11
-production and full audits, deprecation review, clean installs, and exception
-validation. Zero production high/critical findings is mandatory. Any remaining
-production moderate or development high/critical finding needs the bounded
-exception evidence above; lower-severity findings need owners and expiry where
-required. Record the final counts, lockfile hash, and approved disposition in
-#44 before declaring the prerequisite closed.
+**Import-gate decision:** GO when PR #57 merges. The merge makes the reviewed
+candidate lock, zero-undispositioned-finding policy, and evidence contract part
+of `main`, at which point #44 may close and #46 becomes the next frontier.
+Future lock changes must rerun the same production and development gates; this
+decision does not grandfather a later advisory or deprecation.
