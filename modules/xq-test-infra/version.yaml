@@ -1,11 +1,11 @@
 schema_version: 1
-version: 0.1.1
+version: 0.1.2
 mirrors:
   - path: package.json
     format: package-json
   - path: package-lock.json
     format: package-lock-json
 changelog:
-  - version: 0.1.1
+  - version: 0.1.2
     changes:
-      - Baseline imported into the module release manifest.
+      - Replace the monorepo-only common-kit dependency with the published npm package for clean consumer installs.

@@ -17,17 +17,21 @@ This package is structured into several core modules to provide organized test u
 
 ## Installation
 
+Configure npm to read the `@chauhaidang` scope from GitHub Packages. Supply a
+token with package-read access through the environment; do not commit it to an
+`.npmrc` file.
+
 ```sh
-npm install @chauhaidang/xq-harness-test-utils
+printf '%s\n' \
+  '@chauhaidang:registry=https://npm.pkg.github.com' \
+  '//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}' \
+  > .npmrc
+npm install --save-dev @chauhaidang/xq-harness-test-utils@0.1.0
 ```
 
-For use from the xq-toolbox monorepo, link the workspace package:
-
-```json
-"devDependencies": {
-  "@chauhaidang/xq-harness-test-utils": "file:../xq-toolbox/packages/xq-harness-test-utils"
-}
-```
+Consumers, including monorepo modules, install an immutable published version.
+Do not use a local `file:`, `link:`, or workspace dependency as a substitute for
+the released package.
 
 ---
 
@@ -121,12 +125,11 @@ Options: `rootDir`, `testMatch`, `setupPath`, `teardownPath`, `helpersPath` (opt
 
 ## Development
 
-Part of the `xq-toolbox` monorepo.
+Part of the `xq-harness` monorepo. From the repository root, use the registered
+module commands:
 
 ```sh
-npm run build
-npm test
-npm run lint
+./scripts/module ci xq-test-utils
 ```
 
 ---
