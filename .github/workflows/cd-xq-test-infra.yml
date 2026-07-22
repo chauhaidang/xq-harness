@@ -7,6 +7,12 @@ on:
       - modules/xq-test-infra/version.yaml
       - modules/xq-test-infra/package.json
   workflow_dispatch:
+    inputs:
+      verify_only:
+        description: Verify the published package without publishing
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   version-check:
@@ -23,7 +29,7 @@ jobs:
 
   publish:
     needs: version-check
-    if: needs.version-check.outputs.version_changed == 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.version-check.outputs.version_changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.verify_only != true)
     permissions:
       contents: read
       packages: write
@@ -31,3 +37,32 @@ jobs:
     secrets: inherit
     with:
       module: xq-test-infra
+
+  verify-published:
+    needs: version-check
+    if: github.event_name == 'workflow_dispatch' && inputs.verify_only
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          package-manager-cache: false
+          registry-url: https://npm.pkg.github.com
+          scope: "@chauhaidang"
+
+      - name: Verify published package from a clean consumer
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          package_version="$(node -p "require('./modules/xq-test-infra/package.json').version")"
+          consumer_dir="$(mktemp -d)"
+          cd "$consumer_dir"
+          npm init --yes
+          npm install --ignore-scripts --save-exact "@chauhaidang/xq-harness-test-infra@$package_version"
+          test "$(./node_modules/.bin/xq-infra --version)" = "$package_version"
+          node -e "const lock = require('./package-lock.json'); const invalid = JSON.stringify(lock).match(/(file:|link:|portal:|workspace:)/); if (invalid) throw new Error('local dependency protocol found')"
