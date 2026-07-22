@@ -33,6 +33,18 @@ jest.mock('@chauhaidang/xq-harness-common-kit', () => ({
 describe('PostgresDatabaseHelper', () => {
     let db: PostgresDatabaseHelper;
 
+    it('supports DatabaseHelper as both a constructor and a TypeScript type', () => {
+        const legacyHelper: DatabaseHelper = new DatabaseHelper({
+            host: 'localhost',
+            port: 5432,
+            database: 'test_db',
+            user: 'user',
+            password: 'pass',
+        });
+
+        expect(legacyHelper).toBeInstanceOf(PostgresDatabaseHelper);
+    });
+
     beforeEach(() => {
         jest.clearAllMocks();
         db = new PostgresDatabaseHelper({

@@ -213,4 +213,4 @@ export class PostgresDatabaseHelper implements IDatabaseHelper {
 }
 
 /** @deprecated Use PostgresDatabaseHelper instead */
-export const DatabaseHelper = PostgresDatabaseHelper;
+export { PostgresDatabaseHelper as DatabaseHelper };
