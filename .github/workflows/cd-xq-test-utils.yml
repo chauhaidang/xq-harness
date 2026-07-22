@@ -60,9 +60,21 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           package_version="$(node -p "require('./modules/xq-test-utils/package.json').version")"
+          package_artifact_dir="$RUNNER_TEMP/published-package"
           consumer_dir="$(mktemp -d)"
+          mkdir -p "$package_artifact_dir"
+          npm pack "@chauhaidang/xq-harness-test-utils@$package_version" --pack-destination "$package_artifact_dir"
+          shasum "$package_artifact_dir"/*.tgz
           cd "$consumer_dir"
           npm init --yes
           npm install --ignore-scripts --save-exact "@chauhaidang/xq-harness-test-utils@$package_version"
           node -e "require('@chauhaidang/xq-harness-test-utils')"
           node -e "const lock = require('./package-lock.json'); const invalid = JSON.stringify(lock).match(/(file:|link:|portal:|workspace:)/); if (invalid) throw new Error('local dependency protocol found')"
+
+      - name: Upload verified published package
+        uses: actions/upload-artifact@v4
+        with:
+          name: xq-test-utils-published-package
+          path: ${{ runner.temp }}/published-package/*.tgz
+          if-no-files-found: error
+          retention-days: 7
