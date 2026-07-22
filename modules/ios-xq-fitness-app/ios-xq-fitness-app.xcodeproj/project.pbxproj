@@ -7,25 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1B4C7B1E2C8A4D9E9A7B1F20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F8F8B9A1D7A4A8E8D6C2B11 /* Assets.xcassets */; };
 		09A9E1040869850F2B04981F /* SnapshotReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585C97078D9FCA44E9030932 /* SnapshotReportView.swift */; };
 		233CAF754A961044A0BB2DD6 /* RoutineWorkspaceViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9169D72947E4C1179C4E332D /* RoutineWorkspaceViews.swift */; };
 		2369781BC821C840D655604D /* RoutineEditorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319A4D592E790944B88D7DD3 /* RoutineEditorScreen.swift */; };
 		50E1E0FC6E9BF44D164EB0EA /* RoutineEditorValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 139E140454092450F032FFF4 /* RoutineEditorValidationTests.swift */; };
 		78B3BBC8E773A3A5DCBCE947 /* RoutineWorkspaceScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6604A42AA396198E17CC2881 /* RoutineWorkspaceScreen.swift */; };
 		84ED0E40585ED090FB53D031 /* RoutineListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABED0764CADD0696717B6F8 /* RoutineListScreen.swift */; };
-		8A333B2149F8EE8E5E6C2D6F /* XQUIHarness in Frameworks */ = {isa = PBXBuildFile; productRef = 152C22AC65FCCE99CC4BD435 /* XQUIHarness */; };
 		905951C639701448F3288B08 /* FitnessViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC5CFED385C7ECD0B326FA1 /* FitnessViews.swift */; };
 		A1348E855620C8F39C5DAB9E /* RoutineListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 804BFC2D7E7D091D4CAC14F6 /* RoutineListTests.swift */; };
 		A9981B1B4734128CBF8C5504 /* SevenDaySnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40A5F3F30E07B4CAE0CC55A /* SevenDaySnapshotTests.swift */; };
 		AC779C6AC2BD816DE243FAA6 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E6119290A3D6271F9550FC /* AppRouter.swift */; };
 		B70FA49E2BC5F7FB101956A4 /* ExerciseEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6199AB95CEFE8DEF68478D66 /* ExerciseEditorView.swift */; };
+		CA9A48DE2A18BD4EF83E9FB9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5A82462DE429AC8FE5DFA45 /* Assets.xcassets */; };
 		CC00DDF400D485394377F874 /* RoutineLifecycleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8496FF645B98F862D75ADFB4 /* RoutineLifecycleTests.swift */; };
 		CD57A9302F4B9A53F82870B2 /* XQFitnessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C02A9CE752D512A645BB5890 /* XQFitnessApp.swift */; };
 		E114EFDAF7251D2699FD03A1 /* FitnessCore in Frameworks */ = {isa = PBXBuildFile; productRef = F6A57045681B40DDDB02992D /* FitnessCore */; };
 		EC39FD12A838B8456F810B0F /* FitnessAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = A750026303923D676E44AA79 /* FitnessAccessibility.swift */; };
 		EEB1B187B57C82060368173F /* FitnessAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = A750026303923D676E44AA79 /* FitnessAccessibility.swift */; };
 		F3D3853E23FC89E1C2CE4C49 /* TestApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDF07CC7404BA8104814AA15 /* TestApplication.swift */; };
+		F63BA0C02FBC958D133B8D20 /* UITestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE29BCF506FC5985F3E7AC57 /* UITestSupport.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,15 +39,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		6F8F8B9A1D7A4A8E8D6C2B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		139E140454092450F032FFF4 /* RoutineEditorValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineEditorValidationTests.swift; sourceTree = "<group>"; };
 		1AC5CFED385C7ECD0B326FA1 /* FitnessViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessViews.swift; sourceTree = "<group>"; };
-		29420DCC51B3144E02698158 /* ios-xq-fitness-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-xq-fitness-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		29420DCC51B3144E02698158 /* ios-xq-fitness-app.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "ios-xq-fitness-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		319A4D592E790944B88D7DD3 /* RoutineEditorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineEditorScreen.swift; sourceTree = "<group>"; };
 		585C97078D9FCA44E9030932 /* SnapshotReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotReportView.swift; sourceTree = "<group>"; };
 		6199AB95CEFE8DEF68478D66 /* ExerciseEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEditorView.swift; sourceTree = "<group>"; };
 		6604A42AA396198E17CC2881 /* RoutineWorkspaceScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineWorkspaceScreen.swift; sourceTree = "<group>"; };
-		723F6F875DC9061512128575 /* xq-ios-ui-test-framework */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "xq-ios-ui-test-framework"; path = "../xq-ios-ui-test-framework"; sourceTree = SOURCE_ROOT; };
 		7ABED0764CADD0696717B6F8 /* RoutineListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineListScreen.swift; sourceTree = "<group>"; };
 		804BFC2D7E7D091D4CAC14F6 /* RoutineListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineListTests.swift; sourceTree = "<group>"; };
 		8496FF645B98F862D75ADFB4 /* RoutineLifecycleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineLifecycleTests.swift; sourceTree = "<group>"; };
@@ -55,9 +53,11 @@
 		91E6119290A3D6271F9550FC /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		A40A5F3F30E07B4CAE0CC55A /* SevenDaySnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SevenDaySnapshotTests.swift; sourceTree = "<group>"; };
 		A750026303923D676E44AA79 /* FitnessAccessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitnessAccessibility.swift; sourceTree = "<group>"; };
+		AE29BCF506FC5985F3E7AC57 /* UITestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestSupport.swift; sourceTree = "<group>"; };
+		B5A82462DE429AC8FE5DFA45 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C02A9CE752D512A645BB5890 /* XQFitnessApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XQFitnessApp.swift; sourceTree = "<group>"; };
 		E32931AAAD0A588926EA82A9 /* ios-xq-fitness-appUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = "ios-xq-fitness-appUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E36F2D3B50BF1D325DE8BDA2 /* FitnessCore */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FitnessCore; sourceTree = SOURCE_ROOT; };
+		E36F2D3B50BF1D325DE8BDA2 /* FitnessCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = FitnessCore; path = FitnessCore; sourceTree = SOURCE_ROOT; };
 		FDF07CC7404BA8104814AA15 /* TestApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestApplication.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -67,14 +67,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E114EFDAF7251D2699FD03A1 /* FitnessCore in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		91EE5745823E4AC61D56540E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8A333B2149F8EE8E5E6C2D6F /* XQUIHarness in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,8 +85,8 @@
 		6BBBF8767DE4AF6117ED72C4 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				6F8F8B9A1D7A4A8E8D6C2B11 /* Assets.xcassets */,
 				91E6119290A3D6271F9550FC /* AppRouter.swift */,
+				B5A82462DE429AC8FE5DFA45 /* Assets.xcassets */,
 				6199AB95CEFE8DEF68478D66 /* ExerciseEditorView.swift */,
 				A750026303923D676E44AA79 /* FitnessAccessibility.swift */,
 				1AC5CFED385C7ECD0B326FA1 /* FitnessViews.swift */,
@@ -116,6 +108,7 @@
 				6604A42AA396198E17CC2881 /* RoutineWorkspaceScreen.swift */,
 				A40A5F3F30E07B4CAE0CC55A /* SevenDaySnapshotTests.swift */,
 				FDF07CC7404BA8104814AA15 /* TestApplication.swift */,
+				AE29BCF506FC5985F3E7AC57 /* UITestSupport.swift */,
 			);
 			path = AppUITests;
 			sourceTree = "<group>";
@@ -134,7 +127,6 @@
 			isa = PBXGroup;
 			children = (
 				E36F2D3B50BF1D325DE8BDA2 /* FitnessCore */,
-				723F6F875DC9061512128575 /* xq-ios-ui-test-framework */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -147,7 +139,6 @@
 			buildConfigurationList = 80B9EC09B3D6F25B62360AB4 /* Build configuration list for PBXNativeTarget "ios-xq-fitness-appUITests" */;
 			buildPhases = (
 				BD238CF75F330134010F59C1 /* Sources */,
-				91EE5745823E4AC61D56540E /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -156,7 +147,6 @@
 			);
 			name = "ios-xq-fitness-appUITests";
 			packageProductDependencies = (
-				152C22AC65FCCE99CC4BD435 /* XQUIHarness */,
 			);
 			productName = "ios-xq-fitness-appUITests";
 			productReference = E32931AAAD0A588926EA82A9 /* ios-xq-fitness-appUITests.xctest */;
@@ -167,8 +157,8 @@
 			buildConfigurationList = ADB2AC1D001C960362BDB31D /* Build configuration list for PBXNativeTarget "ios-xq-fitness-app" */;
 			buildPhases = (
 				E2228688CF683D4429E767EF /* Sources */,
+				7DF7FB4D43C1EDE66AF3E62B /* Resources */,
 				4E8AE24F3CFED86450A34193 /* Frameworks */,
-				A1D4F9B20E7C4A1A8B2C3D4E /* Resources */,
 			);
 			buildRules = (
 			);
@@ -194,6 +184,10 @@
 					55C8A4472851FF90AB534B9A = {
 						TestTargetID = 6D2D15A5257F62F63205742C;
 					};
+					6D2D15A5257F62F63205742C = {
+						DevelopmentTeam = T99X93V7Y2;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = F35316B7DE44BE0376180149 /* Build configuration list for PBXProject "ios-xq-fitness-app" */;
@@ -207,7 +201,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				0A44F546F55F61816B0FCC3F /* XCLocalSwiftPackageReference "FitnessCore" */,
-				366D6EBEE317FDA5E34BC5FC /* XCLocalSwiftPackageReference "../xq-ios-ui-test-framework" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0AA6600A87F9C521A4B0316F /* Products */;
@@ -219,6 +212,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7DF7FB4D43C1EDE66AF3E62B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CA9A48DE2A18BD4EF83E9FB9 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BD238CF75F330134010F59C1 /* Sources */ = {
@@ -234,6 +238,7 @@
 				78B3BBC8E773A3A5DCBCE947 /* RoutineWorkspaceScreen.swift in Sources */,
 				A9981B1B4734128CBF8C5504 /* SevenDaySnapshotTests.swift in Sources */,
 				F3D3853E23FC89E1C2CE4C49 /* TestApplication.swift in Sources */,
+				F63BA0C02FBC958D133B8D20 /* UITestSupport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,17 +257,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXResourcesBuildPhase section */
-		A1D4F9B20E7C4A1A8B2C3D4E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1B4C7B1E2C8A4D9E9A7B1F20 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
 		97E1B1CD9B12FB3C51D716C4 /* PBXTargetDependency */ = {
@@ -511,17 +505,9 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = FitnessCore;
 		};
-		366D6EBEE317FDA5E34BC5FC /* XCLocalSwiftPackageReference "../xq-ios-ui-test-framework" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../xq-ios-ui-test-framework";
-		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		152C22AC65FCCE99CC4BD435 /* XQUIHarness */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = XQUIHarness;
-		};
 		F6A57045681B40DDDB02992D /* FitnessCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FitnessCore;

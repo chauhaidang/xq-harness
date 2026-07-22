@@ -1,5 +1,4 @@
 import XCTest
-import XQUIHarness
 
 @MainActor
 struct AddAssetScreen: ScreenObject {

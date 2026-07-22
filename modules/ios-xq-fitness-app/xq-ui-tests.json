@@ -1,8 +1,0 @@
-{
-  "schemaVersion": 1,
-  "project": "ios-xq-fitness-app.xcodeproj",
-  "scheme": "ios-xq-fitness-app-ui-tests",
-  "bundleIdentifier": "com.xq.fitness.ios-xq-fitness-app",
-  "ipaEnvironmentVariable": "XQ_FITNESS_IPA",
-  "resultDirectory": "build/ui-test-results"
-}

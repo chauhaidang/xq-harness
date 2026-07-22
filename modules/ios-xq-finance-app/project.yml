@@ -8,9 +8,6 @@ settings:
   base:
     MARKETING_VERSION: 0.1.0
     CURRENT_PROJECT_VERSION: 1
-packages:
-  XQUIHarness:
-    path: ../xq-ios-ui-test-framework
 targets:
   ios-xq-finance-app:
     type: application
@@ -47,7 +44,6 @@ targets:
       - App/XQAccessibilityIdentifier.swift
     dependencies:
       - target: ios-xq-finance-app
-      - package: XQUIHarness
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.xq.finance.ios-xq-finance-appUITests

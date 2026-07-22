@@ -1,5 +1,4 @@
 import XCTest
-import XQUIHarness
 
 enum TestApplication {
     static let descriptor = ApplicationDescriptor(

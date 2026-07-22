@@ -7,7 +7,6 @@ package. Simulator workflows are intentionally out of scope.
 
 - App scheme: `ios-xq-fitness-app`
 - Physical-device UI-test scheme: `ios-xq-fitness-app-ui-tests`
-- UI-test configuration: `xq-ui-tests.json`
 - App bundle ID: `com.xq.fitness.ios-xq-fitness-app`
 - UI-test bundle ID: `com.xq.fitness.ios-xq-fitness-appUITests`
 
