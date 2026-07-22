@@ -64,6 +64,7 @@ jobs:
           consumer_dir="$(mktemp -d)"
           mkdir -p "$package_artifact_dir"
           npm pack "@chauhaidang/xq-harness-test-utils@$package_version" --pack-destination "$package_artifact_dir"
+          npm pack "@chauhaidang/xq-harness-common-kit@0.1.0" --pack-destination "$package_artifact_dir"
           shasum "$package_artifact_dir"/*.tgz
           cd "$consumer_dir"
           npm init --yes
