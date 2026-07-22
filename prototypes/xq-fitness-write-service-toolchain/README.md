@@ -1,65 +1,71 @@
 # PROTOTYPE — XQ Fitness write-service toolchain
 
-This throwaway prototype answers one question:
+This local acceptance runner answers GitHub issue #43 without package-registry
+credentials or pre-published service/database images. It consumes three exact
+package tarballs, extracts the archived write service and database into `/tmp`,
+builds uniquely tagged local images, and runs the complete archived component
+suite through `xq-infra@0.1.2`.
 
-> What is the smallest toolchain contract that lets the archived
-> `xq-fitness-write-service` run under the monorepo's Node 22/npm 11
-> conventions without checking in generated clients or sharing local package
-> dependencies in the eventual production module?
+## Inputs
 
-It is evidence for the Wayfinder decision ticket, not production source. The
-runner extracts the supplied archive into a disposable directory, regenerates
-the OpenAPI client, substitutes the renamed test-utils package, and runs the
-service-level acceptance gates.
+The runner rejects package tarballs unless their SHA-1 values match:
 
-The runner uses a locally packed `xq-harness-test-utils` only to prove API
-compatibility because that package is not published yet. This is deliberately
-not the proposed production dependency contract.
+| Package | Version | Required SHA-1 |
+| --- | --- | --- |
+| `@chauhaidang/xq-harness-test-utils` | `0.1.1` | `32888639ae58798891d47f0ac7adcee7699dc940` |
+| `@chauhaidang/xq-harness-test-infra` | `0.1.2` | `7eac12c279fa737f35fce643bc8f3f84035fcc92` |
+| `@chauhaidang/xq-harness-common-kit` | `0.1.0` | `3d3817768521562add1d00e7e7adf64cce38ac68` |
 
-## Run
+The three tarballs are installed together as local file dependencies, allowing
+the internal package graph to resolve without GitHub Packages or
+`NODE_AUTH_TOKEN`. Public npm dependencies and Docker base images still use
+their normal configured registries when absent from local caches.
+
+## Command
 
 ```bash
-NODE_AUTH_TOKEN=... \
-  ./prototypes/xq-fitness-write-service-toolchain/run.sh \
+TEST_UTILS_TARBALL=/absolute/path/to/chauhaidang-xq-harness-test-utils-0.1.1.tgz \
+TEST_INFRA_TARBALL=/absolute/path/to/chauhaidang-xq-harness-test-infra-0.1.2.tgz \
+COMMON_KIT_TARBALL=/absolute/path/to/chauhaidang-xq-harness-common-kit-0.1.0.tgz \
+./prototypes/xq-fitness-write-service-toolchain/run.sh \
   /absolute/path/to/xq-fitness-backend-source-2026-07-20.tar.gz
 ```
 
-The token must be able to read the `@chauhaidang` packages on GitHub Packages.
-The runner prints its scratch directory and preserves it for inspection.
+The runner requires Node 22, npm 11.16.0, and a working Docker daemon. Colima
+users must set `SCRATCH_PARENT` to a shared path under `/Users`; its VM cannot
+bind-mount the default macOS `/private/tmp` path used by `mktemp`. It:
 
-## Observed result on 2026-07-21
+1. verifies the archive and package hashes;
+2. generates the ignored OpenAPI client and installs all three package
+   tarballs together;
+3. verifies the exact installed package and CLI versions;
+4. runs service build, lint, client build, and unit tests;
+5. statically asserts 9 component suites, 44 test declarations, and 20 OpenAPI
+   operations;
+6. builds both archive-derived local image tags and records their image IDs
+   before and after the build;
+7. uses exact `xq-infra@0.1.2` to generate Compose from the archived service
+   definitions, asserts that its database/service references use the unique
+   local tags, and starts them with `--no-pull`;
+8. runs the single complete component row; and
+9. always captures bounded logs and tears down generated infrastructure.
 
-Environment: Node 22.15.0 and npm 11.16.0.
+The scratch evidence directory contains a manifest, bounded service logs, and
+JUnit XML. Failure is a STOP; the scratch directory is preserved for diagnosis.
 
-| Gate | Result |
-| --- | --- |
-| OpenAPI client bootstrap before install | Pass |
-| Clean npm install | Pass with locally packed test-utils compatibility artifact |
-| Service TypeScript build | Pass |
-| ESLint | Pass |
-| Generated client CommonJS + ESM builds | Pass |
-| Unit tests | Pass: 9 suites, 153 tests |
-| Published `xq-harness-test-utils` install | Blocked: package is not published |
-| Published `xq-harness-test-infra@0.1.1` install | Blocked: published metadata contains `portal:../xq-common-kit` |
-| Production image build | Blocked locally: Docker daemon unavailable; also waits on published test-utils |
-| Component tests through `xq-infra` | Blocked by the released test-infra package and Docker prerequisites |
+## Acceptance result
 
-## Candidate production contract
+The complete runner passed on 2026-07-22 with Node `22.15.0` and npm
+`11.16.0`:
 
-- Declare `engines.node` as `>=22.0.0` and `packageManager` as `npm@11.16.0`.
-- Generate the ignored OpenAPI client before `npm ci`; keep generator CLI
-  `2.25.2` and generator engine `7.17.0` pinned.
-- Rename imports and the dependency from `@chauhaidang/xq-test-utils` to
-  `@chauhaidang/xq-harness-test-utils`, pinned to a published exact version.
-- Keep `xq-infra` out of write-service dependencies. The integration workflow
-  installs an exact fixed published CLI version.
-- Change both Docker stages from `node:20-alpine` to a pinned Node 22 Alpine
-  image before production-image verification.
+- build, lint, generated CommonJS/ESM client build, and 9 unit suites / 153
+  tests passed;
+- both archive-derived images were rebuilt under unique immutable local tags;
+- exact `xq-infra@0.1.2` started those tags with `--no-pull`;
+- all 9 component suites / 44 tests passed against the disposable database;
+- all 20 OpenAPI `operationId` entries were present; and
+- teardown completed with no running matrix containers.
 
-## Prerequisites exposed by the prototype
-
-1. Publish `@chauhaidang/xq-harness-test-utils`.
-2. Republish `@chauhaidang/xq-harness-test-infra` without the `portal:`
-   dependency and pin that new version in integration automation.
-3. Start a Docker daemon and verify the production image plus the complete
-   `xq-infra` component suite using immutable service/database image references.
+The runner remains the reproducible pre-import acceptance gate. Its service log,
+JUnit XML, package hashes, and image IDs are retained in the reported scratch
+evidence directory for each execution.

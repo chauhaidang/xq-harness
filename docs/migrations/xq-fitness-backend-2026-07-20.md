@@ -62,8 +62,18 @@ Recorded package-release evidence:
 
 | Package | Release | Tarball SHA-1 | Publish evidence | Clean Node 22 consumer evidence |
 | --- | --- | --- | --- | --- |
-| `@chauhaidang/xq-harness-test-utils` | `0.1.0` | `f02473ee1b5aa544780948cbeeda4465622922bd` | [GitHub Actions run 29926863661](https://github.com/chauhaidang/xq-harness/actions/runs/29926863661) | [GitHub Actions run 29927203258](https://github.com/chauhaidang/xq-harness/actions/runs/29927203258) |
+| `@chauhaidang/xq-harness-test-utils` | `0.1.1` | `32888639ae58798891d47f0ac7adcee7699dc940` | [GitHub Actions run 29930448510](https://github.com/chauhaidang/xq-harness/actions/runs/29930448510) | [GitHub Actions run 29930991976](https://github.com/chauhaidang/xq-harness/actions/runs/29930991976) |
 | `@chauhaidang/xq-harness-test-infra` (`xq-infra`) | `0.1.2` | `7eac12c279fa737f35fce643bc8f3f84035fcc92` | [GitHub Actions run 29926867060](https://github.com/chauhaidang/xq-harness/actions/runs/29926867060) | [GitHub Actions run 29927207258](https://github.com/chauhaidang/xq-harness/actions/runs/29927207258) |
+
+Recorded write-service acceptance evidence (2026-07-22):
+
+| Gate | Evidence |
+| --- | --- |
+| Toolchain | Node `22.15.0`; npm `11.16.0`; exact package tarballs above plus `@chauhaidang/xq-harness-common-kit@0.1.0` SHA-1 `3d3817768521562add1d00e7e7adf64cce38ac68` |
+| Archived contract | Archive SHA-256 `1994859408762f3e188dc466fb31ee05b1c8b63cf0a4f1a88a8e849a97e26a38`; 20 OpenAPI operations |
+| Service gates | Build, lint, generated CommonJS/ESM client build, and 9 unit suites / 153 tests passed |
+| Immutable local images | `xq-fitness-db:acceptance-199485940876` image ID `sha256:6e0409b20581da97dcdff4a1e44d92b3fa1b89b7ed02b8fd03e93ac997dd40b7`; `xq-fitness-write-service:acceptance-199485940876` image ID `sha256:80754c0a17f9e749056555bb13031eda99dc0dfe2f5211c07b139cfdca7743df` |
+| Component matrix | Exact `xq-infra@0.1.2` generated and started the matrix with `--no-pull`; all 9 suites / 44 tests passed; teardown left no running containers |
 
 The first three may proceed in parallel. The acceptance-matrix prerequisite
 starts only after both package releases are installable. Curated source import,
