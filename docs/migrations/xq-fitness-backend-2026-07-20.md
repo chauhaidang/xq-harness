@@ -1,8 +1,7 @@
 # XQ Fitness backend monorepo onboarding specification
 
 Status: approved and planning-unblocked; replacement snapshot acceptance #61
-passed; curated module import #46 is verified in the working tree and awaits a
-user-authorized commit
+passed; curated module import #46 landed in commit `c39cf5d`
 
 Source map: [Map the XQ Fitness backend monorepo onboarding](https://github.com/chauhaidang/xq-harness/issues/32)
 
@@ -166,7 +165,7 @@ deprecation is owned by #58 through 2026-10-20.
 | Fitness database source | [`chauhaidang/xq-fitness-db@450f6b6157f622dc3f6a98fdaa52953ce4c88ae3`](https://github.com/chauhaidang/xq-fitness-db/commit/450f6b6157f622dc3f6a98fdaa52953ce4c88ae3) |
 | Records database source | [`chauhaidang/xq-records@d9acc0fa21b16968c6cdf196c5e1ad63ff9a809b`](https://github.com/chauhaidang/xq-records/commit/d9acc0fa21b16968c6cdf196c5e1ad63ff9a809b) |
 | Deterministic assembly | 208 entries; fixed `2026-07-20T23:59:59Z` metadata; normalized owners; sorted paths; gzip without timestamp; repeat SHA matched |
-| Monorepo import date and commit | Curated into the working tree on 2026-07-23; commit pending user authorization. See `docs/migrations/evidence/xq-fitness-curated-import-2026-07-23.md`. |
+| Monorepo import date and commit | 2026-07-23, commit `c39cf5d`. See `docs/migrations/evidence/xq-fitness-curated-import-2026-07-23.md`. |
 
 The original approved archive was deleted by the operator and could not be
 recovered. On 2026-07-23 the operator approved replacing it with a deterministic

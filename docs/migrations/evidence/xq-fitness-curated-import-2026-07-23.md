@@ -9,8 +9,9 @@ Source archive: `xq-fitness-backend-source-2026-07-23.tar.gz`
 Source SHA-256:
 `3c5fa62a3c7437aad27e14c227e35b540f5f5b125b05457007e1452047ae76c5`
 
-Import commit: pending a user-authorized commit; this manifest currently binds
-the curated working tree to the approved archive and source commits.
+Import commit: `c39cf5d` (`feat: import XQ Fitness backend modules`). This
+follow-up record binds that immutable import to the approved archive and source
+commits.
 
 ## Imported modules
 
