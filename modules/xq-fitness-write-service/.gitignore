@@ -1,0 +1,23 @@
+.env
+env.neon.local
+node_modules
+.yarn/*
+.npmrc.local
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+.idea
+xq-compose.yml
+nginx-gateway.conf
+
+# Generated API client artifacts
+.tmp/
+generated-clients/
+coverage
+tsr/
+dist/
+.DS_Store
+scripts/

@@ -1,16 +1,24 @@
 # XQ Fitness write-service dependency-audit baseline
 
-Status: **GO after PR #57 merges — approved dependency baseline for curated import**
+Status: **GO — PR #57 merged; approved dependency baseline for curated import**
 
 Issue: [#44, Choose the write-service dependency-audit baseline](https://github.com/chauhaidang/xq-harness/issues/44)
 
-Evidence date: 2026-07-22
+Evidence date: 2026-07-23
 
 This document defines the dependency vulnerability and deprecation gate for the
-archived XQ Fitness write service. The corrected, committed audit candidate now
-has current production and full-development reports from an authorized GitHub
-Actions runner. Issue #44 closes when PR #57 merges the reviewed lock and gate;
-issue #46 must not start before that merge.
+archived XQ Fitness write service. The corrected, committed audit candidate has
+current production and full-development reports from an authorized GitHub
+Actions runner. PR #57 merged the reviewed lock and gate, issue #44 is closed,
+and this prerequisite no longer blocks issue #46.
+
+The original archive was subsequently deleted. Replacement gate #61 rebuilt
+the same approved candidate from pinned write-service commit
+`49ebb1baa58c377b6e8281463db491d077ab086b` and rebound the audit to replacement
+archive SHA-256
+`3c5fa62a3c7437aad27e14c227e35b540f5f5b125b05457007e1452047ae76c5`.
+The sanitized replacement result is retained in
+`docs/migrations/evidence/xq-fitness-replacement-snapshot-2026-07-23.md`.
 
 ## Evidence inspected
 
@@ -42,6 +50,23 @@ repository.
 | Clean trees | Production and full-development `npm ci --ignore-scripts` and `npm ls --all` passed using GitHub Packages for exact internal releases and npm for public packages |
 | Deprecations | Development-only warnings are owned by [#58](https://github.com/chauhaidang/xq-harness/issues/58), target 2026-10-20; no warning has a current advisory or prevents the verified Node 22 build, lint, unit, generated-client, or component gates |
 | Exceptions | None |
+
+### Replacement refresh
+
+On 2026-07-23, Node `22.15.0` and npm `11.16.0` reproduced the committed lock
+SHA-256 `c952d018bba8aa9246037b31f96ef619502faced8b78a61c8e3493d99ed11233`.
+Production and development audits again returned zero findings at every
+severity, and the clean production install/tree passed. Local GitHub Packages
+authentication lacked `read:packages`, so the authorized clean development
+registry install from run 29933182931 remains the registry-provenance evidence;
+the replacement build and component run separately installed exact published
+package tarballs and passed every source-sensitive gate.
+
+That component install surfaced a separate development-only
+`@chauhaidang/xq-harness-test-infra@0.1.2 -> uuid@9.0.1` deprecation. It has no
+current advisory, does not enter the production image, and is now explicitly
+owned by #58 through 2026-10-20. It is distinct from the removed
+`jest-junit@16 -> uuid@8.3.2` advisory path.
 
 The archived manifest contained three deterministic-install concerns. The audit
 candidate resolves them as follows:
@@ -233,8 +258,8 @@ The corrected candidate satisfies the dependency gate:
    verification, and 90-day removal target recorded in #58. They meet none of
    the immediate blocking conditions in the deprecation policy.
 
-**Import-gate decision:** GO when PR #57 merges. The merge makes the reviewed
-candidate lock, zero-undispositioned-finding policy, and evidence contract part
-of `main`, at which point #44 may close and #46 becomes the next frontier.
-Future lock changes must rerun the same production and development gates; this
-decision does not grandfather a later advisory or deprecation.
+**Import-gate decision:** GO. PR #57 made the reviewed candidate lock,
+zero-undispositioned-finding policy, and evidence contract part of `main`; #44
+is closed, and #61 refreshed the source-sensitive evidence against the pinned
+replacement. Future lock changes must rerun the same production and development
+gates; this decision does not grandfather a later advisory or deprecation.

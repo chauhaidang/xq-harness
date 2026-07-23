@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly EXPECTED_ARCHIVE_SHA256="1994859408762f3e188dc466fb31ee05b1c8b63cf0a4f1a88a8e849a97e26a38"
+readonly EXPECTED_ARCHIVE_SHA256="3c5fa62a3c7437aad27e14c227e35b540f5f5b125b05457007e1452047ae76c5"
 readonly EXPECTED_TEST_UTILS_SHA1="32888639ae58798891d47f0ac7adcee7699dc940"
 readonly EXPECTED_TEST_INFRA_SHA1="7eac12c279fa737f35fce643bc8f3f84035fcc92"
 readonly EXPECTED_COMMON_KIT_SHA1="3d3817768521562add1d00e7e7adf64cce38ac68"
@@ -11,7 +11,7 @@ readonly EXPECTED_COMMON_KIT_VERSION="0.1.0"
 
 usage() {
   cat >&2 <<'USAGE'
-usage: run.sh /absolute/path/to/xq-fitness-backend-source-2026-07-20.tar.gz
+usage: run.sh /absolute/path/to/xq-fitness-backend-source-2026-07-23.tar.gz
 
 Required environment:
   TEST_UTILS_TARBALL  @chauhaidang/xq-harness-test-utils@0.1.1 package tarball

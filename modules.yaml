@@ -185,6 +185,45 @@ modules:
       build: npm run build:check
       test: npm run test:unit
 
+  xq-fitness-write-service:
+    path: modules/xq-fitness-write-service
+    language: node
+    test_all: false
+    toolchain:
+      node: ">=22"
+      npm: "11.16.0"
+      docker: optional
+    commands:
+      install: npm run generate:client && npm ci --include=dev
+      build: npm run build
+      test: npm run test:unit -- --runInBand
+
+  xq-fitness-db:
+    path: modules/xq-fitness-db
+    language: node
+    test_all: false
+    toolchain:
+      node: ">=22"
+      npm: "11.16.0"
+      docker: optional
+    commands:
+      install: npm ci --include=dev
+      build: npm exec prisma validate
+      test: npm test
+
+  xq-records:
+    path: modules/xq-records
+    language: node
+    test_all: false
+    toolchain:
+      node: ">=22"
+      npm: "11.16.0"
+      docker: optional
+    commands:
+      install: npm ci --include=dev
+      build: npm exec prisma validate
+      test: npm test
+
   xq-scripts:
     path: modules/xq-scripts
     language: shell

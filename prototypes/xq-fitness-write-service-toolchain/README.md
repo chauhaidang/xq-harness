@@ -28,7 +28,7 @@ TEST_UTILS_TARBALL=/absolute/path/to/chauhaidang-xq-harness-test-utils-0.1.1.tgz
 TEST_INFRA_TARBALL=/absolute/path/to/chauhaidang-xq-harness-test-infra-0.1.2.tgz \
 COMMON_KIT_TARBALL=/absolute/path/to/chauhaidang-xq-harness-common-kit-0.1.0.tgz \
 ./prototypes/xq-fitness-write-service-toolchain/run.sh \
-  /absolute/path/to/xq-fitness-backend-source-2026-07-20.tar.gz
+  /absolute/path/to/xq-fitness-backend-source-2026-07-23.tar.gz
 ```
 
 The runner requires Node 22, npm 11.16.0, and a working Docker daemon. Colima
@@ -55,8 +55,9 @@ JUnit XML. Failure is a STOP; the scratch directory is preserved for diagnosis.
 
 ## Acceptance result
 
-The complete runner passed on 2026-07-22 with Node `22.15.0` and npm
-`11.16.0`:
+The replacement snapshot passed the complete runner on 2026-07-23 with Node
+`22.15.0` and npm `11.16.0`. It was bound to archive SHA-256
+`3c5fa62a3c7437aad27e14c227e35b540f5f5b125b05457007e1452047ae76c5`:
 
 - build, lint, generated CommonJS/ESM client build, and 9 unit suites / 153
   tests passed;
@@ -65,6 +66,13 @@ The complete runner passed on 2026-07-22 with Node `22.15.0` and npm
 - all 9 component suites / 44 tests passed against the disposable database;
 - all 20 OpenAPI `operationId` entries were present; and
 - teardown completed with no running matrix containers.
+
+The resulting database image ID was
+`sha256:b050944a0994068b83f467ac5bd1defa63588a09df68f35b5201e0aad88fe07a`;
+the service image ID was
+`sha256:369958bb50fb09d16737a9d483c3f4d8471e9226d3f80a1b8c423b644ead43dc`.
+The earlier 2026-07-22 pass remains historical evidence bound to the deleted
+archive and is not replacement-snapshot acceptance.
 
 The runner remains the reproducible pre-import acceptance gate. Its service log,
 JUnit XML, package hashes, and image IDs are retained in the reported scratch
