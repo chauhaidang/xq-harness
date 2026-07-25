@@ -14,15 +14,17 @@ jobs:
     permissions:
       contents: read
     env:
-      XQ_FITNESS_DATABASE_URL: ${{ secrets.XQ_FITNESS_DATABASE_URL }}
+      # Prefer monorepo names; fall back to standalone CI names already in use.
+      XQ_FITNESS_DATABASE_URL: ${{ secrets.XQ_FITNESS_DATABASE_URL || secrets.NEON_DATABASE_URL || secrets.NEON_DATASOURCE_URL }}
       XQ_RECORDS_DATABASE_URL: ${{ secrets.XQ_RECORDS_DATABASE_URL }}
-      XQ_FITNESS_NEON_API_KEY: ${{ secrets.XQ_FITNESS_NEON_API_KEY }}
-      XQ_RECORDS_NEON_API_KEY: ${{ secrets.XQ_RECORDS_NEON_API_KEY }}
-      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DO_READ_TOKEN }}
-      XQ_FITNESS_NEON_PROJECT_ID: ${{ vars.XQ_FITNESS_NEON_PROJECT_ID }}
-      XQ_RECORDS_NEON_PROJECT_ID: ${{ vars.XQ_RECORDS_NEON_PROJECT_ID }}
-      DO_APP_ID: ${{ vars.DO_APP_ID }}
-      DO_SERVICE_NAME: ${{ vars.DO_SERVICE_NAME }}
+      XQ_FITNESS_NEON_API_KEY: ${{ secrets.XQ_FITNESS_NEON_API_KEY || secrets.NEON_API_KEY }}
+      XQ_RECORDS_NEON_API_KEY: ${{ secrets.XQ_RECORDS_NEON_API_KEY || secrets.NEON_API_KEY || secrets.XQ_FITNESS_NEON_API_KEY }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DO_READ_TOKEN || secrets.DO_TOKEN }}
+      XQ_FITNESS_NEON_PROJECT_ID: ${{ vars.XQ_FITNESS_NEON_PROJECT_ID || vars.NEON_PROJECT_ID }}
+      XQ_RECORDS_NEON_PROJECT_ID: ${{ vars.XQ_RECORDS_NEON_PROJECT_ID || vars.NEON_RECORDS_PROJECT_ID }}
+      # From standalone xq-fitness-write CI defaults / archived .do/app.yaml
+      DO_APP_ID: ${{ vars.DO_APP_ID || '7960143e-c80f-496d-9992-f24430bb77ff' }}
+      DO_SERVICE_NAME: ${{ vars.DO_SERVICE_NAME || 'write-service' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -30,26 +32,36 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client jq
-          doctl version || true
 
       - uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.DO_READ_TOKEN }}
+          token: ${{ secrets.DO_READ_TOKEN || secrets.DO_TOKEN }}
 
       - name: Verify sanitization policy
         run: node --test scripts/test-xq-fitness-preflight-sanitization.mjs
 
       - name: Validate required protected inputs
         run: |
-          test -n "$XQ_FITNESS_DATABASE_URL"
-          test -n "$XQ_RECORDS_DATABASE_URL"
-          test -n "$XQ_FITNESS_NEON_API_KEY"
-          test -n "$XQ_RECORDS_NEON_API_KEY"
-          test -n "$DIGITALOCEAN_ACCESS_TOKEN"
-          test -n "$XQ_FITNESS_NEON_PROJECT_ID"
-          test -n "$XQ_RECORDS_NEON_PROJECT_ID"
-          test -n "$DO_APP_ID"
-          test -n "$DO_SERVICE_NAME"
+          missing=0
+          for name in \
+            XQ_FITNESS_DATABASE_URL \
+            XQ_RECORDS_DATABASE_URL \
+            XQ_FITNESS_NEON_API_KEY \
+            XQ_RECORDS_NEON_API_KEY \
+            DIGITALOCEAN_ACCESS_TOKEN \
+            XQ_FITNESS_NEON_PROJECT_ID \
+            XQ_RECORDS_NEON_PROJECT_ID \
+            DO_APP_ID \
+            DO_SERVICE_NAME
+          do
+            if [ -z "${!name}" ]; then
+              echo "missing required input: $name"
+              missing=1
+            else
+              echo "present: $name"
+            fi
+          done
+          exit "$missing"
 
       - name: Capture read-only production evidence
         run: scripts/xq-fitness-production-preflight.sh "$RUNNER_TEMP/xq-fitness-production-preflight"

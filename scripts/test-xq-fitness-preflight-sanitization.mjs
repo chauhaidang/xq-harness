@@ -273,4 +273,7 @@ test('seam 3: workflow is manual, read-only, and short-lived', () => {
   assert.match(workflow, /postgresql-client/);
   assert.match(workflow, /git diff --check/);
   assert.match(workflow, /xq-fitness-production-preflight-\$\{capture_date\}\.md/);
+  assert.match(workflow, /DO_READ_TOKEN \|\| secrets\.DO_TOKEN/);
+  assert.match(workflow, /7960143e-c80f-496d-9992-f24430bb77ff/);
+  assert.match(workflow, /write-service/);
 });
