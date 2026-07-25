@@ -1,0 +1,86 @@
+name: XQ Fitness production preflight
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: xq-fitness-production-preflight
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    env:
+      XQ_FITNESS_DATABASE_URL: ${{ secrets.XQ_FITNESS_DATABASE_URL }}
+      XQ_RECORDS_DATABASE_URL: ${{ secrets.XQ_RECORDS_DATABASE_URL }}
+      XQ_FITNESS_NEON_API_KEY: ${{ secrets.XQ_FITNESS_NEON_API_KEY }}
+      XQ_RECORDS_NEON_API_KEY: ${{ secrets.XQ_RECORDS_NEON_API_KEY }}
+      DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DO_READ_TOKEN }}
+      XQ_FITNESS_NEON_PROJECT_ID: ${{ vars.XQ_FITNESS_NEON_PROJECT_ID }}
+      XQ_RECORDS_NEON_PROJECT_ID: ${{ vars.XQ_RECORDS_NEON_PROJECT_ID }}
+      DO_APP_ID: ${{ vars.DO_APP_ID }}
+      DO_SERVICE_NAME: ${{ vars.DO_SERVICE_NAME }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install read-only capture tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client jq
+          doctl version || true
+
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_READ_TOKEN }}
+
+      - name: Verify sanitization policy
+        run: node --test scripts/test-xq-fitness-preflight-sanitization.mjs
+
+      - name: Validate required protected inputs
+        run: |
+          test -n "$XQ_FITNESS_DATABASE_URL"
+          test -n "$XQ_RECORDS_DATABASE_URL"
+          test -n "$XQ_FITNESS_NEON_API_KEY"
+          test -n "$XQ_RECORDS_NEON_API_KEY"
+          test -n "$DIGITALOCEAN_ACCESS_TOKEN"
+          test -n "$XQ_FITNESS_NEON_PROJECT_ID"
+          test -n "$XQ_RECORDS_NEON_PROJECT_ID"
+          test -n "$DO_APP_ID"
+          test -n "$DO_SERVICE_NAME"
+
+      - name: Capture read-only production evidence
+        run: scripts/xq-fitness-production-preflight.sh "$RUNNER_TEMP/xq-fitness-production-preflight"
+
+      - name: Enforce sanitized evidence contract
+        if: always()
+        run: node scripts/validate-xq-fitness-preflight-evidence.mjs "$RUNNER_TEMP/xq-fitness-production-preflight"
+
+      - name: Build durable commit-ready manifest
+        run: |
+          mkdir -p "$RUNNER_TEMP/xq-fitness-production-preflight-durable"
+          capture_date="$(date -u +%Y-%m-%d)"
+          node scripts/build-xq-fitness-preflight-manifest.mjs \
+            "$RUNNER_TEMP/xq-fitness-production-preflight" \
+            "$RUNNER_TEMP/xq-fitness-production-preflight-durable/xq-fitness-production-preflight-${capture_date}.md"
+          node scripts/validate-xq-fitness-preflight-evidence.mjs "$RUNNER_TEMP/xq-fitness-production-preflight"
+          git diff --check
+
+      - name: Upload protected short-lived evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xq-fitness-production-preflight-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/xq-fitness-production-preflight/**
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Upload durable manifest artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: xq-fitness-production-preflight-manifest-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/xq-fitness-production-preflight-durable/xq-fitness-production-preflight-*.md
+          if-no-files-found: error
+          retention-days: 1

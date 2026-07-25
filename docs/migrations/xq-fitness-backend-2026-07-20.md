@@ -540,6 +540,7 @@ This table names secrets but never their values:
 
 | Location/owner | Secret or variable | Permitted use |
 | --- | --- | --- |
+| Manual workflow `xq-fitness-production-preflight.yml` (repo secrets/vars; no GitHub environment) | Secrets `XQ_FITNESS_DATABASE_URL`, `XQ_RECORDS_DATABASE_URL`, `XQ_FITNESS_NEON_API_KEY`, `XQ_RECORDS_NEON_API_KEY`, `DO_READ_TOKEN`; vars `XQ_FITNESS_NEON_PROJECT_ID`, `XQ_RECORDS_NEON_PROJECT_ID`, `DO_APP_ID`, `DO_SERVICE_NAME` | Read-only preflight capture for #60 only. Roles must be limited to catalog/metadata reads, counts, and documented invariant `SELECT`s. No DDL, DML, role admin, recovery, app mutation, or environment configuration. |
 | GitHub environment `xq-fitness-write-service-production` | Secret `DO_TOKEN`; non-secret immutable app ID, app name, and service name | Read, validate, and patch only the live DigitalOcean app component. |
 | Write-service GitHub workflow | Scoped `GITHUB_TOKEN` | Publish the release image to GHCR when repository-token permissions suffice. No general package PAT. |
 | DigitalOcean encrypted app settings | GHCR read-only credential; `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_SSL` | Pull the image and connect the runtime service. These values never transit GitHub app-spec rendering. |
@@ -549,10 +550,14 @@ This table names secrets but never their values:
 | Separately approved administration | Owner/admin, role rotation, and production seed credentials | Exceptional administration only; excluded from normal CD. |
 | Future consumer-owned environment | One consumer-specific restricted records role and secret | Approved runtime access after the consumer contract and permission tests pass. |
 
-CI receives no DigitalOcean or production Neon secrets. Mask connection strings,
-passwords, tokens, and registry credentials; never place them in outputs,
-rendered specs, reports, caches, or artifacts. Registry authentication comes
-from user configuration or scoped workflow tokens, not imported `.npmrc` files.
+Module CI and ordinary PR/push workflows receive no DigitalOcean or production
+Neon secrets. The manual read-only preflight workflow is the sole approved
+exception and still must not place connection strings, passwords, tokens, or
+unsanitized provider responses in committed files, issue comments, or durable
+manifests. Mask connection strings, passwords, tokens, and registry
+credentials; never place them in outputs, rendered specs, reports, caches, or
+artifacts. Registry authentication comes from user configuration or scoped
+workflow tokens, not imported `.npmrc` files.
 
 ## Compatibility, recovery, and failure handling
 
@@ -778,10 +783,15 @@ human-approved response to destructive corruption.
   tickets.
 - Development-only deprecations remain owned by #58, which is planning-ready
   after #49 and must complete by 2026-10-20 without changing runtime behavior.
-- The actual monorepo import date/commit cannot be recorded until slice 1 lands.
-- Live Neon schemas, ledgers, roles, counts, restore windows, and the live
-  DigitalOcean app spec have not been captured. Read-only preflight #60 is the
-  explicit evidence gate; slice 6 refreshes that evidence before mutation.
+- Slice 1 curated import landed in `c39cf5d`; see
+  `docs/migrations/evidence/xq-fitness-curated-import-2026-07-23.md`.
+- Read-only preflight tooling for #60 is in-repo
+  (`scripts/xq-fitness-production-preflight.sh`, evidence validator, durable
+  manifest builder, and `xq-fitness-production-preflight.yml`). A prior live
+  attempt hit STOP: the active DigitalOcean deployment exposed no component or
+  immutable digest, and read-only Neon URLs were unavailable. No durable
+  production manifest is committed until a GO capture lands; slice 6 refreshes
+  that evidence before mutation.
 - A future records consumer, v2 API, `/ready` endpoint, authentication change,
   production purge, or artifact-retention cleanup requires its own approved
   design.
