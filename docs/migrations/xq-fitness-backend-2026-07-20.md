@@ -1,7 +1,10 @@
 # XQ Fitness backend monorepo onboarding specification
 
-Status: approved and planning-unblocked; replacement snapshot acceptance #61
-passed; curated module import #46 landed in commit `c39cf5d`
+Status: **cancelled** on 2026-07-25. Wayfinder map #32 and remaining
+execution tickets (#47–#55, #58, #60) were closed without cutover. Historical
+gates (#61, #46) and any already-landed import/preflight tooling remain on
+`main` unless separately reverted. Do not treat this document as an active
+implementation contract.
 
 Source map: [Map the XQ Fitness backend monorepo onboarding](https://github.com/chauhaidang/xq-harness/issues/32)
 
