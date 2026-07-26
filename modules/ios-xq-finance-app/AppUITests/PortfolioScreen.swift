@@ -8,16 +8,38 @@ struct PortfolioScreen: ScreenObject {
         application.descendants(matching: .any)[XQAccessibilityIdentifier.emptyPortfolio.rawValue]
     }
 
+    var assetCard: XCUIElement {
+        application.descendants(matching: .any)
+            .matching(identifier: XQAccessibilityIdentifier.assetCard.rawValue)
+            .firstMatch
+    }
+
     var assetSymbol: XCUIElement {
-        application.descendants(matching: .any)[XQAccessibilityIdentifier.assetSymbol.rawValue]
+        application.descendants(matching: .any)
+            .matching(identifier: XQAccessibilityIdentifier.assetSymbol.rawValue)
+            .firstMatch
     }
 
     var assetCurrentValue: XCUIElement {
-        application.descendants(matching: .any)[XQAccessibilityIdentifier.assetCurrentValue.rawValue]
+        application.descendants(matching: .any)
+            .matching(identifier: XQAccessibilityIdentifier.assetCurrentValue.rawValue)
+            .firstMatch
     }
 
     var transactionRow: XCUIElement {
-        application.descendants(matching: .any)[XQAccessibilityIdentifier.transactionRow.rawValue]
+        application.descendants(matching: .any)
+            .matching(identifier: XQAccessibilityIdentifier.transactionRow.rawValue)
+            .firstMatch
+    }
+
+    var portfolioPosition: XCUIElement {
+        application.descendants(matching: .any)
+            .matching(identifier: XQAccessibilityIdentifier.portfolioPosition.rawValue)
+            .firstMatch
+    }
+
+    var exchangeRateEditButton: XCUIElement {
+        application.buttons[XQAccessibilityIdentifier.exchangeRateEditButton.rawValue]
     }
 
     func openAddAsset() -> AddAssetScreen {
@@ -33,6 +55,11 @@ struct PortfolioScreen: ScreenObject {
     func openBuyLotEditor() -> BuyLotScreen {
         application.buttons[XQAccessibilityIdentifier.addBuyLotButton.rawValue].tapWhenHittable()
         return BuyLotScreen(application: application)
+    }
+
+    func openExchangeRateEditor() -> ExchangeRateScreen {
+        exchangeRateEditButton.tapWhenHittable()
+        return ExchangeRateScreen(application: application)
     }
 
     func switchToVND() {
@@ -57,10 +84,34 @@ struct PortfolioScreen: ScreenObject {
         toggle.coordinate(withNormalizedOffset: CGVector(dx: normalizedX, dy: 0.5)).tap()
     }
 
-    func deductFirstTransaction() {
+    func deductFirstTransaction(confirm: Bool = true) {
         application.buttons[XQAccessibilityIdentifier.deductTransactionButton.rawValue].firstMatch.tapWhenHittable()
-        let confirmationButtons = application.sheets.buttons
-            .matching(identifier: XQAccessibilityIdentifier.confirmDeductionButton.rawValue)
-        confirmationButtons.element(boundBy: 1).tapWhenHittable()
+        if confirm {
+            confirmDeductionButton().tapWhenHittable()
+        } else {
+            cancelButtonInPresentedDialog().tapWhenHittable()
+        }
+    }
+
+    func swipeToNextAsset() {
+        assetCard.requireExistence().swipeLeft()
+    }
+
+    private func confirmDeductionButton() -> XCUIElement {
+        let identifier = XQAccessibilityIdentifier.confirmDeductionButton.rawValue
+        let alertButton = application.alerts.buttons[identifier].firstMatch
+        if alertButton.waitForExistence(timeout: 2) {
+            return alertButton
+        }
+        return application.alerts.buttons["Confirm Deduction"].firstMatch
+    }
+
+    private func cancelButtonInPresentedDialog() -> XCUIElement {
+        let identifier = XQAccessibilityIdentifier.cancelDeductionButton.rawValue
+        let alertButton = application.alerts.buttons[identifier].firstMatch
+        if alertButton.waitForExistence(timeout: 2) {
+            return alertButton
+        }
+        return application.alerts.buttons["Cancel"].firstMatch
     }
 }

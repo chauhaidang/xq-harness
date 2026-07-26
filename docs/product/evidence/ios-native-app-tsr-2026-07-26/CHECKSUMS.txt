@@ -1,0 +1,19 @@
+# Evidence integrity
+
+Generated: Sun Jul 26 16:01:56 +07 2026
+
+8102db60c6f3a5d686bc2030c1ff1dd1c33434a7a3e63a5d6554919833f9a2e5  docs/product/evidence/ios-native-app-tsr-2026-07-26/TSR.md
+5d1476e2c9269c1121bdf562b61309f0f9c8b75010c095c4c5fbfcfa22aefb4c  docs/product/evidence/ios-native-app-tsr-2026-07-26/finance-ui-summary.json
+a72f5de1debb2d185b62970b17ad90f6e8d4e8a9e0409e7f282073b2a9371bdf  docs/product/evidence/ios-native-app-tsr-2026-07-26/fitness-ui-summary.json
+ccdb34bc08082907a0df96455df1b22aa8128d19abbba2ae353596a15dc8db68  docs/product/evidence/ios-native-app-tsr-2026-07-26/finance-unit-summary.txt
+997761b609f8f30307fde36147969bce527abfe0046c966d1888dfef18e78df7  docs/product/evidence/ios-native-app-tsr-2026-07-26/fitness-unit-summary.txt
+1cd48b4379897fbfc987c30bb7b2373e36cac561ecdceef585a2652d78e82b1b  docs/product/evidence/ios-native-app-tsr-2026-07-26/finance-ui-cases.txt
+c6d6e155431a72ecec5a70bd35db4a2756940b27b2de5ba7e79887781a47d378  docs/product/evidence/ios-native-app-tsr-2026-07-26/fitness-ui-cases.txt
+f78c8e652fb56c02af38112e039091885821cf74497eeeb9b7ecfaea79fd5a63  docs/product/evidence/ios-native-app-tsr-2026-07-26/host-environment.txt
+7a990ece7f88edc349eab4e91d350f098268cf67402a411a4608807163845a04  docs/product/evidence/ios-native-app-tsr-2026-07-26/finance-ui-xcresult.path
+497f070005d0e7148b2c8667eb20847be540391028353bb19462c4d0e5031a0c  docs/product/evidence/ios-native-app-tsr-2026-07-26/fitness-ui-xcresult.path
+
+## XCResult bundles (local, not checked in)
+- present (13M): /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-finance-app/build/ui-test-results/finance-ui-tests-20260726-153712.xcresult
+- present (4.6M): /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-fitness-app/build/ui-test-results/fitness-ui-tests-20260726-154756.xcresult
+- present (248K): /Users/automation2/Library/Developer/Xcode/DerivedData/ios-xq-finance-app-egtebmmbtfasxzhlfcgmydyxobvs/Logs/Test/Test-ios-xq-finance-app-2026.07.26_15-34-45-+0700.xcresult

@@ -4,8 +4,20 @@ import XCTest
 struct PriceEditorScreen: ScreenObject {
     let application: XCUIApplication
 
+    var priceField: XCUIElement {
+        application.textFields[XQAccessibilityIdentifier.currentPriceField.rawValue]
+    }
+
+    var saveButton: XCUIElement {
+        application.buttons[XQAccessibilityIdentifier.priceSaveButton.rawValue]
+    }
+
     func save(price: String) {
-        application.textFields[XQAccessibilityIdentifier.currentPriceField.rawValue].replaceText(with: price)
-        application.buttons[XQAccessibilityIdentifier.priceSaveButton.rawValue].tapWhenHittable()
+        priceField.replaceText(with: price)
+        saveButton.tapWhenHittable()
+    }
+
+    func cancel() {
+        application.buttons["Cancel"].tapWhenHittable()
     }
 }

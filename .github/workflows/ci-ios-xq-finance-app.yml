@@ -1,20 +1,20 @@
-name: CI ios-xq-fitness-app
+name: CI ios-xq-finance-app
 
 on:
   pull_request:
     paths: &paths
-      - modules/ios-xq-fitness-app/**
+      - modules/ios-xq-finance-app/**
       - docs/product/ios-native-app-test-strategy.md
       - modules.yaml
       - scripts/module
       - scripts/validate-module-versions.py
-      - .github/workflows/ci-ios-xq-fitness-app.yml
+      - .github/workflows/ci-ios-xq-finance-app.yml
   push:
     branches: [main]
     paths: *paths
 
 concurrency:
-  group: ci-ios-xq-fitness-app-${{ github.ref }}
+  group: ci-ios-xq-finance-app-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -31,4 +31,4 @@ jobs:
         run: brew install xcodegen yq
 
       - name: Build and unit test
-        run: ./scripts/module ci ios-xq-fitness-app
+        run: ./scripts/module ci ios-xq-finance-app

@@ -1,0 +1,53 @@
+validated 1 module release definition(s)
+==> ios-xq-fitness-app: test
+[0/1] Planning build
+Building for debugging...
+[0/2] Write swift-version--58304C5D6DBC2206.txt
+Build complete! (0.28s)
+Test Suite 'All tests' started at 2026-07-26 15:37:03.522.
+Test Suite 'FitnessCorePackageTests.xctest' started at 2026-07-26 15:37:03.528.
+Test Suite 'FitnessStoreTests' started at 2026-07-26 15:37:03.528.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testBlankRoutineNotesAreStoredAsNil]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testBlankRoutineNotesAreStoredAsNil]' passed (0.004 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testCreateRoutineRejectsBlankNameWithoutMutatingOrPersisting]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testCreateRoutineRejectsBlankNameWithoutMutatingOrPersisting]' passed (0.003 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testCreateRoutineTrimsInputAndPersistsTheCandidateSnapshot]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testCreateRoutineTrimsInputAndPersistsTheCandidateSnapshot]' passed (0.000 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testCreatingThirdSnapshotRetainsOnlyNewestTwoCaptures]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testCreatingThirdSnapshotRetainsOnlyNewestTwoCaptures]' passed (0.001 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testEveryRoutineOwnsExactlySevenStableOrderedDays]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testEveryRoutineOwnsExactlySevenStableOrderedDays]' passed (0.000 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testExerciseCommandsAddUpdateAndDeleteWithinOneDay]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testExerciseCommandsAddUpdateAndDeleteWithinOneDay]' passed (0.001 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testFailedSaveDoesNotPublishPartiallyAppliedState]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testFailedSaveDoesNotPublishPartiallyAppliedState]' passed (0.000 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testFirstLaunchStartsWithAnEmptyVersionedSnapshot]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testFirstLaunchStartsWithAnEmptyVersionedSnapshot]' passed (0.000 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testFuturePrimarySchemaIsNotReplacedByOlderRecovery]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testFuturePrimarySchemaIsNotReplacedByOlderRecovery]' passed (0.005 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testInvalidExerciseDoesNotMutateOrPersistCandidate]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testInvalidExerciseDoesNotMutateOrPersistCandidate]' passed (0.000 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testJSONPersistenceRoundTripsAndRecoversFromDamagedPrimaryFile]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testJSONPersistenceRoundTripsAndRecoversFromDamagedPrimaryFile]' passed (0.005 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testLegacySchemaMigratesToSevenDaysAndCurrentVersion]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testLegacySchemaMigratesToSevenDaysAndCurrentVersion]' passed (0.002 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testProductionStorageStartsEmptyAndSeparatesUITestNamespace]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testProductionStorageStartsEmptyAndSeparatesUITestNamespace]' passed (0.001 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testRecoveryWriteFailureFailsSaveAndRollsBackPrimary]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testRecoveryWriteFailureFailsSaveAndRollsBackPrimary]' passed (0.003 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testSnapshotsAreImmutableAggregateDuplicateExercisesAndCompareToPrevious]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testSnapshotsAreImmutableAggregateDuplicateExercisesAndCompareToPrevious]' passed (0.001 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testUITestResetRemovesOnlyIsolatedDirectory]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testUITestResetRemovesOnlyIsolatedDirectory]' passed (0.002 seconds).
+Test Case '-[FitnessCoreTests.FitnessStoreTests testUITestResetRequiresIsolationAndResetFlags]' started.
+Test Case '-[FitnessCoreTests.FitnessStoreTests testUITestResetRequiresIsolationAndResetFlags]' passed (0.000 seconds).
+Test Suite 'FitnessStoreTests' passed at 2026-07-26 15:37:03.563.
+	 Executed 17 tests, with 0 failures (0 unexpected) in 0.030 (0.035) seconds
+Test Suite 'FitnessCorePackageTests.xctest' passed at 2026-07-26 15:37:03.563.
+	 Executed 17 tests, with 0 failures (0 unexpected) in 0.030 (0.035) seconds
+Test Suite 'All tests' passed at 2026-07-26 15:37:03.563.
+	 Executed 17 tests, with 0 failures (0 unexpected) in 0.030 (0.041) seconds
+◇ Test run started.
+↳ Testing Library Version: 1085
+↳ Target Platform: x86_64-apple-macos14.0
+✔ Test run with 0 tests in 0 suites passed after 0.001 seconds.

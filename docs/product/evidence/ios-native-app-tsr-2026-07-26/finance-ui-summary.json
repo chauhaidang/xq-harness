@@ -1,0 +1,42 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "x86_64",
+        "deviceId" : "E9F9419A-A059-4B8C-8E45-6E026D5F6452",
+        "deviceName" : "iPhone 16",
+        "modelName" : "iPhone 16",
+        "osBuildNumber" : "23A8464",
+        "osVersion" : "26.0.1",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 0,
+      "passedTests" : 10,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "ios-xq-finance-app-ui-tests · Built with macOS 15.7.7",
+  "expectedFailures" : 0,
+  "failedTests" : 0,
+  "finishTime" : 1785055667.537,
+  "passedTests" : 10,
+  "result" : "Passed",
+  "skippedTests" : 0,
+  "startTime" : 1785055036.252,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+
+  ],
+  "title" : "Test - ios-xq-finance-app-ui-tests",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 10
+}

@@ -1,14 +1,9 @@
 import XCTest
 
 @MainActor
-final class CurrencyToggleHitTargetTests: BaseUITestCase {
-    override func setUp() {
-        super.setUp()
-        continueAfterFailure = false
-    }
-
+final class CurrencyToggleHitTargetTests: FinanceUITestCase {
     func testCurrencyToggleRespondsToEdgeTaps() {
-        let app = launchApplication(TestApplication.descriptor, reset: true)
+        let app = financeApp
         let toggle = app.descendants(matching: .any)[XQAccessibilityIdentifier.displayCurrencyToggle.rawValue]
             .requireExistence()
 

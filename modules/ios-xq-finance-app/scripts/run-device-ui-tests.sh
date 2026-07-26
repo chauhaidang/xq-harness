@@ -7,7 +7,7 @@ REPO_ROOT="$(cd "${ROOT}/../.." && pwd)"
 DEVICE_ID="$("${REPO_ROOT}/scripts/ios-plugged-iphone-udid.sh")"
 TEAM_ID="${DEVELOPMENT_TEAM:-T99X93V7Y2}"
 RESULT_DIRECTORY="${ROOT}/build/ui-test-results"
-RESULT_BUNDLE="${RESULT_DIRECTORY}/fitness-ui-tests-device-$(date +%Y%m%d-%H%M%S).xcresult"
+RESULT_BUNDLE="${RESULT_DIRECTORY}/finance-ui-tests-device-$(date +%Y%m%d-%H%M%S).xcresult"
 
 echo "TECHDEBT: physical-device UI path. Supported path is scripts/run-ui-tests.sh" >&2
 echo "Using plugged-in iPhone: ${DEVICE_ID}"
@@ -17,8 +17,8 @@ mkdir -p "${RESULT_DIRECTORY}"
 
 xcodebuild \
   -quiet \
-  -project "${ROOT}/ios-xq-fitness-app.xcodeproj" \
-  -scheme ios-xq-fitness-app-ui-tests \
+  -project "${ROOT}/ios-xq-finance-app.xcodeproj" \
+  -scheme ios-xq-finance-app-ui-tests \
   -destination "platform=iOS,id=${DEVICE_ID}" \
   "DEVELOPMENT_TEAM=${TEAM_ID}" \
   -allowProvisioningUpdates \

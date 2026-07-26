@@ -30,6 +30,9 @@ modules:
         uv run behave features &&
         uv run behave workshop/features/checkpoints.feature
 
+  # Native iOS apps share the unit + Simulator UI strategy in
+  # docs/product/ios-native-app-test-strategy.md. `test` is unit-only; UI
+  # schemes never run through this registry or CI.
   ios-xq-finance-app:
     path: modules/ios-xq-finance-app
     language: ios

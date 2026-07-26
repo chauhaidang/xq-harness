@@ -1,0 +1,11 @@
+Passed        47s  AddAssetValidationTests.testAddAssetRequiresSymbolAndNameAndCancelKeepsPortfolioEmpty()
+Passed        38s  AddAssetValidationTests.testCanCreateVNDNativeAsset()
+Passed        12s  CurrencyToggleHitTargetTests.testCurrencyToggleRespondsToEdgeTaps()
+Passed        56s  DeductionDialogTests.testCancelingDeductionKeepsTransaction()
+Passed        45s  ExchangeRateTests.testExchangeRateCancelLeavesRateUnchanged()
+Passed     1m 13s  ExchangeRateTests.testExchangeRateUpdatePersistsAndAffectsVNDDisplay()
+Passed        38s  MultiAssetDeckTests.testIsolatedResetClearsPersistedAssets()
+Passed        58s  MultiAssetDeckTests.testMultipleAssetsUpdatePositionAndSwipeAdvancesDeck()
+Passed     1m 24s  PortfolioLifecycleTests.testPortfolioLifecyclePersistsInIsolatedStorage()
+Passed      1m 2s  SheetValidationTests.testPriceAndBuyLotValidationAndCancelLeaveStateUnchanged()
+TOTAL 10 cases

@@ -12,6 +12,7 @@ enum XQAccessibilityIdentifier: String {
     case transactionRow = "xq.transaction.row"
     case deductTransactionButton = "xq.transaction.deduct"
     case confirmDeductionButton = "xq.transaction.confirm-deduction"
+    case cancelDeductionButton = "xq.transaction.cancel-deduction"
     case symbolField = "xq.add-asset.symbol"
     case nameField = "xq.add-asset.name"
     case startingPriceField = "xq.add-asset.starting-price"
@@ -21,4 +22,9 @@ enum XQAccessibilityIdentifier: String {
     case buyLotUnitsField = "xq.buy-lot.units"
     case buyLotPriceField = "xq.buy-lot.price"
     case buyLotSaveButton = "xq.buy-lot.save"
+    case exchangeRateEditButton = "xq.exchange-rate.edit"
+    case exchangeRateField = "xq.exchange-rate.field"
+    case exchangeRateSaveButton = "xq.exchange-rate.save"
+    case portfolioPosition = "xq.portfolio.position"
+    case assetNativeCurrencyPicker = "xq.add-asset.native-currency"
 }

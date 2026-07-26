@@ -1,0 +1,13 @@
+Using iOS Simulator: iPhone 16
+Writing result bundle at path:
+	/Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-fitness-app/build/ui-test-results/fitness-ui-tests-20260726-154756.xcresult
+
+/Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-fitness-app/AppUITests/MultiDayExerciseTests.swift:17:13: warning: variable 'wednesday' was never mutated; consider changing to 'let' constant
+        var wednesday = workspace.openDay(3)
+        ~~~ ^
+        let
+2026-07-26 16:01:15.030 xcodebuild[60658:3862427] [MT] IDETestOperationsObserverDebug: 767.466 elapsed -- Testing started completed.
+2026-07-26 16:01:15.031 xcodebuild[60658:3862427] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-07-26 16:01:15.031 xcodebuild[60658:3862427] [MT] IDETestOperationsObserverDebug: 767.466 sec, +767.466 sec -- end
+Testing started
+UI-test result: /Users/automation2/Documents/workspace/xq-harness/modules/ios-xq-fitness-app/build/ui-test-results/fitness-ui-tests-20260726-154756.xcresult

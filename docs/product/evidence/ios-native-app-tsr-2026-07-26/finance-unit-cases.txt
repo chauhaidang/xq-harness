@@ -1,0 +1,14 @@
+Test Case '-[ios_xq_finance_appTests.AppTests testAddingBuyLotUpdatesUnitsCostAndValuation]' passed (0.004 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testCurrentValueConvertsFromNativeCurrencyUsingExchangeRate]' passed (0.001 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testDecimalCommaInputIsAccepted]' passed (0.002 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testDeductingTransactionRemovesBuyLot]' passed (0.001 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testDefaultSummaryNamesFinanceApp]' passed (0.018 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testLegacySeededPortfolioIsDetectedForMigration]' passed (0.001 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testNonSeededPortfolioDoesNotMatchLegacySeedMigration]' passed (0.001 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testPortfolioSnapshotDecodesLegacyVersionWithoutExchangeRate]' passed (0.010 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testPortfolioSnapshotRoundTripsAssetsAndExchangeRate]' passed (0.012 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testPortfolioSnapshotStartsEmptyWhenNoAssetsAreLoaded]' passed (0.001 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testPortfolioStoreSignatureChangesWhenExchangeRateChanges]' passed (0.002 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testUITestResetRequiresBothIsolationAndResetFlags]' passed (0.001 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testUITestStorageIsIsolatedFromNormalPortfolioStorage]' passed (0.002 seconds).
+Test Case '-[ios_xq_finance_appTests.AppTests testUpdatingCurrentPriceChangesValuationOnly]' passed (0.001 seconds).

@@ -646,17 +646,17 @@ struct ContentView: View {
                 }
             }
         }
-        .confirmationDialog(
+        .alert(
             "Deduct this transaction?",
             isPresented: $isShowingDeductConfirmation,
-            titleVisibility: .visible,
             presenting: selectedTransaction
         ) { selection in
-                Button("Confirm Deduction", role: .destructive) {
-                    deduct(selection)
-                }
-                .accessibilityIdentifier(XQAccessibilityIdentifier.confirmDeductionButton.rawValue)
+            Button("Confirm Deduction", role: .destructive) {
+                deduct(selection)
+            }
+            .accessibilityIdentifier(XQAccessibilityIdentifier.confirmDeductionButton.rawValue)
             Button("Cancel", role: .cancel) {}
+                .accessibilityIdentifier(XQAccessibilityIdentifier.cancelDeductionButton.rawValue)
         } message: { selection in
             Text("This removes \(selection.transaction.units.formattedUnits) units from the asset's buy lots.")
         }
@@ -798,6 +798,7 @@ private struct HeaderView: View {
                 Text(count == 0 ? "0 / 0" : "\(position) / \(count)")
                     .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(XQPalette.muted)
+                    .accessibilityIdentifier(XQAccessibilityIdentifier.portfolioPosition.rawValue)
 
                 Button(action: onAddAsset) {
                     Image(systemName: "plus")
@@ -961,6 +962,8 @@ private struct ExchangeRateEditorView: View {
                 )
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Edit exchange rate")
+            .accessibilityIdentifier(XQAccessibilityIdentifier.exchangeRateEditButton.rawValue)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 13)
@@ -998,6 +1001,7 @@ private struct ExchangeRateSheet: View {
                     TextField("USD to VND", text: $initialText)
                         .keyboardType(.decimalPad)
                         .font(.system(size: 28, weight: .bold, design: .rounded))
+                        .accessibilityIdentifier(XQAccessibilityIdentifier.exchangeRateField.rawValue)
 
                     Text("Set how many VND equal 1 USD.")
                         .font(.footnote)
@@ -1019,6 +1023,7 @@ private struct ExchangeRateSheet: View {
                         dismiss()
                     }
                     .disabled(parsedValue == nil || parsedValue ?? 0 <= 0)
+                    .accessibilityIdentifier(XQAccessibilityIdentifier.exchangeRateSaveButton.rawValue)
                 }
             }
         }
@@ -1494,6 +1499,7 @@ private struct AddAssetSheet: View {
                         }
                     }
                     .pickerStyle(.segmented)
+                    .accessibilityIdentifier(XQAccessibilityIdentifier.assetNativeCurrencyPicker.rawValue)
                 }
 
                 Section("Starting Price") {

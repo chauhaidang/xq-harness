@@ -1,16 +1,10 @@
 import XCTest
 
 @MainActor
-final class PortfolioLifecycleTests: BaseUITestCase {
-    override func setUp() {
-        super.setUp()
-        continueAfterFailure = false
-    }
-
+final class PortfolioLifecycleTests: FinanceUITestCase {
     func testPortfolioLifecyclePersistsInIsolatedStorage() {
-        var app = launchApplication(TestApplication.descriptor, reset: true)
+        var app = financeApp
         var portfolio = PortfolioScreen(application: app)
-        portfolio.emptyPortfolio.requireExistence()
 
         portfolio.openAddAsset().add(symbol: "XQTEST", name: "XQ Test Asset", startingPrice: "100")
         XCTAssertEqual(portfolio.assetSymbol.requireExistence().label, "XQTEST")
@@ -28,7 +22,7 @@ final class PortfolioLifecycleTests: BaseUITestCase {
         portfolio.deductFirstTransaction()
         XCTAssertTrue(portfolio.transactionRow.waitForNonExistence(timeout: 8))
 
-        app = relaunchApplication(TestApplication.descriptor)
+        app = relaunchPreservingTestData()
         portfolio = PortfolioScreen(application: app)
         XCTAssertEqual(portfolio.assetSymbol.requireExistence().label, "XQTEST")
         XCTAssertFalse(portfolio.transactionRow.exists)

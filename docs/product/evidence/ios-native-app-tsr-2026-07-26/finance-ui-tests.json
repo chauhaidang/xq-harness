@@ -1,0 +1,182 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "E9F9419A-A059-4B8C-8E45-6E026D5F6452",
+      "deviceName" : "iPhone 16",
+      "modelName" : "iPhone 16",
+      "osBuildNumber" : "23A8464",
+      "osVersion" : "26.0.1",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "47s",
+                  "durationInSeconds" : 47.51903200149536,
+                  "name" : "testAddAssetRequiresSymbolAndNameAndCancelKeepsPortfolioEmpty()",
+                  "nodeIdentifier" : "AddAssetValidationTests/testAddAssetRequiresSymbolAndNameAndCancelKeepsPortfolioEmpty()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/AddAssetValidationTests/testAddAssetRequiresSymbolAndNameAndCancelKeepsPortfolioEmpty",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "38s",
+                  "durationInSeconds" : 38.78832805156708,
+                  "name" : "testCanCreateVNDNativeAsset()",
+                  "nodeIdentifier" : "AddAssetValidationTests/testCanCreateVNDNativeAsset()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/AddAssetValidationTests/testCanCreateVNDNativeAsset",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "AddAssetValidationTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/AddAssetValidationTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "12s",
+                  "durationInSeconds" : 12.256792068481445,
+                  "name" : "testCurrencyToggleRespondsToEdgeTaps()",
+                  "nodeIdentifier" : "CurrencyToggleHitTargetTests/testCurrencyToggleRespondsToEdgeTaps()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/CurrencyToggleHitTargetTests/testCurrencyToggleRespondsToEdgeTaps",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "CurrencyToggleHitTargetTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/CurrencyToggleHitTargetTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "56s",
+                  "durationInSeconds" : 56.2453418970108,
+                  "name" : "testCancelingDeductionKeepsTransaction()",
+                  "nodeIdentifier" : "DeductionDialogTests/testCancelingDeductionKeepsTransaction()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/DeductionDialogTests/testCancelingDeductionKeepsTransaction",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "DeductionDialogTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/DeductionDialogTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "45s",
+                  "durationInSeconds" : 45.898090958595276,
+                  "name" : "testExchangeRateCancelLeavesRateUnchanged()",
+                  "nodeIdentifier" : "ExchangeRateTests/testExchangeRateCancelLeavesRateUnchanged()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/ExchangeRateTests/testExchangeRateCancelLeavesRateUnchanged",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1m 13s",
+                  "durationInSeconds" : 73.1921329498291,
+                  "name" : "testExchangeRateUpdatePersistsAndAffectsVNDDisplay()",
+                  "nodeIdentifier" : "ExchangeRateTests/testExchangeRateUpdatePersistsAndAffectsVNDDisplay()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/ExchangeRateTests/testExchangeRateUpdatePersistsAndAffectsVNDDisplay",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "ExchangeRateTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/ExchangeRateTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "38s",
+                  "durationInSeconds" : 38.197202920913696,
+                  "name" : "testIsolatedResetClearsPersistedAssets()",
+                  "nodeIdentifier" : "MultiAssetDeckTests/testIsolatedResetClearsPersistedAssets()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/MultiAssetDeckTests/testIsolatedResetClearsPersistedAssets",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "58s",
+                  "durationInSeconds" : 58.16203594207764,
+                  "name" : "testMultipleAssetsUpdatePositionAndSwipeAdvancesDeck()",
+                  "nodeIdentifier" : "MultiAssetDeckTests/testMultipleAssetsUpdatePositionAndSwipeAdvancesDeck()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/MultiAssetDeckTests/testMultipleAssetsUpdatePositionAndSwipeAdvancesDeck",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "MultiAssetDeckTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/MultiAssetDeckTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "1m 24s",
+                  "durationInSeconds" : 84.25410997867584,
+                  "name" : "testPortfolioLifecyclePersistsInIsolatedStorage()",
+                  "nodeIdentifier" : "PortfolioLifecycleTests/testPortfolioLifecyclePersistsInIsolatedStorage()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/PortfolioLifecycleTests/testPortfolioLifecyclePersistsInIsolatedStorage",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "PortfolioLifecycleTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/PortfolioLifecycleTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "1m 2s",
+                  "durationInSeconds" : 62.34130299091339,
+                  "name" : "testPriceAndBuyLotValidationAndCancelLeaveStateUnchanged()",
+                  "nodeIdentifier" : "SheetValidationTests/testPriceAndBuyLotValidationAndCancelLeaveStateUnchanged()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/SheetValidationTests/testPriceAndBuyLotValidationAndCancelLeaveStateUnchanged",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "SheetValidationTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests/SheetValidationTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "ios-xq-finance-appUITests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-finance-app/ios-xq-finance-appUITests",
+          "nodeType" : "UI test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "ios-xq-finance-app-ui-tests",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

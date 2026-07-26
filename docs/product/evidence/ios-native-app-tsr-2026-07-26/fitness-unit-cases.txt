@@ -1,0 +1,17 @@
+FitnessStoreTests testBlankRoutineNotesAreStoredAsNil]' passed (0.004 seconds).
+FitnessStoreTests testCreateRoutineRejectsBlankNameWithoutMutatingOrPersisting]' passed (0.003 seconds).
+FitnessStoreTests testCreateRoutineTrimsInputAndPersistsTheCandidateSnapshot]' passed (0.000 seconds).
+FitnessStoreTests testCreatingThirdSnapshotRetainsOnlyNewestTwoCaptures]' passed (0.001 seconds).
+FitnessStoreTests testEveryRoutineOwnsExactlySevenStableOrderedDays]' passed (0.000 seconds).
+FitnessStoreTests testExerciseCommandsAddUpdateAndDeleteWithinOneDay]' passed (0.001 seconds).
+FitnessStoreTests testFailedSaveDoesNotPublishPartiallyAppliedState]' passed (0.000 seconds).
+FitnessStoreTests testFirstLaunchStartsWithAnEmptyVersionedSnapshot]' passed (0.000 seconds).
+FitnessStoreTests testFuturePrimarySchemaIsNotReplacedByOlderRecovery]' passed (0.005 seconds).
+FitnessStoreTests testInvalidExerciseDoesNotMutateOrPersistCandidate]' passed (0.000 seconds).
+FitnessStoreTests testJSONPersistenceRoundTripsAndRecoversFromDamagedPrimaryFile]' passed (0.005 seconds).
+FitnessStoreTests testLegacySchemaMigratesToSevenDaysAndCurrentVersion]' passed (0.002 seconds).
+FitnessStoreTests testProductionStorageStartsEmptyAndSeparatesUITestNamespace]' passed (0.001 seconds).
+FitnessStoreTests testRecoveryWriteFailureFailsSaveAndRollsBackPrimary]' passed (0.003 seconds).
+FitnessStoreTests testSnapshotsAreImmutableAggregateDuplicateExercisesAndCompareToPrevious]' passed (0.001 seconds).
+FitnessStoreTests testUITestResetRemovesOnlyIsolatedDirectory]' passed (0.002 seconds).
+FitnessStoreTests testUITestResetRequiresIsolationAndResetFlags]' passed (0.000 seconds).

@@ -109,17 +109,32 @@ struct ExerciseEditorScreen: ScreenObject {
         application.textFields[FitnessAccessibility.exerciseWeightField]
     }
 
+    var saveButton: XCUIElement {
+        application.buttons[FitnessAccessibility.exerciseSaveButton]
+    }
+
     func save(name: String? = nil) {
         if let name {
             nameField.replaceText(with: name)
         }
-        application.buttons[FitnessAccessibility.exerciseSaveButton].tapWhenHittable()
+        saveButton.tapWhenHittable()
     }
 
-    func update(reps: String, weight: String) {
-        repsField.replaceText(with: reps)
-        weightField.replaceText(with: weight)
+    func update(reps: String? = nil, weight: String? = nil, sets: String? = nil) {
+        if let sets {
+            setsField.replaceText(with: sets)
+        }
+        if let reps {
+            repsField.replaceText(with: reps)
+        }
+        if let weight {
+            weightField.replaceText(with: weight)
+        }
         save()
+    }
+
+    func cancel() {
+        application.buttons["Cancel"].tapWhenHittable()
     }
 }
 

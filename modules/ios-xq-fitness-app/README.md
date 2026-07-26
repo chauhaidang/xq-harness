@@ -11,12 +11,14 @@ is a frozen behavior reference, not a runtime dependency.
 - `FitnessStore` owns domain mutations and observable snapshot state.
 - `FitnessPersisting` is the storage seam; production uses atomic local JSON
   with recovery and host tests use an in-memory adapter.
-- No API, authentication, analytics, container, or simulator workflow exists
-  in this module.
+- No API, authentication, analytics, or container workflow exists in this
+  module.
 
-## Build and unit test
+## Testing
 
-From the repository root:
+Shared contract: [iOS native app test strategy](../../docs/product/ios-native-app-test-strategy.md).
+
+**Unit (CI):**
 
 ```bash
 ./scripts/module ci ios-xq-fitness-app
@@ -25,24 +27,15 @@ From the repository root:
 CI runs only an unsigned `generic/platform=iOS` build and the host-side
 `FitnessCore` unit suite.
 
-## Physical-device UI tests
-
-UI tests are local-only and require the paired iPhone plus an Apple development
-team supplied through environment variables:
+**UI (Simulator, never CI):**
 
 ```bash
-IOS_DEVICE_ID=<device-udid> \
-DEVELOPMENT_TEAM=<team-id> \
-modules/ios-xq-fitness-app/scripts/run-device-ui-tests.sh
+modules/ios-xq-fitness-app/scripts/run-ui-tests.sh
 ```
 
 Every UI test resets and verifies an isolated `XQFitnessUITests` store before
-its test body. Normal app data is never reset. No device identifier, team ID,
-or signing credential is committed.
-
-See [BUILD_AND_TEST.md](BUILD_AND_TEST.md) for the complete workflow and
-[../../docs/product/ios-xq-fitness-app-test-coverage.md](../../docs/product/ios-xq-fitness-app-test-coverage.md)
-for the component-by-capability coverage matrix.
+its test body. Normal app data is never reset. Physical-device UI/IPA is tech
+debt — see [BUILD_AND_TEST.md](BUILD_AND_TEST.md).
 
 ## Build and deploy an IPA
 

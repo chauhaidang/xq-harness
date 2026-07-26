@@ -1,155 +1,52 @@
 # iOS XQ Finance Build And Test Workflow
 
-This module is a SwiftUI iOS app with an XCTest bundle.
+Shared contract: [iOS native app test strategy](../../docs/product/ios-native-app-test-strategy.md).
+
+This module is a SwiftUI iOS app with **unit** (`AppTests`) and **UI** (`AppUITests`) layers.
 
 ## Module Basics
 
 - Module: `ios-xq-finance-app`
-- Project: `modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj`
-- Scheme: `ios-xq-finance-app`
+- Project: `ios-xq-finance-app.xcodeproj`
+- Unit scheme: `ios-xq-finance-app` → `ios-xq-finance-appTests`
+- UI scheme: `ios-xq-finance-app-ui-tests` → `ios-xq-finance-appUITests`
 - App bundle ID: `com.xq.finance.ios-xq-finance-app`
-- Test bundle ID: `com.xq.finance.ios-xq-finance-appTests`
-- UI-test scheme: `ios-xq-finance-app-ui-tests`
 - Minimum iOS deployment target: `17.0`
 
-## Preferred Device Workflow
-
-This module is validated on a plugged-in physical iPhone. Use the device ID you
-see from `xcrun xctrace list devices` or `xcodebuild -showdestinations`.
-
-List connected devices:
+## Unit (CI + local)
 
 ```bash
-xcrun xctrace list devices
+./scripts/module ci ios-xq-finance-app
 ```
 
-Show destinations known to Xcode:
+Or only the unit suite:
 
 ```bash
-xcodebuild \
-  -project modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj \
-  -scheme ios-xq-finance-app \
-  -showdestinations
+./scripts/module test ios-xq-finance-app
 ```
 
-Run tests on the plugged-in iPhone:
+`modules.yaml` runs `xcodebuild … -scheme ios-xq-finance-app test` on the iPhone 16 Simulator. That scheme includes `AppTests` only — not UI journeys.
+
+## UI (Simulator)
+
+UI tests never run in CI. Supported path is the iPhone 16 Simulator (no signing):
 
 ```bash
-xcodebuild \
-  -project modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj \
-  -scheme ios-xq-finance-app \
-  -destination "platform=iOS,id=<device-id>" \
-  test
+modules/ios-xq-finance-app/scripts/run-ui-tests.sh
 ```
 
-## Physical Device Reinstall Persistence
+Optional: `IOS_SIMULATOR_NAME='iPhone 16 Pro'`.
 
-Run the reinstall persistence smoke test on the verified physical iPhone:
+The suite uses `--xq-ui-testing` and `--xq-ui-testing-reset`. Its Application Support directory and Keychain service are distinct from normal app storage; reset removes only that UI-test namespace. XCResults land under `build/ui-test-results/`.
+
+## Tech debt: physical device
+
+Physical-device UI, reinstall persistence, and IPA flows are deferred. Scripts still exist:
 
 ```bash
+modules/ios-xq-finance-app/scripts/run-device-ui-tests.sh
 modules/ios-xq-finance-app/scripts/verify-device-reinstall-persistence.sh
-```
-
-To target a different plugged-in device:
-
-```bash
-IOS_DEVICE_ID=<device-id> \
-  modules/ios-xq-finance-app/scripts/verify-device-reinstall-persistence.sh
-```
-
-The script builds the Debug app, installs it on the device, launches it with a
-debug-only smoke command that backs up the current portfolio and seeds a
-temporary marker, installs the same app again without uninstalling, then
-launches a verify command that asserts the marker survived and restores the
-original portfolio.
-
-This proves update-style reinstalls with the same bundle ID and signing identity
-do not wipe the app's local persisted portfolio. It intentionally does not
-uninstall the app; uninstalling removes the app container, and recovery then
-depends on the Keychain fallback path.
-
-## Isolated UI Journey
-
-Run the app-owned UI-test suite directly through its Xcode scheme:
-
-```bash
-xcodebuild \
-  -project modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj \
-  -scheme ios-xq-finance-app-ui-tests \
-  -destination "platform=iOS,id=<device-id>" \
-  test
-```
-
-The suite uses `--xq-ui-testing` and `--xq-ui-testing-reset`. Its Application
-Support directory and Keychain service are distinct from normal app storage,
-and reset removes only that UI-test namespace. XCTest retains failure
-screenshots and accessibility hierarchies inside the generated XCResult.
-
-## Signing Requirements
-
-Physical-device builds require both the app and test target to be signed.
-
-Confirmed signing during the last physical-device test run:
-
-- Signing identity: `Apple Development: chauhaidang1@gmail.com (Y57FXM29C3)`
-- Provisioning profile: `iOS Team Provisioning Profile: com.xq.finance.ios-xq-finance-app`
-- Team identifier: `T99X93V7Y2`
-
-If physical-device testing fails before launching tests, check:
-
-- The iPhone is unlocked and trusted by the Mac.
-- Developer Mode is enabled on the iPhone.
-- The app target has a valid development team and provisioning profile.
-- The test target is also signed.
-- The selected destination ID matches the connected device.
-
-Use `-allowProvisioningUpdates` on archive and export commands. This lets
-`xcodebuild` refresh automatic signing assets from the CLI instead of relying on
-Xcode.app to reopen and repair stale local provisioning profile state.
-
-## Known Non-Blocking Warning
-
-Physical-device validation currently emits this warning:
-
-```text
-All interface orientations must be supported unless the app requires full screen.
-```
-
-The warning did not block the physical-device XCTest run.
-
-## Useful commands:
-
-Archive and export the app as an IPA. The script prints the generated IPA path
-to stdout and sends build logs to stderr:
-
-```bash
 ./scripts/archive-ipa.sh
 ```
 
-To fail the archive/export when the embedded provisioning profile does not
-include a target physical device:
-
-```bash
-IOS_DEVICE_ID=00008150-0012058A14F8401C \
-  ./scripts/archive-ipa.sh
-```
-
-```bash
-xcodebuild \
-  -project modules/ios-xq-finance-app/ios-xq-finance-app.xcodeproj \
-  -scheme ios-xq-finance-app \
-  -destination "generic/platform=iOS" \
-  -configuration Release \
-  -archivePath modules/ios-xq-finance-app/build/ios-xq-finance-app.xcarchive \
-  -allowProvisioningUpdates \
-  archive
-```
-
-```bash
-xcodebuild \
-  -exportArchive \
-  -archivePath modules/ios-xq-finance-app/build/ios-xq-finance-app.xcarchive \
-  -exportPath modules/ios-xq-finance-app/build/ipa \
-  -exportOptionsPlist modules/ios-xq-finance-app/exportOptions.plist \
-  -allowProvisioningUpdates
-```
+Those require a trusted iPhone, `DEVELOPMENT_TEAM` (default `T99X93V7Y2`), and valid Apple Development signing. Do not treat them as the UI gate.

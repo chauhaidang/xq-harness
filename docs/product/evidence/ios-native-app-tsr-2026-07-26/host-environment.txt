@@ -1,0 +1,15 @@
+Sun Jul 26 16:01:49 +07 2026
+Darwin automation2.local 24.6.0 Darwin Kernel Version 24.6.0: Tue Apr 21 20:17:54 PDT 2026; root:xnu-11417.140.69.710.16~1/RELEASE_X86_64 x86_64
+Xcode 26.0.1
+Build version 17A400
+ProductName:		macOS
+ProductVersion:		15.7.7
+BuildVersion:		24G720
+== Devices ==
+-- iOS 18.3 --
+-- iOS 26.0 --
+Commands:
+  ./scripts/module test ios-xq-finance-app
+  ./scripts/module test ios-xq-fitness-app
+  modules/ios-xq-finance-app/scripts/run-ui-tests.sh
+  modules/ios-xq-fitness-app/scripts/run-ui-tests.sh

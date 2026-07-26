@@ -1,0 +1,13 @@
+Passed      1m 5s  ExerciseEditorValidationTests.testBlankExerciseNameDisablesSaveAndCancelLeavesDayEmpty()
+Passed     1m 12s  MultiDayExerciseTests.testExercisesCanBeAddedAcrossMultipleTrainingDays()
+Passed        53s  MultiDayExerciseTests.testUpdatingSetsPersistsOnTrainingDay()
+Passed        21s  RoutineEditorValidationTests.testRequiredNameValidationAndCancelLeaveRoutineListEmpty()
+Passed        40s  RoutineLifecycleTests.testRoutineCreationNavigationAndRelaunchPersistence()
+Passed        39s  RoutineListTests.testCreatesRoutineWithoutNotesAndAddsAnotherFromToolbar()
+Passed        27s  RoutineListTests.testResetClearsPreviouslyPersistedUITestRoutines()
+Passed        45s  SevenDaySnapshotTests.testExerciseCanBeDeletedFromTrainingDay()
+Passed        35s  SevenDaySnapshotTests.testExerciseEditorShowsEveryInputLabel()
+Passed     2m 27s  SevenDaySnapshotTests.testSevenDayExerciseDrillDownAndThreeSnapshotComparisonPersists()
+Passed        56s  SnapshotMaintainedProgressTests.testUnchangedExerciseShowsMaintainedProgressOnSecondSnapshot()
+TOTAL 11 cases
+SUMMARY Passed passed 11 failed 0

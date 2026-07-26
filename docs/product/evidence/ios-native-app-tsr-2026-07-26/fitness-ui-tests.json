@@ -1,0 +1,191 @@
+{
+  "devices" : [
+    {
+      "architecture" : "x86_64",
+      "deviceId" : "E9F9419A-A059-4B8C-8E45-6E026D5F6452",
+      "deviceName" : "iPhone 16",
+      "modelName" : "iPhone 16",
+      "osBuildNumber" : "23A8464",
+      "osVersion" : "26.0.1",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "1m 5s",
+                  "durationInSeconds" : 65.28682899475098,
+                  "name" : "testBlankExerciseNameDisablesSaveAndCancelLeavesDayEmpty()",
+                  "nodeIdentifier" : "ExerciseEditorValidationTests/testBlankExerciseNameDisablesSaveAndCancelLeavesDayEmpty()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/ExerciseEditorValidationTests/testBlankExerciseNameDisablesSaveAndCancelLeavesDayEmpty",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "ExerciseEditorValidationTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/ExerciseEditorValidationTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "1m 12s",
+                  "durationInSeconds" : 72.38500499725342,
+                  "name" : "testExercisesCanBeAddedAcrossMultipleTrainingDays()",
+                  "nodeIdentifier" : "MultiDayExerciseTests/testExercisesCanBeAddedAcrossMultipleTrainingDays()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/MultiDayExerciseTests/testExercisesCanBeAddedAcrossMultipleTrainingDays",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "53s",
+                  "durationInSeconds" : 53.64860999584198,
+                  "name" : "testUpdatingSetsPersistsOnTrainingDay()",
+                  "nodeIdentifier" : "MultiDayExerciseTests/testUpdatingSetsPersistsOnTrainingDay()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/MultiDayExerciseTests/testUpdatingSetsPersistsOnTrainingDay",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "MultiDayExerciseTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/MultiDayExerciseTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "21s",
+                  "durationInSeconds" : 21.51026701927185,
+                  "name" : "testRequiredNameValidationAndCancelLeaveRoutineListEmpty()",
+                  "nodeIdentifier" : "RoutineEditorValidationTests/testRequiredNameValidationAndCancelLeaveRoutineListEmpty()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/RoutineEditorValidationTests/testRequiredNameValidationAndCancelLeaveRoutineListEmpty",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "RoutineEditorValidationTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/RoutineEditorValidationTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "40s",
+                  "durationInSeconds" : 40.33520698547363,
+                  "name" : "testRoutineCreationNavigationAndRelaunchPersistence()",
+                  "nodeIdentifier" : "RoutineLifecycleTests/testRoutineCreationNavigationAndRelaunchPersistence()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/RoutineLifecycleTests/testRoutineCreationNavigationAndRelaunchPersistence",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "RoutineLifecycleTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/RoutineLifecycleTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "39s",
+                  "durationInSeconds" : 39.79711103439331,
+                  "name" : "testCreatesRoutineWithoutNotesAndAddsAnotherFromToolbar()",
+                  "nodeIdentifier" : "RoutineListTests/testCreatesRoutineWithoutNotesAndAddsAnotherFromToolbar()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/RoutineListTests/testCreatesRoutineWithoutNotesAndAddsAnotherFromToolbar",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "27s",
+                  "durationInSeconds" : 27.898776054382324,
+                  "name" : "testResetClearsPreviouslyPersistedUITestRoutines()",
+                  "nodeIdentifier" : "RoutineListTests/testResetClearsPreviouslyPersistedUITestRoutines()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/RoutineListTests/testResetClearsPreviouslyPersistedUITestRoutines",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "RoutineListTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/RoutineListTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "45s",
+                  "durationInSeconds" : 45.81239604949951,
+                  "name" : "testExerciseCanBeDeletedFromTrainingDay()",
+                  "nodeIdentifier" : "SevenDaySnapshotTests/testExerciseCanBeDeletedFromTrainingDay()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/SevenDaySnapshotTests/testExerciseCanBeDeletedFromTrainingDay",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "35s",
+                  "durationInSeconds" : 35.833467960357666,
+                  "name" : "testExerciseEditorShowsEveryInputLabel()",
+                  "nodeIdentifier" : "SevenDaySnapshotTests/testExerciseEditorShowsEveryInputLabel()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/SevenDaySnapshotTests/testExerciseEditorShowsEveryInputLabel",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "2m 27s",
+                  "durationInSeconds" : 147.14650094509125,
+                  "name" : "testSevenDayExerciseDrillDownAndThreeSnapshotComparisonPersists()",
+                  "nodeIdentifier" : "SevenDaySnapshotTests/testSevenDayExerciseDrillDownAndThreeSnapshotComparisonPersists()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/SevenDaySnapshotTests/testSevenDayExerciseDrillDownAndThreeSnapshotComparisonPersists",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "SevenDaySnapshotTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/SevenDaySnapshotTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "56s",
+                  "durationInSeconds" : 56.103100061416626,
+                  "name" : "testUnchangedExerciseShowsMaintainedProgressOnSecondSnapshot()",
+                  "nodeIdentifier" : "SnapshotMaintainedProgressTests/testUnchangedExerciseShowsMaintainedProgressOnSecondSnapshot()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/SnapshotMaintainedProgressTests/testUnchangedExerciseShowsMaintainedProgressOnSecondSnapshot",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "SnapshotMaintainedProgressTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests/SnapshotMaintainedProgressTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "ios-xq-fitness-appUITests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/ios-xq-fitness-app/ios-xq-fitness-appUITests",
+          "nodeType" : "UI test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "ios-xq-fitness-app-ui-tests",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}
