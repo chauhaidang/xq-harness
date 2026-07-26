@@ -156,19 +156,6 @@ modules:
       build: npm exec prisma validate
       test: npm test
 
-  xq-records:
-    path: modules/xq-records
-    language: node
-    test_all: false
-    toolchain:
-      node: ">=22"
-      npm: "11.16.0"
-      docker: optional
-    commands:
-      install: npm ci --include=dev
-      build: npm exec prisma validate
-      test: npm test
-
   xq-scripts:
     path: modules/xq-scripts
     language: shell
