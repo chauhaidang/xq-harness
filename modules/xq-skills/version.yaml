@@ -1,11 +1,14 @@
 schema_version: 1
-version: 0.1.0
+version: 0.1.1
 mirrors:
   - path: package.json
     format: package-json
   - path: package-lock.json
     format: package-lock-json
 changelog:
+  - version: 0.1.1
+    changes:
+      - Drop xq-octopus and xq-domain-test-mcp skills after those modules left the monorepo.
   - version: 0.1.0
     changes:
       - Baseline imported into the module release manifest.

@@ -7,7 +7,7 @@ packages ship to GitHub Packages as `@chauhaidang/xq-harness-*`.
 
 Install published packages in your own repo. Start here:
 
-- **[exposure/catalogue.md](CATALOGUE.md)** — package index, APIs, CLIs, and install notes
+- **[CATALOGUE.md](CATALOGUE.md)** — package index, APIs, CLIs, and install notes
 
 Registry scope: `@chauhaidang`. Requires a GitHub token with `read:packages`
 (`NODE_AUTH_TOKEN` in CI).

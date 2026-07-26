@@ -134,18 +134,20 @@ def canonical_version(module: str, config: dict, errors: list[str]) -> Optional[
         if not isinstance(release, dict):
             errors.append(f"{module}: release {index} must be an object")
             continue
-        version = release.get("version")
+        release_version = release.get("version")
         changes = release.get("changes")
-        if not isinstance(version, str) or not SEMVER_RE.fullmatch(version):
-            errors.append(f"{module}: release {index} has invalid semver: {version}")
-        elif version in seen:
-            errors.append(f"{module}: duplicate release version {version}")
+        if not isinstance(release_version, str) or not SEMVER_RE.fullmatch(release_version):
+            errors.append(
+                f"{module}: release {index} has invalid semver: {release_version}"
+            )
+        elif release_version in seen:
+            errors.append(f"{module}: duplicate release version {release_version}")
         else:
-            seen.add(version)
+            seen.add(release_version)
         if not isinstance(changes, list) or not changes or not all(
             isinstance(item, str) and item.strip() for item in changes
         ):
-            errors.append(f"{module}: release {version} must have non-empty changes")
+            errors.append(f"{module}: release {release_version} must have non-empty changes")
     current = changelog[0].get("version") if isinstance(changelog[0], dict) else None
     if current != version:
         errors.append(

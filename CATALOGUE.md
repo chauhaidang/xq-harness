@@ -113,7 +113,7 @@ test environments (up / down / logs / gateway).
 
 ---
 
-### `@chauhaidang/xq-skills` (0.1.0)
+### `@chauhaidang/xq-skills` (0.1.1)
 
 **Purpose:** Single install that ships all XQ agent skill Markdown for consumer
 projects. No runtime code — only `skills/<name>/SKILL.md` files.
