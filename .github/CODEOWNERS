@@ -13,7 +13,6 @@
 /.github/workflows/ci-xq-skills.yml           @chauhaidang/xq-harness-maintainers
 /.github/workflows/cd-xq-skills.yml           @chauhaidang/xq-harness-maintainers
 /.github/workflows/cd-xq-scripts.yml          @chauhaidang/xq-harness-maintainers
-/.github/workflows/ci-xq-workflow-dashboard.yml @chauhaidang/xq-harness-maintainers
 /.github/workflows/ci-xq-fitness-mobile.yml @chauhaidang/xq-harness-maintainers
 /.github/workflows/ci-ios-xq-fitness-app.yml @chauhaidang/xq-harness-maintainers
 
@@ -23,6 +22,5 @@
 /modules/xq-test-infra/                       @chauhaidang/xq-harness-maintainers
 /modules/xq-skills/                            @chauhaidang/xq-harness-maintainers
 /modules/xq-scripts/                            @chauhaidang/xq-harness-maintainers
-/modules/xq-workflow-dashboard/                  @chauhaidang/xq-harness-maintainers
 /modules/xq-fitness-mobile/                      @chauhaidang/xq-harness-maintainers
 /modules/ios-xq-fitness-app/                     @chauhaidang/xq-harness-maintainers

@@ -88,11 +88,9 @@ The script scans these package layouts:
 ```text
 node_modules/@chauhaidang/*/skills/<skill-name>/
 node_modules/@chauhaidang/xq-skills/skills/<skill-name>/
-node_modules/xq-octopus/skills/<skill-name>/
 node_modules/xq-skills/skills/<skill-name>/
 $(npm root --global)/@chauhaidang/*/skills/<skill-name>/   # with --include-global
 $(npm root --global)/@chauhaidang/xq-skills/skills/<skill-name>/   # with --include-global
-$(npm root --global)/xq-octopus/skills/<skill-name>/        # with --include-global
 $(npm root --global)/xq-skills/skills/<skill-name>/         # with --include-global
 ```
 

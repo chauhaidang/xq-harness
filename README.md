@@ -47,14 +47,16 @@ CI/CD is per-module: [docs/github-actions.md](docs/github-actions.md).
 ```text
 modules.yaml              # module registry (paths, versions, commands)
 scripts/module            # install / build / test / ci runner
-exposure/catalogue.md     # consumer-facing package index
+CATALOGUE.md              # consumer-facing package index
 modules/
   xq-common-kit/          # shared TS utilities
   xq-test-utils/          # Jest / DB / Detox helpers
   xq-test-infra/          # xq-infra CLI (Docker test environments)
-  xq-domain-test-mcp/     # Python MCP server for REST/E2E API test calls
+  xq-kraken/              # Python OpenAPI / workshop tooling
+  xq-skills/              # distributable agent skills
   xq-scripts/             # release tarball scripts (not npm)
-  ios-xq-finance-app/     # SwiftUI sample app
+  ios-xq-finance-app/     # SwiftUI finance app
+  ios-xq-fitness-app/     # SwiftUI fitness app
 docs/                     # contributor and package documentation
 ```
 

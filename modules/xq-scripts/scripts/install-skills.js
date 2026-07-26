@@ -84,7 +84,7 @@ function copyDir(src, dest) {
 // ─── Discover skills from installed XQ packages ──────────────────────────────
 
 const SCOPED_XQ_SKILL_PACKAGES = ["@chauhaidang/xq-skills"];
-const UNSCOPED_XQ_PACKAGES = ["xq-octopus", "xq-skills"];
+const UNSCOPED_XQ_PACKAGES = ["xq-skills"];
 
 function getGlobalNodeModules() {
   try {

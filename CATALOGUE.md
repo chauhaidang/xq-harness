@@ -16,8 +16,6 @@ names below for code from this repo.
 | Logger, config, YAML, JUnit→Markdown            | `@chauhaidang/xq-harness-common-kit`      |
 | Postgres tests, wait-for-service, Jest config   | `@chauhaidang/xq-harness-test-utils`      |
 | Docker Compose test environments                | `@chauhaidang/xq-harness-test-infra`      |
-| MCP server for scenario-driven REST API testing | `@chauhaidang/xq-harness-domain-test-mcp` |
-| Direct REST CLI checks                          | `xq-octopus`                              |
 | All bundled agent skills in one install         | `@chauhaidang/xq-skills`                  |
 | OpenAPI sync / report scripts (tarball)         | xq-scripts GitHub Release (not npm)       |
 
@@ -39,7 +37,6 @@ names below for code from this repo.
 npm install @chauhaidang/xq-harness-common-kit
 npm install --save-dev @chauhaidang/xq-harness-test-utils
 npm install --save-dev @chauhaidang/xq-harness-test-infra
-npm install --save-dev @chauhaidang/xq-harness-domain-test-mcp
 npm install --save-dev @chauhaidang/xq-skills
 ```
 
@@ -116,34 +113,6 @@ test environments (up / down / logs / gateway).
 
 ---
 
-### `@chauhaidang/xq-harness-domain-test-mcp` (1.0.2)
-
-**Purpose:** Node 26 stdio MCP server for scenario-driven REST API testing.
-
-**Binary:** `xq-domain-test-mcp`
-
-**MCP config after install**
-
-```json
-{
-  "mcpServers": {
-    "xq-domain-test-mcp": {
-      "command": "xq-domain-test-mcp",
-      "args": []
-    }
-  }
-}
-```
-
-**Bundled skill** (for agent tooling): `xq-domain-test-mcp` under
-`node_modules/@chauhaidang/xq-harness-domain-test-mcp/skills/`. Run
-`xq-scripts/scripts/install-skills.js` after installing dependencies to copy it
-into `.agents/skills/`.
-
-**Docs:** [modules/xq-domain-test-mcp/README.md](modules/xq-domain-test-mcp/README.md)
-
----
-
 ### `@chauhaidang/xq-skills` (0.1.0)
 
 **Purpose:** Single install that ships all XQ agent skill Markdown for consumer
@@ -156,8 +125,7 @@ npm install --save-dev @chauhaidang/xq-skills
 node path/to/xq-scripts/scripts/install-skills.js
 ```
 
-**Bundled skills:** `e2e-app`, `e2e-config`, `e2e-screen`,
-`xq-domain-test-mcp`, `xq-octopus`
+**Bundled skills:** `e2e-app`, `e2e-config`, `e2e-screen`, `xq-kraken`
 
 **Docs:** [modules/xq-skills/README.md](modules/xq-skills/README.md)
 
@@ -169,8 +137,6 @@ node path/to/xq-scripts/scripts/install-skills.js
 @chauhaidang/xq-harness-common-kit
   ├── @chauhaidang/xq-harness-test-utils
   └── @chauhaidang/xq-harness-test-infra
-
-@chauhaidang/xq-harness-domain-test-mcp  (no internal xq-harness deps)
 
 @chauhaidang/xq-skills                     (no internal xq-harness deps)
   └── skills only — central agent skill bundle
@@ -203,16 +169,14 @@ installing npm packages, optionally run `install-skills.js` from the xq-scripts
 tarball to copy skills into your project's `.agents/skills/`.
 
 For globally installed tools, run it with `--include-global` so global
-`@chauhaidang/*/skills/` and `xq-octopus/skills/` directories are scanned too.
+`@chauhaidang/*/skills/` directories are scanned too.
 
 Install `@chauhaidang/xq-skills` to get every skill below in one package.
 
-| Package                      | Skills                                |
-| ---------------------------- | ------------------------------------- |
-| `@chauhaidang/xq-skills`     | all skills in this table              |
-| `xq-octopus`                 | `xq-octopus`                          |
-| `xq-harness-test-utils`      | `e2e-app`, `e2e-config`, `e2e-screen` |
-| `xq-harness-domain-test-mcp` | `xq-domain-test-mcp`                  |
+| Package                  | Skills                                |
+| ------------------------ | ------------------------------------- |
+| `@chauhaidang/xq-skills` | all skills in this table              |
+| `xq-harness-test-utils`  | `e2e-app`, `e2e-config`, `e2e-screen` |
 
 ---
 

@@ -1,19 +1,6 @@
 version: 1
 
 modules:
-  xq-domain-test-mcp:
-    path: modules/xq-domain-test-mcp
-    language: python
-    test_all: false
-    toolchain:
-      python: "3.12"
-      uv: required
-      basedpyright: required
-    commands:
-      install: uv sync --locked
-      build: SOURCE_DATE_EPOCH=0 uv run basedpyright && uv build
-      test: uv run pytest
-
   xq-kraken:
     path: modules/xq-kraken
     language: python
@@ -71,27 +58,6 @@ modules:
         build
       test: swift test --package-path FitnessCore
 
-  xq-ios-shell-app:
-    path: modules/xq-ios-shell-app
-    language: ios
-    test_all: false
-    toolchain:
-      xcode: "16"
-      xcodegen: required
-      node: ">=22"
-    commands:
-      install: "true"
-      build: >
-        xcodebuild -workspace xq-ios-shell-app.xcworkspace
-        -scheme xq-ios-shell-app
-        -destination 'platform=iOS Simulator,name=iPhone 16'
-        build
-      test: >
-        xcodebuild -workspace xq-ios-shell-app.xcworkspace
-        -scheme xq-ios-shell-app
-        -destination 'platform=iOS Simulator,name=iPhone 16'
-        test
-
   # ── XQ packages (Level C: published semver, independent modules) ──────────────
   # Harness-lineage packages: @chauhaidang/xq-harness-* (see ADR 0010).
   # Modules install and run locally; cross-module consumers use published semver.
@@ -137,32 +103,8 @@ modules:
       build: npm run build
       test: npm test
 
-  xq-octopus:
-    path: modules/xq-octopus
-    language: node
-    test_all: false
-    toolchain:
-      node: ">=22"
-      npm: "11"
-    commands:
-      install: npm ci --include=dev
-      build: npm run build
-      test: npm test
-
   xq-skills:
     path: modules/xq-skills
-    language: node
-    test_all: false
-    toolchain:
-      node: ">=22"
-      npm: "11"
-    commands:
-      install: npm ci --include=dev
-      build: npm run build
-      test: npm test
-
-  xq-workflow-dashboard:
-    path: modules/xq-workflow-dashboard
     language: node
     test_all: false
     toolchain:
@@ -230,15 +172,6 @@ modules:
   xq-scripts:
     path: modules/xq-scripts
     language: shell
-    test_all: false
-    commands:
-      install: "true"
-      build: "true"
-      test: "true"
-
-  poc:
-    path: modules/poc
-    language: mixed
     test_all: false
     commands:
       install: "true"

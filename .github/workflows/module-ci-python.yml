@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       module:
-        description: Module registry key (e.g. xq-domain-test-mcp)
+        description: Module registry key (e.g. xq-kraken)
         required: true
         type: string
       python_version:
